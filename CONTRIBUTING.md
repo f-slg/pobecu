@@ -37,3 +37,9 @@ propones un cambio en los datos, modifica el script y no los archivos
 generados.
 
 La documentación y los mensajes del paquete están en español.
+
+## Código de conducta
+
+Este proyecto sigue un [código de
+conducta](https://github.com/f-slg/pobecu/blob/main/.github/CODE_OF_CONDUCT.md)
+(Contributor Covenant 2.1). Al participar, te comprometes a respetarlo.

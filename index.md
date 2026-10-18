@@ -432,6 +432,18 @@ indica que son una estimación de pobecu y no cifras oficiales.
   provincias, cantones y parroquias del Ecuador, con los mismos códigos
   DPA.
 
+## Contribuir
+
+Las preguntas de uso van en
+[Discussions](https://github.com/f-slg/pobecu/discussions/categories/q-a),
+y los errores y propuestas en
+[issues](https://github.com/f-slg/pobecu/issues/new/choose). Consulta la
+[guía de
+contribución](https://github.com/f-slg/pobecu/blob/main/.github/CONTRIBUTING.md).
+Este proyecto sigue un [código de
+conducta](https://github.com/f-slg/pobecu/blob/main/.github/CODE_OF_CONDUCT.md):
+al participar, te comprometes a respetarlo.
+
 ## Licencia
 
 El código se distribuye bajo licencia
