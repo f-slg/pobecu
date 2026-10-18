@@ -1,0 +1,73 @@
+url: https://f-slg.github.io/pobecu/
+lang: es
+
+template:
+  bootstrap: 5
+  bslib:
+    primary: "#0F2233"
+    link-color: "#9A6B00"
+    base_font: {google: "Source Sans 3"}
+    heading_font: {google: "Source Sans 3"}
+    code_font: {google: "JetBrains Mono"}
+
+home:
+  title: "pobecu: población del Ecuador por provincia, cantón y parroquia"
+  description: >
+    Estimaciones y proyecciones oficiales del INEC (1950-2050) y estimación
+    parroquial 2010-2035, con códigos DPA, para tasas, coberturas y mapas.
+  sidebar:
+    structure: [links, license, citation, authors, dev]
+  links:
+  - text: Datos del INEC
+    href: https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/
+  - text: Paquete hermano geoecu
+    href: https://f-slg.github.io/geoecu/
+
+navbar:
+  bg: primary
+  structure:
+    left: [intro, reference, articles, news]
+    right: [search, github]
+  components:
+    reference:
+      text: Funciones
+      href: reference/index.html
+    articles:
+      text: Artículos
+      menu:
+      - text: Metodología
+        href: articles/metodologia.html
+      - text: Mapas con geoecu
+        href: articles/pobecu-geoecu.html
+    news:
+      text: Novedades
+      href: news/index.html
+
+reference:
+- title: Consultar población
+  contents:
+  - poblacion
+  - pob_fuentes
+- title: Tasas y denominadores
+  contents:
+  - pob_unir
+  - pob_tasa
+- title: Mapas con geoecu
+  contents:
+  - pob_mapa
+  - agrupar_cabeceras
+- title: Datos
+  desc: Tablas incluidas en el paquete.
+  contents:
+  - pob_inec
+  - pob_parroquias
+  - dpa_pob
+- title: Códigos y nombres
+  contents:
+  - homologar_parroquia
+  - buscar_pob
+  - formatear_codigo
+  - normalizar_nombre
+- title: Datos descargados
+  contents:
+  - starts_with("pobecu_")

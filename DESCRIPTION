@@ -25,7 +25,7 @@ Description: Provides the official population estimates and projections of
     boundaries of provinces, cantons and parishes. Documentation is in
     Spanish.
 License: MIT + file LICENSE
-URL: https://github.com/f-slg/pobecu
+URL: https://f-slg.github.io/pobecu/, https://github.com/f-slg/pobecu
 BugReports: https://github.com/f-slg/pobecu/issues
 Depends:
     R (>= 4.1.0)
