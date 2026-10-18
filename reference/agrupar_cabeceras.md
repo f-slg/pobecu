@@ -2,7 +2,7 @@
 
 Convierte una capa de parroquias con códigos DPA de parroquias urbanas
 (por ejemplo,
-[`geoecu::read_parroquias()`](https://rdrr.io/pkg/geoecu/man/read_dpa.html))
+[`geoecu::read_parroquias()`](https://f-slg.github.io/geoecu/reference/read_dpa.html))
 en las unidades del Censo 2022 que usa pobecu: las parroquias urbanas de
 cada cantón se unen en un solo polígono con el código de la cabecera
 cantonal (sufijo `50`), y las rurales se conservan. Los códigos se

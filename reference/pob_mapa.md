@@ -79,7 +79,7 @@ pob_mapa(
 - resolucion, crs:
 
   Resolución y sistema de coordenadas de la capa, como en
-  [`geoecu::read_cantones()`](https://rdrr.io/pkg/geoecu/man/read_dpa.html).
+  [`geoecu::read_cantones()`](https://f-slg.github.io/geoecu/reference/read_dpa.html).
 
 ## Value
 

@@ -64,7 +64,7 @@ ggplot(cuenca) +
 Para mapear una tasa, calcúlala con
 [`pob_tasa()`](https://f-slg.github.io/pobecu/reference/pob_tasa.md) y
 únela a la capa con
-[`geoecu::geoecu_unir()`](https://rdrr.io/pkg/geoecu/man/geoecu_unir.html):
+[`geoecu::geoecu_unir()`](https://f-slg.github.io/geoecu/reference/geoecu_unir.html):
 
 ``` r
 
