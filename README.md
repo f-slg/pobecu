@@ -1,4 +1,4 @@
-# pobecu
+# pobecu <img src="man/figures/logo.png" align="right" height="139" alt="logo de pobecu" />
 
 <!-- badges: start -->
 [![Licencia: MIT](https://img.shields.io/badge/licencia-MIT-blue.svg)](https://github.com/f-slg/pobecu/blob/main/LICENSE.md)
@@ -22,14 +22,15 @@ indicadores de salud, vigilancia epidemiológica o cualquier otro ámbito.
   INEC o cualquier corte (`c(0, 1, 5, 15, 65)`).
 - Une la población con tus tablas por código DPA y calcula tasas, aunque los
   códigos vengan de Excel sin ceros a la izquierda.
-- Funciona junto con [geoecu](https://github.com/f-slg/geoecu) (capas
-  geográficas con los mismos códigos), pero no depende de él.
+- **Compatible de forma nativa con [geoecu](https://github.com/f-slg/geoecu)**:
+  los mismos códigos DPA y `pob_mapa()` para obtener la capa `sf` con
+  población y densidad en una línea.
 
 ## Instalación
 
 ```r
 # install.packages("remotes")
-remotes::install_github("f-slg/pobecu")
+remotes::install_github("f-slg/pobecu", build_vignettes = TRUE)
 ```
 
 Los grupos quinquenales vienen dentro del paquete. Las edades simples (2 MB)
@@ -72,17 +73,30 @@ pob_tasa(casos, "casos")            # tasa por 100 000 habitantes
 #> 3        701 2024    40    321196 12.45346
 ```
 
-### Parroquias urbanas y geoecu
+### Mapas con geoecu
+
+```r
+# Capa sf de cantones con población y densidad (hab/km²)
+mapa <- pob_mapa("canton", anio = 2025, provincia = "Loja")
+plot(mapa["densidad"])
+
+# Parroquias: las urbanas de geoecu se fusionan en su cabecera cantonal
+pob_mapa("parroquia", anio = 2030, canton = "Cuenca")
+```
 
 El Censo 2022 trata cada **cabecera cantonal** como una sola unidad (código
-terminado en `50`). Si tus datos o tus mapas usan parroquias urbanas (por
-ejemplo, las 15 de Cuenca en geoecu), conviértelas antes de unir:
+terminado en `50`). `pob_mapa()` fusiona automáticamente las parroquias
+urbanas de geoecu con `agrupar_cabeceras()`. Si tus datos de casos usan
+códigos de parroquias urbanas, conviértelos antes de calcular tasas:
 
 ```r
 casos$dpa_parroq <- homologar_parroquia(casos$dpa_parroq)
 casos <- aggregate(casos ~ dpa_parroq + anio, casos, sum)
 pob_tasa(casos, "casos", nivel = "parroquia")
 ```
+
+Más ejemplos (densidad, tasas en el mapa, facetas por año o edad) en la
+viñeta `vignette("pobecu-geoecu", package = "pobecu")`.
 
 ## Fuentes y método
 
@@ -100,8 +114,10 @@ junio de cada año.
 entre sus parroquias según su participación en los censos 2010 y 2022,
 interpolada y extrapolada con una función logística (el mismo método que usa
 el INEC para los cantones). La estructura por sexo y edad se ajusta por IPF
-(*raking*) a partir del Censo 2022 y de la estructura oficial del cantón. Los
-detalles están en `?pob_parroquias` y en los scripts de
+(*raking*) a partir del Censo 2022 y de la estructura oficial del cantón. La
+metodología completa (cómo proyecta el INEC, cada paso de la estimación
+parroquial, verificaciones y limitaciones) está en
+`vignette("metodologia", package = "pobecu")` y en los scripts de
 [`data-raw/`](https://github.com/f-slg/pobecu/tree/main/data-raw).
 
 **Actualización.** Cuando el INEC publique una nueva revisión de sus

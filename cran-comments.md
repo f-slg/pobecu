@@ -10,8 +10,14 @@ This is the first submission of 'pobecu'.
 
 ## Notes for the reviewers
 
+* 'geoecu' (Suggests) is the companion package with the boundaries of the
+  same territorial units; it was submitted to CRAN first and 'pobecu' will
+  only be submitted once 'geoecu' is available there. All uses of 'geoecu'
+  are conditional (`requireNamespace()`), and the related examples, tests and
+  vignette chunks are skipped when it is not installed.
+
 * Population tables by five-year age groups are shipped with the package
-  (about 1.1 MB, xz-compressed). Single-year-of-age data (2 MB) are
+  (about 1.2 MB, xz-compressed). Single-year-of-age data (2 MB) are
   downloaded on first use from the package's GitHub release and cached with
   `tools::R_user_dir("pobecu", "cache")`. Users can also point the package to
   local copies with `pobecu_usar_carpeta()`.

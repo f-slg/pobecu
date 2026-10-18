@@ -1,0 +1,23 @@
+test_that("pob_mapa() une población a las capas de geoecu", {
+  skip_if_not_installed("geoecu")
+  skip_if_not_installed("sf")
+  skip_if_not(geoecu::geoecu_datos_disponibles())
+  m <- pob_mapa("canton", anio = 2025, provincia = "Loja")
+  expect_s3_class(m, "sf")
+  expect_equal(nrow(m), 16)
+  expect_equal(sum(m$poblacion), poblacion("provincia", anio = 2025, provincia = "Loja")$poblacion)
+  expect_true(all(m$densidad > 0))
+})
+
+test_that("agrupar_cabeceras() fusiona las parroquias urbanas", {
+  skip_if_not_installed("geoecu")
+  skip_if_not_installed("sf")
+  skip_if_not(geoecu::geoecu_datos_disponibles())
+  cuenca <- geoecu::read_parroquias(canton = "Cuenca")
+  a <- agrupar_cabeceras(cuenca)
+  expect_equal(nrow(a), sum(dpa_pob$dpa_canton == "0101"))
+  expect_setequal(a$dpa_parroq, dpa_pob$dpa_parroq[dpa_pob$dpa_canton == "0101"])
+  expect_equal(sum(a$area_km2), sum(cuenca$area_km2))
+  p <- suppressMessages(pob_mapa("parroquia", anio = 2030, canton = "Cuenca"))
+  expect_equal(sum(p$poblacion), poblacion("canton", anio = 2030, canton = "Cuenca")$poblacion)
+})

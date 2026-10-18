@@ -8,3 +8,7 @@
   con la proyección cantonal oficial.
 * Funciones `poblacion()`, `pob_unir()`, `pob_tasa()`, `homologar_parroquia()`,
   `buscar_pob()` y `pob_fuentes()`.
+* Integración con geoecu: `pob_mapa()` (capa `sf` con población y densidad) y
+  `agrupar_cabeceras()` (fusiona parroquias urbanas en su cabecera cantonal).
+* Viñetas `metodologia` y `pobecu-geoecu`.
+* Logo.

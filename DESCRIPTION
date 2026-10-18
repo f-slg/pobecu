@@ -20,8 +20,10 @@ Description: Provides the official population estimates and projections of
     censuses (logistic extrapolation) and their age and sex structure in the
     2022 census (iterative proportional fitting); parish figures always add up
     to the official cantonal ones. Includes helpers to aggregate ages, join
-    population denominators to case tables and compute rates. Documentation
-    is in Spanish.
+    population denominators to case tables and compute rates, and native
+    integration with the 'geoecu' package to map population on the
+    boundaries of provinces, cantons and parishes. Documentation is in
+    Spanish.
 License: MIT + file LICENSE
 URL: https://github.com/f-slg/pobecu
 BugReports: https://github.com/f-slg/pobecu/issues
@@ -32,7 +34,14 @@ Imports:
     tools,
     utils
 Suggests:
+    geoecu,
+    ggplot2,
+    knitr,
+    rmarkdown,
+    scales,
+    sf,
     testthat (>= 3.0.0)
+VignetteBuilder: knitr
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: es
