@@ -1,0 +1,23 @@
+name: Proponer una mejora
+description: Una función nueva, un cambio en una existente o un dato que falta.
+title: "[Mejora] "
+labels: ["mejora"]
+body:
+  - type: textarea
+    id: necesidad
+    attributes:
+      label: ¿Qué necesitas hacer?
+      description: Cuenta el problema o la tarea; por ejemplo, el indicador que quieres calcular o el mapa que quieres hacer.
+    validations:
+      required: true
+  - type: textarea
+    id: propuesta
+    attributes:
+      label: ¿Cómo te imaginas la solución?
+      description: Si tienes una idea de la función o los argumentos, compártela.
+      render: r
+  - type: textarea
+    id: alternativas
+    attributes:
+      label: Alternativas o fuentes
+      description: Cómo lo resuelves hoy, o la fuente oficial de los datos que faltan.

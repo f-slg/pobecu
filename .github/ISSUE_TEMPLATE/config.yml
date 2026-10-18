@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Preguntas y ayuda de uso
+    url: https://github.com/f-slg/pobecu/discussions/categories/q-a
+    about: ¿Cómo hago...? ¿Qué significa...? Pregunta en Discussions; así la respuesta queda disponible para todos.
+  - name: Dudas sobre las cifras oficiales del INEC
+    url: https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/
+    about: Las cifras nacionales, provinciales y cantonales son del INEC; su metodología y publicaciones están en su sitio.

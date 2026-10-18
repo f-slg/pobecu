@@ -1,0 +1,39 @@
+name: Problema con los datos
+description: Una cifra, un código o un nombre que no coincide con lo esperado.
+title: "[Datos] "
+labels: ["datos"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por avisar. Recuerda que las cifras nacionales, provinciales y cantonales son las oficiales del INEC (Revisión 2024) y las parroquiales son una **estimación de pobecu** (ver `vignette("metodologia")`).
+  - type: dropdown
+    id: nivel
+    attributes:
+      label: Nivel
+      options: [Nacional, Provincia, Cantón, Parroquia]
+    validations:
+      required: true
+  - type: input
+    id: territorio
+    attributes:
+      label: Territorio y año
+      description: Nombre o código DPA y año.
+      placeholder: "Cantón Loja (1101), 2025"
+    validations:
+      required: true
+  - type: textarea
+    id: problema
+    attributes:
+      label: ¿Qué encontraste?
+      description: La cifra que devuelve pobecu y la que esperabas, con su fuente (tabulado, página o documento del INEC).
+      placeholder: |
+        poblacion("canton", anio = 2025, canton = "Loja") devuelve ...
+        Según el tabulado del INEC ... debería ser ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Versión de pobecu
+      description: Resultado de `packageVersion("pobecu")`.
