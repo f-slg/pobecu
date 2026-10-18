@@ -33,6 +33,10 @@ jobs:
           r-version: ${{ matrix.config.r }}
           use-public-rspm: true
 
+      # Instalar pandoc antes: si falta, setup-r-dependencies revisa todas las
+      # dependencias (incluida geoecu, que aun no esta en CRAN) y falla.
+      - uses: r-lib/actions/setup-pandoc@v2
+
       # geoecu (Suggests) aún no está en CRAN: se instalan solo las dependencias
       # obligatorias y los Suggests se listan aquí, con geoecu desde GitHub.
       # Cuando geoecu esté en CRAN, basta con volver a la configuración por defecto.
