@@ -1,0 +1,24 @@
+## Submission
+
+This is the first submission of 'pobecu'.
+
+## R CMD check results
+
+0 errors | 0 warnings | 1 note
+
+* This is a new submission.
+
+## Notes for the reviewers
+
+* Population tables by five-year age groups are shipped with the package
+  (about 1.1 MB, xz-compressed). Single-year-of-age data (2 MB) are
+  downloaded on first use from the package's GitHub release and cached with
+  `tools::R_user_dir("pobecu", "cache")`. Users can also point the package to
+  local copies with `pobecu_usar_carpeta()`.
+* Functions that need the downloaded data fail with an informative message
+  when the internet is not available. Examples that need it are wrapped in
+  `@examplesIf pobecu_datos_disponibles()`, and the corresponding tests are
+  skipped when the data are not available, so checks do not require internet
+  access.
+* The documentation is in Spanish (`Language: es`) because the package is
+  aimed at users in Ecuador; the Title and Description are in English.

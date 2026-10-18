@@ -1,0 +1,14 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.Rcheck/
+pobecu_*.tar.gz
+docs/
+
+# Insumos del INEC y datos de edad simple: se publican como assets del release
+data-raw/build/
+data-raw/release/
+data-raw/insumos/
+*.zip
+*.xlsx

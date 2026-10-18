@@ -1,0 +1,42 @@
+Package: pobecu
+Type: Package
+Title: Population of Ecuador by Province, Canton and Parish (Población del
+    Ecuador por Provincia, Cantón y Parroquia)
+Version: 0.1.0
+Authors@R:
+    person("Ronald Fabricio", "Salas Guerrero",
+           email = "fabriciosalasguerrero@gmail.com",
+           role = c("aut", "cre", "cph"))
+Description: Provides the official population estimates and projections of
+    Ecuador published by the National Institute of Statistics and Censuses
+    (INEC, "Instituto Nacional de Estadística y Censos"), Revision 2024:
+    national (1950-2050), provincial (1990-2035) and cantonal (2010-2035)
+    figures by sex, age and urban/rural area, identified by the codes of the
+    political-administrative division (DPA, "División
+    Político-Administrativa") <https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/>.
+    Because INEC does not publish projections for parishes, the package also
+    offers a parish-level estimate for 2010-2035 that distributes the official
+    cantonal projection among parishes using their shares in the 2010 and 2022
+    censuses (logistic extrapolation) and their age and sex structure in the
+    2022 census (iterative proportional fitting); parish figures always add up
+    to the official cantonal ones. Includes helpers to aggregate ages, join
+    population denominators to case tables and compute rates. Documentation
+    is in Spanish.
+License: MIT + file LICENSE
+URL: https://github.com/f-slg/pobecu
+BugReports: https://github.com/f-slg/pobecu/issues
+Depends:
+    R (>= 4.1.0)
+Imports:
+    stats,
+    tools,
+    utils
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Encoding: UTF-8
+Language: es
+LazyData: true
+LazyDataCompression: xz
+Roxygen: list(markdown = TRUE)
+Config/roxygen2/version: 8.1.1
