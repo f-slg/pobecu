@@ -9,8 +9,11 @@
 #' * [poblacion()] consulta la población por nivel, año, sexo, área y edad.
 #' * [pob_unir()] y [pob_tasa()] unen la población con una tabla propia y
 #'   calculan tasas.
-#' * [homologar_parroquia()] convierte códigos de parroquias urbanas al de su
-#'   cabecera cantonal, la unidad del Censo 2022.
+#' * [homologar_parroquia()] y [homologar_canton()] convierten códigos de
+#'   parroquias urbanas o de la DPA del CONALI (2026) a las unidades del
+#'   Censo 2022.
+#' * [pob_mapa()] y [agrupar_unidades()] unen la población con las capas de
+#'   geoecu.
 #' * [dpa_pob] es el catálogo de códigos y nombres; [buscar_pob()] busca en él.
 #' * [pob_fuentes()] describe las fuentes y la versión de los datos.
 #'

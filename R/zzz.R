@@ -28,3 +28,28 @@
 .pobecu_etapas <- c(0, 12, 18, 30, 65)
 
 .pobecu_env <- new.env(parent = emptyenv())
+
+# Codigos de la Organizacion Territorial del Estado (CONALI, 2026), que usa
+# geoecu desde la version 0.4.0, que no existen en el Censo 2022, con la
+# unidad censal que los contiene. "codigo": misma parroquia con otro codigo
+# (cantones nuevos Borbon y Sevilla Don Bosco; Bella Vista). "nueva":
+# parroquia creada despues del censo, cuya poblacion esta incluida en la
+# parroquia censal de la que salio la mayor parte de su territorio.
+# Se obtiene en data-raw/06_equivalencias_conali.R a partir de
+# geoecu::dpa_equivalencias.
+.pobecu_conali <- data.frame(
+  conali = c("080950", "080951", "080952", "080953", "080954", "080955",
+             "080956", "080957", "080958", "080959", "080960", "080961",
+             "141350", "200351",
+             "131251", "160167", "170257", "210456", "210457", "210458"),
+  censo  = c("080253", "080251", "080252", "080255", "080256", "080258",
+             "080259", "080260", "080261", "080262", "080263", "080264",
+             "140157", "200353",
+             "131250", "160162", "170250", "210450", "210450", "210450"),
+  cambio = rep(c("codigo", "nueva"), c(14, 6)),
+  stringsAsFactors = FALSE
+)
+
+# Cantones creados despues del Censo 2022 y el canton censal que los contiene
+.pobecu_cantones_conali <- c("0809" = "0802",   # Borbon, antes en Eloy Alfaro
+                             "1413" = "1401")   # Sevilla Don Bosco, antes en Morona

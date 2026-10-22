@@ -40,7 +40,7 @@ pob_unir <- function(datos, nivel = c("canton", "provincia", "parroquia"),
          "Ind\u00edcala con el argumento `codigo`.", call. = FALSE)
   }
   cod <- formatear_codigo(datos[[col_cod]], nivel)
-  if (nivel == "parroquia") .revisar_urbanas(cod)
+  .revisar_codigos(cod, nivel)
 
   # Ano: columna, numero fijo o columna `anio` por defecto
   if (is.numeric(anio)) {
@@ -116,13 +116,25 @@ pob_tasa <- function(datos, casos, nivel = c("canton", "provincia", "parroquia")
   datos[[nombre]]
 }
 
-.revisar_urbanas <- function(cod) {
-  urb <- unique(cod[!is.na(cod) & !cod %in% pobecu::dpa_pob$dpa_parroq &
-                    suppressWarnings(as.integer(substr(cod, 5, 6))) < 50])
-  if (length(urb)) {
-    stop("Hay c\u00f3digos de parroquias urbanas (", paste(utils::head(urb, 5), collapse = ", "),
-         if (length(urb) > 5) ", ...", "). La poblaci\u00f3n parroquial usa la cabecera ",
-         "cantonal completa (c\u00f3digo XX50): convierte los c\u00f3digos con ",
-         "homologar_parroquia() y agrega tus datos antes de unir.", call. = FALSE)
+# Rechaza codigos que no son unidades del censo pero se pueden convertir:
+# unirlos sin agregar repetiria la poblacion en varias filas
+.revisar_codigos <- function(cod, nivel) {
+  if (nivel == "provincia") return(invisible())
+  cod <- unique(cod[!is.na(cod)])
+  if (nivel == "parroquia") {
+    otros <- cod[!cod %in% pobecu::dpa_pob$dpa_parroq & homologar_parroquia(cod) != cod]
+    funcion <- "homologar_parroquia()"
+    detalle <- paste0("de parroquias urbanas o posteriores al Censo 2022 ",
+                      "(por ejemplo, de geoecu >= 0.4.0)")
+  } else {
+    otros <- cod[homologar_canton(cod) != cod]
+    funcion <- "homologar_canton()"
+    detalle <- "de cantones creados despu\u00e9s del Censo 2022 (Borb\u00f3n, Sevilla Don Bosco)"
+  }
+  if (length(otros)) {
+    stop("Hay c\u00f3digos ", detalle, ": ", paste(utils::head(otros, 5), collapse = ", "),
+         if (length(otros) > 5) ", ...", ". La poblaci\u00f3n usa las unidades del ",
+         "Censo 2022: convierte los c\u00f3digos con ", funcion,
+         " y agrega tus datos antes de unir.", call. = FALSE)
   }
 }

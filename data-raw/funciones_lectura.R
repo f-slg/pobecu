@@ -99,3 +99,18 @@ normalizar <- function(x) {
   x <- toupper(gsub("[^A-Za-z0-9 ]", " ", x))
   trimws(gsub(" +", " ", x))
 }
+
+# Parroquias rurales del catálogo de geoecu con los códigos del Censo 2022.
+# geoecu 0.3.0 y anteriores distinguen urbanas y rurales con `area_dpa`.
+# Desde geoecu 0.4.0 (CONALI 2026) se usa `tipo` y se deshacen los cambios
+# posteriores al censo con `.pobecu_conali` (R/zzz.R): las parroquias nuevas
+# se descartan y las que solo cambiaron de código recuperan el del censo.
+parroquias_rurales_censo <- function(dpa) {
+  if ("area_dpa" %in% names(dpa)) return(dpa[dpa$area_dpa == "rural", ])
+  nuevas <- .pobecu_conali$conali[.pobecu_conali$cambio == "nueva"]
+  dpa <- dpa[dpa$tipo != "zona en estudio" & !dpa$dpa_parroq %in% nuevas, ]
+  i <- match(dpa$dpa_parroq, .pobecu_conali$conali)
+  dpa$dpa_parroq[!is.na(i)] <- .pobecu_conali$censo[i[!is.na(i)]]
+  dpa$dpa_canton <- substr(dpa$dpa_parroq, 1, 4)
+  dpa[substr(dpa$dpa_parroq, 5, 6) != "50", ]
+}

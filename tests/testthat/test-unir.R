@@ -16,6 +16,9 @@ test_that("pob_unir() avisa y rechaza lo que no puede unir", {
                  "sin poblaci")
   expect_error(pob_unir(data.frame(dpa_parroq = "010101", anio = 2025), "parroquia"),
                "homologar_parroquia")
+  expect_error(pob_unir(data.frame(dpa_parroq = "131251", anio = 2025), "parroquia"),
+               "homologar_parroquia")
+  expect_error(pob_unir(data.frame(dpa_canton = "0809", anio = 2025)), "homologar_canton")
   expect_error(pob_unir(data.frame(x = 1)), "columna de c")
 })
 

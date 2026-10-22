@@ -10,8 +10,8 @@ Un \code{data.frame} con 1042 filas y 10 columnas:
 \item{dpa_parroq}{Código DPA de la parroquia (6 dígitos, texto). Las
 cabeceras cantonales terminan en \code{50}.}
 \item{parroquia}{Nombre de la parroquia según el Censo 2022.}
-\item{tipo}{\code{"cabecera"} (cabecera cantonal, incluye las parroquias
-urbanas) o \code{"rural"}.}
+\item{tipo}{\code{"cabecera cantonal"} (incluye las parroquias urbanas) o
+\code{"parroquia rural"}, con los mismos valores que geoecu.}
 \item{dpa_canton, canton}{Código y nombre del cantón.}
 \item{dpa_provin, provincia}{Código y nombre de la provincia.}
 \item{metodo}{Método de la estimación parroquial: \code{"logistica"},
@@ -35,6 +35,12 @@ dpa_pob
 Una fila por parroquia del Censo 2022, con sus códigos DPA, nombres
 oficiales del INEC, la población censal 2010 y 2022 y el método usado en
 la estimación parroquial.
+}
+\details{
+Los cantones y parroquias creados después del censo (por
+ejemplo, el cantón Borbón o la parroquia Sosote) no tienen fila propia:
+su población está incluida en la unidad censal que los contenía. Ver
+\code{\link[=homologar_canton]{homologar_canton()}} y \code{\link[=homologar_parroquia]{homologar_parroquia()}}.
 }
 \examples{
 head(dpa_pob)

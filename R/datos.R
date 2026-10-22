@@ -66,10 +66,11 @@ NULL
 #' cantón, año, sexo y grupo de edad.
 #'
 #' @details
-#' **Unidades.** Como en el Censo 2022, cada cabecera cantonal (código
-#' terminado en `50`) es una sola unidad que incluye a todas las parroquias
-#' urbanas del cantón. Para unir datos que usan códigos de parroquias urbanas
-#' (por ejemplo, las capas del paquete geoecu), conviértelos con
+#' **Unidades.** Son las parroquias del Censo 2022. Cada cabecera cantonal
+#' (código terminado en `50`) es una sola unidad que incluye a todas las
+#' parroquias urbanas del cantón. Para unir datos que usan códigos de
+#' parroquias urbanas o de la Organización Territorial del Estado del CONALI
+#' (2026), como las capas de geoecu 0.4.0 y posteriores, conviértelos con
 #' [homologar_parroquia()].
 #'
 #' **Método.**
@@ -118,8 +119,8 @@ NULL
 #'   \item{dpa_parroq}{Código DPA de la parroquia (6 dígitos, texto). Las
 #'     cabeceras cantonales terminan en `50`.}
 #'   \item{parroquia}{Nombre de la parroquia según el Censo 2022.}
-#'   \item{tipo}{`"cabecera"` (cabecera cantonal, incluye las parroquias
-#'     urbanas) o `"rural"`.}
+#'   \item{tipo}{`"cabecera cantonal"` (incluye las parroquias urbanas) o
+#'     `"parroquia rural"`, con los mismos valores que geoecu.}
 #'   \item{dpa_canton, canton}{Código y nombre del cantón.}
 #'   \item{dpa_provin, provincia}{Código y nombre de la provincia.}
 #'   \item{metodo}{Método de la estimación parroquial: `"logistica"`,
@@ -129,6 +130,11 @@ NULL
 #'     (en los límites de 2022; `NA` para parroquias creadas después de 2010)
 #'     y 2022.}
 #' }
+#'
+#' @details Los cantones y parroquias creados después del censo (por
+#'   ejemplo, el cantón Borbón o la parroquia Sosote) no tienen fila propia:
+#'   su población está incluida en la unidad censal que los contenía. Ver
+#'   [homologar_canton()] y [homologar_parroquia()].
 #'
 #' @source INEC, VIII Censo de Población y VII de Vivienda 2022, tablas 2.1 y
 #'   5.2 de *Estructura poblacional*. Los códigos de las parroquias rurales se

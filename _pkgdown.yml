@@ -55,7 +55,7 @@ reference:
 - title: Mapas con geoecu
   contents:
   - pob_mapa
-  - agrupar_cabeceras
+  - agrupar_unidades
 - title: Datos
   desc: Tablas incluidas en el paquete.
   contents:
@@ -65,6 +65,7 @@ reference:
 - title: Códigos y nombres
   contents:
   - homologar_parroquia
+  - homologar_canton
   - buscar_pob
   - formatear_codigo
   - normalizar_nombre
