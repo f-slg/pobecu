@@ -16,8 +16,11 @@ calcular tasas y unir con otros datos.
 \item \code{\link[=poblacion]{poblacion()}} consulta la población por nivel, año, sexo, área y edad.
 \item \code{\link[=pob_unir]{pob_unir()}} y \code{\link[=pob_tasa]{pob_tasa()}} unen la población con una tabla propia y
 calculan tasas.
-\item \code{\link[=homologar_parroquia]{homologar_parroquia()}} convierte códigos de parroquias urbanas al de su
-cabecera cantonal, la unidad del Censo 2022.
+\item \code{\link[=homologar_parroquia]{homologar_parroquia()}} y \code{\link[=homologar_canton]{homologar_canton()}} convierten códigos de
+parroquias urbanas o de la DPA del CONALI (2026) a las unidades del
+Censo 2022.
+\item \code{\link[=pob_mapa]{pob_mapa()}} y \code{\link[=agrupar_unidades]{agrupar_unidades()}} unen la población con las capas de
+geoecu.
 \item \link{dpa_pob} es el catálogo de códigos y nombres; \code{\link[=buscar_pob]{buscar_pob()}} busca en él.
 \item \code{\link[=pob_fuentes]{pob_fuentes()}} describe las fuentes y la versión de los datos.
 }
@@ -38,6 +41,7 @@ versión del paquete.
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://f-slg.github.io/pobecu/}
   \item \url{https://github.com/f-slg/pobecu}
   \item Report bugs at \url{https://github.com/f-slg/pobecu/issues}
 }

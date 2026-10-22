@@ -56,31 +56,39 @@ están disponibles para parroquias.}
 en \code{geoecu::read_cantones()}.}
 }
 \value{
-Un objeto \code{sf} con las columnas de la capa, las de \code{\link[=poblacion]{poblacion()}}
-(\code{anio}, \code{poblacion} y las desagregaciones pedidas) y \code{densidad}
-(habitantes por km²). Con varios años o desagregaciones, cada polígono
-se repite una vez por combinación (útil para \code{facet_wrap()}).
+Un objeto \code{sf} con las columnas de \code{\link[=agrupar_unidades]{agrupar_unidades()}}, las de
+\code{\link[=poblacion]{poblacion()}} (\code{anio}, \code{poblacion} y las desagregaciones pedidas) y
+\code{densidad} (habitantes por km²). Con varios años o desagregaciones, cada
+polígono se repite una vez por combinación (útil para \code{facet_wrap()}).
 }
 \description{
 Devuelve la capa geográfica del nivel indicado (del paquete
 \href{https://github.com/f-slg/geoecu}{geoecu}) con la población de pobecu ya
-unida, lista para mapear. Ambos paquetes usan los mismos códigos DPA, así
-que no hace falta preparar nada.
+unida, lista para mapear. Ambos paquetes usan los códigos DPA, así que no
+hace falta preparar nada.
 }
 \details{
-En el nivel parroquial las parroquias urbanas de geoecu se fusionan en su
-cabecera cantonal con \code{\link[=agrupar_cabeceras]{agrupar_cabeceras()}}, porque esa es la unidad del
-Censo 2022 y de la estimación parroquial.
+Las cifras de población usan las unidades del Censo 2022, y geoecu (desde
+la versión 0.4.0) la Organización Territorial del Estado del CONALI
+(2026). Para que cada cifra se dibuje sobre el territorio al que
+corresponde, la capa se convierte primero a las unidades del censo con
+\code{\link[=agrupar_unidades]{agrupar_unidades()}}: por ejemplo, el cantón Borbón se dibuja dentro de
+Eloy Alfaro y la parroquia Sosote dentro de Rocafuerte. Con geoecu 0.3.0
+y anteriores, las parroquias urbanas se fusionan en su cabecera cantonal.
+
+Las zonas en estudio de geoecu (territorios con límites aún no resueltos)
+se conservan para que el mapa no tenga huecos, con población \code{NA} en cada
+año y desagregación.
 }
 \examples{
 \dontshow{if (requireNamespace("geoecu", quietly = TRUE) && geoecu::geoecu_datos_disponibles()) withAutoprint(\{ # examplesIf}
 m <- pob_mapa("canton", anio = 2025, provincia = "Loja")
 plot(m["densidad"], logz = TRUE)
 
-# Parroquias de Cuenca: las 15 urbanas se fusionan en la cabecera
+# Parroquias de Cuenca
 pob_mapa("parroquia", anio = 2030, canton = "Cuenca")
 \dontshow{\}) # examplesIf}
 }
 \seealso{
-\code{\link[=agrupar_cabeceras]{agrupar_cabeceras()}}, \code{\link[=pob_tasa]{pob_tasa()}}.
+\code{\link[=agrupar_unidades]{agrupar_unidades()}}, \code{\link[=pob_tasa]{pob_tasa()}}.
 }

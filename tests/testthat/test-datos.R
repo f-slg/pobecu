@@ -1,6 +1,6 @@
 test_that("los datos incluidos tienen la estructura esperada", {
   expect_equal(nrow(dpa_pob), 1042)
-  expect_equal(sum(dpa_pob$tipo == "cabecera"), 221)
+  expect_equal(sum(dpa_pob$tipo == "cabecera cantonal"), 221)
   expect_false(anyDuplicated(dpa_pob$dpa_parroq) > 0)
   expect_true(all(grepl("^[0-9]{6}$", dpa_pob$dpa_parroq)))
   expect_equal(range(pob_nacional$anio), c(1950L, 2050L))

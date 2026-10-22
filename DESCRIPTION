@@ -2,7 +2,7 @@ Package: pobecu
 Type: Package
 Title: Population of Ecuador by Province, Canton and Parish (Población del
     Ecuador por Provincia, Cantón y Parroquia)
-Version: 0.1.0
+Version: 0.2.0
 Authors@R:
     person("Ronald Fabricio", "Salas Guerrero",
            email = "fabriciosalasguerrero@gmail.com",
@@ -20,8 +20,10 @@ Description: Provides the official population estimates and projections of
     censuses (logistic extrapolation) and their age and sex structure in the
     2022 census (iterative proportional fitting); parish figures always add up
     to the official cantonal ones. Includes helpers to aggregate ages, join
-    population denominators to case tables and compute rates, and native
-    integration with the 'geoecu' package to map population on the
+    population denominators to case tables and compute rates, convert codes
+    of urban parishes and of the 2026 political-administrative division
+    (CONALI, "Comité Nacional de Límites Internos") to census units, and
+    native integration with the 'geoecu' package to map population on the
     boundaries of provinces, cantons and parishes. Documentation is in
     Spanish.
 License: MIT + file LICENSE
@@ -34,7 +36,7 @@ Imports:
     tools,
     utils
 Suggests:
-    geoecu,
+    geoecu (>= 0.3.0),
     ggplot2,
     knitr,
     rmarkdown,

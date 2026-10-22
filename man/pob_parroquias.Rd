@@ -28,10 +28,11 @@ de un cantón es exactamente igual a la cifra oficial del INEC para ese
 cantón, año, sexo y grupo de edad.
 }
 \details{
-\strong{Unidades.} Como en el Censo 2022, cada cabecera cantonal (código
-terminado en \code{50}) es una sola unidad que incluye a todas las parroquias
-urbanas del cantón. Para unir datos que usan códigos de parroquias urbanas
-(por ejemplo, las capas del paquete geoecu), conviértelos con
+\strong{Unidades.} Son las parroquias del Censo 2022. Cada cabecera cantonal
+(código terminado en \code{50}) es una sola unidad que incluye a todas las
+parroquias urbanas del cantón. Para unir datos que usan códigos de
+parroquias urbanas o de la Organización Territorial del Estado del CONALI
+(2026), como las capas de geoecu 0.4.0 y posteriores, conviértelos con
 \code{\link[=homologar_parroquia]{homologar_parroquia()}}.
 
 \strong{Método.}

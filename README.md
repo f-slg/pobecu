@@ -44,8 +44,9 @@ pobecu resuelve eso:
   población con tu tabla de casos por código DPA, aunque los códigos vengan
   de Excel sin ceros a la izquierda.
 - **Mapas nativos con [geoecu](https://github.com/f-slg/geoecu).** Ambos
-  paquetes usan los mismos códigos DPA, y `pob_mapa()` devuelve la capa `sf`
-  con población y densidad.
+  paquetes usan los códigos DPA, y `pob_mapa()` devuelve la capa `sf` con
+  población y densidad. Las diferencias entre las unidades del Censo 2022 y
+  la DPA del CONALI (2026) que usa geoecu se resuelven automáticamente.
 - **Coherente y reproducible.** Las parroquias suman su cantón, los cantones
   su provincia y las provincias el total nacional. Todo el procesamiento está
   en [`data-raw/`](https://github.com/f-slg/pobecu/tree/main/data-raw) y se
@@ -218,14 +219,18 @@ poblacion("parroquia", anio = 2030, canton = "Puyango")
 
 Las unidades son las **1042 parroquias del Censo 2022**: 221 **cabeceras
 cantonales** (código terminado en `50`) y 821 parroquias rurales. El censo
-no separa las parroquias urbanas: Cuenca, por ejemplo, tiene 15 en la
-cartografía, pero en el censo son una sola unidad, la cabecera `010150`. Si
-tus datos usan códigos de parroquias urbanas, conviértelos y agrégalos antes
-de unir:
+no separa las parroquias urbanas: Cuenca, por ejemplo, tiene 15 en muchos
+registros administrativos, pero en el censo son una sola unidad, la
+cabecera `010150`. Tampoco tiene los cantones y parroquias creados después
+(Borbón, Sevilla Don Bosco, Sosote, etc.), que sí están en la DPA del CONALI
+(2026) que usa geoecu desde la versión 0.4.0. Si tus datos usan esos
+códigos, conviértelos y agrégalos antes de unir:
 
 ```r
-homologar_parroquia(c("010101", "010115", "010151"))
-#> [1] "010150" "010150" "010151"
+homologar_parroquia(c("010101", "010115", "010151", "131251"))
+#> [1] "010150" "010150" "010151" "131250"
+homologar_canton(c("0809", "1413"))
+#> [1] "0802" "1401"
 
 casos$dpa_parroq <- homologar_parroquia(casos$dpa_parroq)
 casos <- aggregate(casos ~ dpa_parroq + anio, casos, sum)
@@ -235,21 +240,23 @@ pob_tasa(casos, "casos", nivel = "parroquia")
 ## Mapas con geoecu
 
 [geoecu](https://github.com/f-slg/geoecu) contiene los límites de
-provincias, cantones y parroquias con los mismos códigos DPA. `pob_mapa()`
-une ambos paquetes y devuelve un objeto `sf` con la población y la densidad
-(hab/km²):
+provincias, cantones y parroquias con códigos DPA, según la Organización
+Territorial del Estado del CONALI (2026). `pob_mapa()` une ambos paquetes y
+devuelve un objeto `sf` con la población y la densidad (hab/km²). Antes de
+unir, convierte la capa a las unidades del Censo 2022 con
+`agrupar_unidades()`: por ejemplo, el cantón Borbón se dibuja dentro de Eloy
+Alfaro, que lo incluía en el censo, para que la densidad sea correcta.
 
 ```r
 mapa <- pob_mapa("canton", anio = 2025, provincia = "Loja")
 plot(mapa["densidad"])
 
-# Nivel parroquial: las parroquias urbanas de geoecu se fusionan en su
-# cabecera cantonal (agrupar_cabeceras()) para coincidir con el censo
+# Nivel parroquial, dos años
 pob_mapa("parroquia", anio = c(2025, 2035))
 
-# Una tasa sobre el mapa
-geoecu::geoecu_unir(pob_tasa(casos, "casos"), codigo = "dpa_canton",
-                    nivel = "canton")
+# Una tasa sobre el mapa, con la capa en unidades del censo
+capa <- agrupar_unidades(geoecu::read_cantones())
+merge(capa, pob_tasa(casos, "casos"), by = "dpa_canton", all.x = TRUE)
 ```
 
 La viñeta `vignette("pobecu-geoecu")` tiene ejemplos completos con
@@ -351,8 +358,8 @@ nivel.
 | `poblacion()` | Consultar población por nivel, año, sexo, área y edad |
 | `pob_unir()`, `pob_tasa()` | Unir población a una tabla propia y calcular tasas |
 | `pob_mapa()` | Capa `sf` de geoecu con población y densidad |
-| `agrupar_cabeceras()` | Fusionar parroquias urbanas de una capa en su cabecera cantonal |
-| `homologar_parroquia()` | Convertir códigos de parroquias urbanas al de su cabecera |
+| `agrupar_unidades()` | Convertir una capa de geoecu a las unidades del Censo 2022 |
+| `homologar_parroquia()`, `homologar_canton()` | Convertir códigos de parroquias urbanas o del CONALI (2026) a las unidades del censo |
 | `buscar_pob()` | Buscar territorios por nombre o código |
 | `formatear_codigo()`, `normalizar_nombre()` | Limpiar códigos DPA y nombres |
 | `pob_fuentes()` | Fuentes, revisión y cobertura de los datos |
@@ -371,6 +378,7 @@ parroquial, y regeneran las figuras de este README:
 | `02_estimar_parroquias.R` | Estimación parroquial (participación logística, IPF y redondeo) |
 | `03_construir_datos.R` | Tablas del paquete y archivo de edades simples para el *release* |
 | `04_logo.R`, `05_figuras_readme.R` | Logo y figuras, con datos reales |
+| `06_equivalencias_conali.R` | Comprueba las equivalencias entre la DPA del CONALI (2026) y el Censo 2022 |
 
 Cada versión de los datos se publica como un
 [*release*](https://github.com/f-slg/pobecu/releases) (`datos-vX.Y.Z`), y
@@ -384,7 +392,7 @@ citation("pobecu")
 
 ```
 Salas Guerrero, R. F. (2026). pobecu: Población del Ecuador por provincia,
-cantón y parroquia. Paquete de R versión 0.1.0.
+cantón y parroquia. Paquete de R versión 0.2.0.
 https://github.com/f-slg/pobecu
 ```
 
@@ -395,7 +403,8 @@ indica que son una estimación de pobecu y no cifras oficiales.
 ## Paquetes relacionados
 
 - [geoecu](https://github.com/f-slg/geoecu): capas geográficas de
-  provincias, cantones y parroquias del Ecuador, con los mismos códigos DPA.
+  provincias, cantones y parroquias del Ecuador, con códigos DPA (CONALI,
+  2026).
 
 ## Contribuir
 

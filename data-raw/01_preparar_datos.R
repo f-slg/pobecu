@@ -18,6 +18,7 @@
 # Uso: Rscript data-raw/01_preparar_datos.R
 # -----------------------------------------------------------------------------
 source("data-raw/funciones_lectura.R")
+source("R/zzz.R")
 
 dir_in <- "data-raw/insumos"
 dir_build <- "data-raw/build"
@@ -43,7 +44,9 @@ for (nm in names(urls)) {
 f_proy  <- file.path(dir_in, names(urls)[1])
 f_censo <- file.path(dir_in, names(urls)[2])
 
-# Catálogo DPA de geoecu (instalado o en la carpeta hermana del repositorio)
+# Catálogo DPA de geoecu (instalado o en la carpeta hermana del repositorio).
+# Desde geoecu 0.4.0 es la Organización Territorial del Estado del CONALI
+# (2026); sus códigos se llevan a los del censo con la tabla de R/zzz.R.
 dpa_geoecu <- local({
   if (requireNamespace("geoecu", quietly = TRUE)) return(geoecu::dpa)
   e <- new.env()
@@ -99,7 +102,7 @@ stopifnot(!anyNA(c52$dpa_canton))
 
 # En cada cantón la primera fila es la cabecera cantonal (código XX50, que en el
 # Censo 2022 agrupa a todas las parroquias urbanas); el resto son rurales.
-c52$tipo <- ifelse(!duplicated(c52$dpa_canton), "cabecera", "rural")
+c52$tipo <- ifelse(!duplicated(c52$dpa_canton), "cabecera cantonal", "parroquia rural")
 
 base <- function(x) normalizar(sub("\\s*\\(.*$", "", x))
 abrev <- function(x) {
@@ -108,12 +111,12 @@ abrev <- function(x) {
   x <- gsub("\\bDR\\b", "DOCTOR", x)
   gsub("\\b11\\b", "ONCE", x)
 }
-rur <- dpa_geoecu[dpa_geoecu$area_dpa == "rural", ]
+rur <- parroquias_rurales_censo(dpa_geoecu)
 rur$k <- abrev(base(rur$parroquia))
 c52$k <- abrev(normalizar(c52$parroquia))
 
 c52$dpa_parroq <- NA_character_
-es_cab <- c52$tipo == "cabecera"
+es_cab <- c52$tipo == "cabecera cantonal"
 c52$dpa_parroq[es_cab] <- paste0(c52$dpa_canton[es_cab], "50")
 
 # a) coincidencia exacta dentro del cantón

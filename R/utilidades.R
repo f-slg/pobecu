@@ -72,28 +72,44 @@ formatear_codigo <- function(x, nivel = c("parroquia", "canton", "provincia")) {
 
 #' Homologar códigos parroquiales a las unidades del Censo 2022
 #'
-#' El Censo 2022 y las estimaciones parroquiales de pobecu tratan cada
-#' **cabecera cantonal** como una sola unidad (código terminado en `50`), sin
-#' separar las parroquias urbanas. En cambio, la cartografía (por ejemplo, el
-#' paquete geoecu) y muchos registros administrativos usan códigos de
-#' parroquias urbanas (sufijos `01` a `49`, como las 15 parroquias urbanas de
-#' Cuenca).
+#' El Censo 2022 y las estimaciones parroquiales de pobecu usan las
+#' parroquias vigentes en el censo: cada **cabecera cantonal** es una sola
+#' unidad (código terminado en `50`), sin separar las parroquias urbanas.
+#' Otras fuentes usan códigos que no existen en el censo:
 #'
-#' Esta función convierte esos códigos al de su cabecera cantonal para poder
-#' agregar los datos y unirlos con la población. Los códigos de parroquias
-#' rurales (sufijo `51` a `99`) se devuelven sin cambios, salvo los casos
-#' especiales documentados abajo.
+#' * **Parroquias urbanas** (sufijos `01` a `49`, como las 15 de Cuenca), que
+#'   aparecen en muchos registros administrativos y en geoecu 0.3.0 y
+#'   anteriores. Se convierten al código de su cabecera cantonal.
+#' * **Códigos de la Organización Territorial del Estado del CONALI
+#'   (2026)**, que usa geoecu desde la versión 0.4.0: las parroquias de los
+#'   cantones creados después del censo (Borbón, antes en Eloy Alfaro, y
+#'   Sevilla Don Bosco, antes en Morona) y Bella Vista (Santa Cruz) recuperan
+#'   su código del censo, y las parroquias creadas después del censo (Sosote,
+#'   Shuar Pastaza, Juan Montalvo, La Magdalena, La Primavera y Miss Ecuador)
+#'   se convierten al de la parroquia censal que las contenía.
+#'
+#' Así se pueden agregar los datos y unirlos con la población. Los demás
+#' códigos se devuelven sin cambios.
 #'
 #' @details Casos especiales:
 #' * `220254` (Tiputini, Aguarico): no figura como parroquia rural en el Censo
 #'   2022; su población está incluida en la cabecera cantonal `220250`.
+#' * La Magdalena (`210456`) se formó con territorio de Shushufindi,
+#'   Limoncocha y San Roque; se asigna a Shushufindi (`210450`), de donde
+#'   salió la mayor parte.
+#' * Las zonas en estudio de geoecu (`139090`, `140190`, `900651`) no tienen
+#'   población en pobecu y se devuelven sin cambios.
 #'
 #' @param codigo Vector de códigos de parroquia (número o texto).
 #' @return Vector de texto con códigos de 6 dígitos.
+#' @seealso [homologar_canton()] para los códigos de cantón.
 #' @export
 #' @examples
 #' # Parroquias urbanas de Cuenca -> cabecera cantonal de Cuenca
 #' homologar_parroquia(c("010101", "010115", "010150", "010151"))
+#'
+#' # Códigos de geoecu >= 0.4.0 (CONALI 2026): cabecera de Borbón y Sosote
+#' homologar_parroquia(c("080950", "131251"))
 #'
 #' # Agregar casos por parroquia urbana a la unidad del censo
 #' casos <- data.frame(dpa_parroq = c("010101", "010102", "010151"),
@@ -102,6 +118,8 @@ formatear_codigo <- function(x, nivel = c("parroquia", "canton", "provincia")) {
 #' aggregate(casos ~ dpa_parroq, casos, sum)
 homologar_parroquia <- function(codigo) {
   x <- formatear_codigo(codigo, "parroquia")
+  conali <- match(x, .pobecu_conali$conali)
+  x[!is.na(conali)] <- .pobecu_conali$censo[conali[!is.na(conali)]]
   sufijo <- suppressWarnings(as.integer(substr(x, 5, 6)))
   urbana <- !is.na(sufijo) & sufijo <= 50
   x[urbana] <- paste0(substr(x[urbana], 1, 4), "50")
@@ -109,6 +127,36 @@ homologar_parroquia <- function(codigo) {
   i <- x %in% names(especiales)
   x[i] <- especiales[x[i]]
   x
+}
+
+#' Homologar códigos de cantón a las unidades del Censo 2022
+#'
+#' Las proyecciones cantonales del INEC usan los 221 cantones del Censo
+#' 2022. La Organización Territorial del Estado del CONALI (2026), que usa
+#' geoecu desde la versión 0.4.0, tiene 223: incluye Borbón (`0809`), creado
+#' a partir de Eloy Alfaro (`0802`), y Sevilla Don Bosco (`1413`), creado a
+#' partir de Morona (`1401`). Esta función convierte esos códigos al del
+#' cantón censal que los contiene, para agregar los datos y unirlos con la
+#' población. Los demás códigos se devuelven sin cambios.
+#'
+#' @param codigo Vector de códigos de cantón (número o texto).
+#' @return Vector de texto con códigos de 4 dígitos.
+#' @seealso [homologar_parroquia()] para los códigos de parroquia.
+#' @export
+#' @examples
+#' homologar_canton(c("0809", "1413", 1101))
+#'
+#' # Agregar casos de Borbón y Eloy Alfaro antes de calcular la tasa
+#' casos <- data.frame(dpa_canton = c("0802", "0809"), anio = 2025,
+#'                     casos = c(7, 5))
+#' casos$dpa_canton <- homologar_canton(casos$dpa_canton)
+#' casos <- aggregate(casos ~ dpa_canton + anio, casos, sum)
+#' pob_tasa(casos, "casos")
+homologar_canton <- function(codigo) {
+  x <- formatear_codigo(codigo, "canton")
+  i <- x %in% names(.pobecu_cantones_conali)
+  x[i] <- .pobecu_cantones_conali[x[i]]
+  unname(x)
 }
 
 #' Buscar en el catálogo de pobecu
@@ -180,6 +228,9 @@ buscar_pob <- function(texto, nivel = c("parroquia", "canton", "provincia")) {
 .resolver_codigos <- function(x, nivel, dentro = NULL) {
   if (is.null(x)) return(NULL)
   tabla <- .tabla_nivel(nivel)
+  # Los cantones creados despues del censo se aceptan y se cambian por el
+  # canton censal que los contiene
+  if (nivel == "canton") tabla <- rbind(tabla, .cantones_conali())
   if (!is.null(dentro)) tabla <- tabla[tabla$dpa_provin %in% dentro, , drop = FALSE]
   cols <- .columnas_nivel(nivel)
   x <- as.character(x)
@@ -217,5 +268,25 @@ buscar_pob <- function(texto, nivel = c("parroquia", "canton", "provincia")) {
     }
     codigos <- c(codigos, cod)
   }
+  if (nivel == "canton") {
+    nuevos <- codigos[codigos %in% names(.pobecu_cantones_conali)]
+    if (length(nuevos)) {
+      censo <- .tabla_nivel("canton")
+      message("Cant\u00f3n(es) creado(s) despu\u00e9s del Censo 2022: se usa el cant\u00f3n ",
+              "que lo(s) conten\u00eda en el censo (",
+              paste0(nuevos, " -> ", homologar_canton(nuevos), " ",
+                     censo$canton[match(homologar_canton(nuevos), censo$dpa_canton)],
+                     collapse = ", "), ").")
+    }
+    codigos <- homologar_canton(codigos)
+  }
   unique(codigos)
+}
+
+.cantones_conali <- function() {
+  data.frame(dpa_canton = names(.pobecu_cantones_conali),
+             canton = c("Borb\u00f3n", "Sevilla Don Bosco"),
+             dpa_provin = c("08", "14"),
+             provincia = c("Esmeraldas", "Morona Santiago"),
+             stringsAsFactors = FALSE)
 }
