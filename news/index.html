@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pobecu</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,16 +37,39 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.0" id="pobecu-020">pobecu 0.2.0<a class="anchor" aria-label="anchor" href="#pobecu-020"></a></h2>
+<div class="section level3">
+<h3 id="compatibilidad-con-geoecu-0-2-0">Compatibilidad con geoecu 0.4.0<a class="anchor" aria-label="anchor" href="#compatibilidad-con-geoecu-0-2-0"></a></h3>
+<p>geoecu 0.4.0 usa la Organización Territorial del Estado del CONALI (2026), con 223 cantones y sin parroquias urbanas; pobecu sigue usando las unidades del Censo 2022 (221 cantones y 1042 parroquias), que son las de las proyecciones del INEC. Para que ambos paquetes encajen:</p>
+<ul><li>
+<code><a href="../reference/pob_mapa.html">pob_mapa()</a></code> convierte la capa de geoecu a las unidades del censo antes de unir la población. Los cantones Borbón y Sevilla Don Bosco se dibujan dentro de Eloy Alfaro y Morona, y las parroquias creadas después del censo dentro de la parroquia que las contenía, así que no quedan territorios sin población ni densidades infladas. Las zonas en estudio se conservan con <code>poblacion = NA</code>. Sigue funcionando con geoecu 0.3.0.</li>
+<li>Nueva función <code><a href="../reference/agrupar_unidades.html">agrupar_unidades()</a></code>, para capas de cantones y de parroquias. Reemplaza a <code><a href="../reference/agrupar_unidades.html">agrupar_cabeceras()</a></code>, que se mantiene como alias.</li>
+<li>
+<code><a href="../reference/homologar_parroquia.html">homologar_parroquia()</a></code> convierte también los códigos del CONALI que no existen en el censo (Borbón, Sevilla Don Bosco, Bella Vista, Sosote, Shuar Pastaza, Juan Montalvo, La Magdalena, La Primavera y Miss Ecuador).</li>
+<li>Nueva función <code><a href="../reference/homologar_canton.html">homologar_canton()</a></code> (<code>0809</code> -&gt; <code>0802</code>, <code>1413</code> -&gt; <code>1401</code>).</li>
+<li>
+<code><a href="../reference/poblacion.html">poblacion()</a></code> y <code><a href="../reference/pob_mapa.html">pob_mapa()</a></code> aceptan los cantones Borbón y Sevilla Don Bosco en el filtro <code>canton</code> y avisan de que se usa el cantón del censo.</li>
+<li>
+<code><a href="../reference/pob_unir.html">pob_unir()</a></code> y <code><a href="../reference/pob_tasa.html">pob_tasa()</a></code> rechazan los códigos de cantón o parroquia del CONALI que hay que convertir y agregar antes, en lugar de dejar la población en <code>NA</code>.</li>
+<li>
+<strong>Cambio incompatible:</strong> la columna <code>tipo</code> de <code>dpa_pob</code> usa los mismos valores que geoecu: <code>"cabecera cantonal"</code> y <code>"parroquia rural"</code> (antes <code>"cabecera"</code> y <code>"rural"</code>).</li>
+<li>
+<code>data-raw/01_preparar_datos.R</code> funciona con el catálogo de geoecu 0.4.0, y el nuevo <code>data-raw/06_equivalencias_conali.R</code> comprueba la tabla de equivalencias con <code><a href="https://f-slg.github.io/geoecu/reference/dpa_equivalencias.html" class="external-link">geoecu::dpa_equivalencias</a></code>.</li>
+<li>La viñeta “Mapas de población con geoecu” explica las diferencias entre ambas divisiones territoriales.</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="pobecu-010">pobecu 0.1.0<a class="anchor" aria-label="anchor" href="#pobecu-010"></a></h2>
 <ul><li>Primera versión.</li>
 <li>Estimaciones y proyecciones oficiales del INEC, Revisión 2024 (con áreas, 2025): nacional 1950-2050, provincial 1990-2035 y cantonal 2010-2035, por sexo, edad y área urbana/rural.</li>
 <li>Estimación parroquial 2010-2035 (1042 parroquias del Censo 2022) coherente con la proyección cantonal oficial.</li>
 <li>Funciones <code><a href="../reference/poblacion.html">poblacion()</a></code>, <code><a href="../reference/pob_unir.html">pob_unir()</a></code>, <code><a href="../reference/pob_tasa.html">pob_tasa()</a></code>, <code><a href="../reference/homologar_parroquia.html">homologar_parroquia()</a></code>, <code><a href="../reference/buscar_pob.html">buscar_pob()</a></code> y <code><a href="../reference/pob_fuentes.html">pob_fuentes()</a></code>.</li>
-<li>Integración con geoecu: <code><a href="../reference/pob_mapa.html">pob_mapa()</a></code> (capa <code>sf</code> con población y densidad) y <code><a href="../reference/agrupar_cabeceras.html">agrupar_cabeceras()</a></code> (fusiona parroquias urbanas en su cabecera cantonal).</li>
+<li>Integración con geoecu: <code><a href="../reference/pob_mapa.html">pob_mapa()</a></code> (capa <code>sf</code> con población y densidad) y <code><a href="../reference/agrupar_unidades.html">agrupar_cabeceras()</a></code> (fusiona parroquias urbanas en su cabecera cantonal).</li>
 <li>Viñetas <code>metodologia</code> y <code>pobecu-geoecu</code>.</li>
 <li>Logo.</li>
 </ul></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

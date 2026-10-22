@@ -11,14 +11,14 @@ Source:
 [`inst/CITATION`](https://github.com/f-slg/pobecu/blob/main/inst/CITATION)
 
 Salas Guerrero, R. F. (2026). pobecu: Población del Ecuador por
-provincia, cantón y parroquia. Paquete de R versión 0.1.0.
+provincia, cantón y parroquia. Paquete de R versión 0.2.0.
 https://github.com/f-slg/pobecu
 
     @Manual{,
       title = {pobecu: Población del Ecuador por provincia, cantón y parroquia},
       author = {Ronald Fabricio {Salas Guerrero}},
       year = {2026},
-      note = {Paquete de R versión 0.1.0},
+      note = {Paquete de R versión 0.2.0},
       url = {https://github.com/f-slg/pobecu},
     }
 

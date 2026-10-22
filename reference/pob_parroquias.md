@@ -29,10 +29,12 @@ Vivienda 2022 (tabulados de estructura poblacional),
 
 ## Details
 
-**Unidades.** Como en el Censo 2022, cada cabecera cantonal (código
-terminado en `50`) es una sola unidad que incluye a todas las parroquias
-urbanas del cantón. Para unir datos que usan códigos de parroquias
-urbanas (por ejemplo, las capas del paquete geoecu), conviértelos con
+**Unidades.** Son las parroquias del Censo 2022. Cada cabecera cantonal
+(código terminado en `50`) es una sola unidad que incluye a todas las
+parroquias urbanas del cantón. Para unir datos que usan códigos de
+parroquias urbanas o de la Organización Territorial del Estado del
+CONALI (2026), como las capas de geoecu 0.4.0 y posteriores,
+conviértelos con
 [`homologar_parroquia()`](https://f-slg.github.io/pobecu/reference/homologar_parroquia.md).
 
 **Método.**

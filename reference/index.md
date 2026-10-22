@@ -18,8 +18,9 @@
 
 - [`pob_mapa()`](https://f-slg.github.io/pobecu/reference/pob_mapa.md) :
   Mapa con población: capas de geoecu unidas a pobecu
-- [`agrupar_cabeceras()`](https://f-slg.github.io/pobecu/reference/agrupar_cabeceras.md)
-  : Fusionar parroquias urbanas en su cabecera cantonal
+- [`agrupar_unidades()`](https://f-slg.github.io/pobecu/reference/agrupar_unidades.md)
+  [`agrupar_cabeceras()`](https://f-slg.github.io/pobecu/reference/agrupar_unidades.md)
+  : Convertir una capa de geoecu a las unidades del Censo 2022
 
 ## Datos
 
@@ -38,6 +39,8 @@ Tablas incluidas en el paquete.
 
 - [`homologar_parroquia()`](https://f-slg.github.io/pobecu/reference/homologar_parroquia.md)
   : Homologar códigos parroquiales a las unidades del Censo 2022
+- [`homologar_canton()`](https://f-slg.github.io/pobecu/reference/homologar_canton.md)
+  : Homologar códigos de cantón a las unidades del Censo 2022
 - [`buscar_pob()`](https://f-slg.github.io/pobecu/reference/buscar_pob.md)
   : Buscar en el catálogo de pobecu
 - [`formatear_codigo()`](https://f-slg.github.io/pobecu/reference/formatear_codigo.md)

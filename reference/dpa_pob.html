@@ -11,7 +11,7 @@ la estimación parroquial."><meta property="og:image" content="https://f-slg.git
 
     <a class="navbar-brand me-2" href="../index.html">pobecu</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,8 +62,8 @@ cabeceras cantonales terminan en <code>50</code>.</p></dd>
 <dd><p>Nombre de la parroquia según el Censo 2022.</p></dd>
 
 <dt>tipo</dt>
-<dd><p><code>"cabecera"</code> (cabecera cantonal, incluye las parroquias
-urbanas) o <code>"rural"</code>.</p></dd>
+<dd><p><code>"cabecera cantonal"</code> (incluye las parroquias urbanas) o
+<code>"parroquia rural"</code>, con los mismos valores que geoecu.</p></dd>
 
 <dt>dpa_canton, canton</dt>
 <dd><p>Código y nombre del cantón.</p></dd>
@@ -90,51 +90,58 @@ y 2022.</p></dd>
 asignaron por nombre a partir de la División Político-Administrativa
 oficial.</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>Los cantones y parroquias creados después del censo (por
+ejemplo, el cantón Borbón o la parroquia Sosote) no tienen fila propia:
+su población está incluida en la unidad censal que los contenía. Ver
+<code><a href="homologar_canton.html">homologar_canton()</a></code> y <code><a href="homologar_parroquia.html">homologar_parroquia()</a></code>.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dpa_pob</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   dpa_parroq  parroquia     tipo dpa_canton canton dpa_provin provincia</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     010150     Cuenca cabecera       0101 Cuenca         01     Azuay</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     010151      Baños    rural       0101 Cuenca         01     Azuay</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     010152      Cumbe    rural       0101 Cuenca         01     Azuay</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     010153    Chaucha    rural       0101 Cuenca         01     Azuay</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     010154      Checa    rural       0101 Cuenca         01     Azuay</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     010155 Chiquintad    rural       0101 Cuenca         01     Azuay</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      metodo censo_2010 censo_2022</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 logistica     334015     361524</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 logistica      16962      21797</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 logistica       5501       6455</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 logistica       1296       1721</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 logistica       2736       3204</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 logistica       4788       5738</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   dpa_parroq  parroquia              tipo dpa_canton canton dpa_provin</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     010150     Cuenca cabecera cantonal       0101 Cuenca         01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     010151      Baños   parroquia rural       0101 Cuenca         01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     010152      Cumbe   parroquia rural       0101 Cuenca         01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     010153    Chaucha   parroquia rural       0101 Cuenca         01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     010154      Checa   parroquia rural       0101 Cuenca         01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     010155 Chiquintad   parroquia rural       0101 Cuenca         01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   provincia    metodo censo_2010 censo_2022</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     Azuay logistica     334015     361524</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     Azuay logistica      16962      21797</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     Azuay logistica       5501       6455</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     Azuay logistica       1296       1721</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     Azuay logistica       2736       3204</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     Azuay logistica       4788       5738</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">dpa_pob</span><span class="op">$</span><span class="va">provincia</span>, <span class="va">dpa_pob</span><span class="op">$</span><span class="va">tipo</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                  cabecera rural</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Azuay                                15    61</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Bolívar                               7    19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Carchi                                6    26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Cañar                                 7    26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Chimborazo                           10    45</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Cotopaxi                              7    33</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   El Oro                               14    50</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Esmeraldas                            7    57</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Galápagos                             3     5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Guayas                               25    29</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Imbabura                              6    36</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Loja                                 16    78</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Los Ríos                             13    17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Manabí                               22    55</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Morona Santiago                      12    46</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Napo                                  5    20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Orellana                              4    28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Pastaza                               4    17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Pichincha                             8    53</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Santa Elena                           3     8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Santo Domingo De Los Tsáchilas        2    10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Sucumbíos                             7    29</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Tungurahua                            9    44</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Zamora Chinchipe                      9    29</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                  cabecera cantonal parroquia rural</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Azuay                                         15              61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Bolívar                                        7              19</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Carchi                                         6              26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Cañar                                          7              26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Chimborazo                                    10              45</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Cotopaxi                                       7              33</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   El Oro                                        14              50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Esmeraldas                                     7              57</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Galápagos                                      3               5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Guayas                                        25              29</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Imbabura                                       6              36</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Loja                                          16              78</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Los Ríos                                      13              17</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Manabí                                        22              55</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Morona Santiago                               12              46</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Napo                                           5              20</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Orellana                                       4              28</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Pastaza                                        4              17</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Pichincha                                      8              53</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Santa Elena                                    3               8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Santo Domingo De Los Tsáchilas                 2              10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Sucumbíos                                      7              29</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Tungurahua                                     9              44</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Zamora Chinchipe                               9              29</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

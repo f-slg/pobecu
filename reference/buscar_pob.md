@@ -27,8 +27,8 @@ Un `data.frame` con las coincidencias en el nivel indicado.
 
 ``` r
 buscar_pob("arenal")
-#>   dpa_parroq parroquia  tipo dpa_canton  canton dpa_provin provincia
-#> 1     111052 El Arenal rural       1110 Puyango         11      Loja
+#>   dpa_parroq parroquia            tipo dpa_canton  canton dpa_provin provincia
+#> 1     111052 El Arenal parroquia rural       1110 Puyango         11      Loja
 buscar_pob("puyango", nivel = "canton")
 #>   dpa_canton  canton dpa_provin provincia
 #> 1       1110 Puyango         11      Loja

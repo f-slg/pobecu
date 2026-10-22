@@ -25,7 +25,7 @@ las verificaciones que pasan los datos y sus limitaciones.
 ``` r
 
 pob_fuentes()
-#> pobecu 0.1.0 · datos datos-v0.1.0
+#> pobecu 0.2.0 · datos datos-v0.1.0
 #> Estimaciones hasta 2022 y proyecciones desde 2023, al 30 de junio de cada año.
 #> 
 #>      nivel   periodo      area        edad              tipo
@@ -260,9 +260,16 @@ hist(w$tasa, breaks = 60, col = "#F2B705", border = "white",
   Censo 2022. Para datos que usan esos códigos, ver
   [`homologar_parroquia()`](https://f-slg.github.io/pobecu/reference/homologar_parroquia.md)
   y
-  [`agrupar_cabeceras()`](https://f-slg.github.io/pobecu/reference/agrupar_cabeceras.md).
+  [`agrupar_unidades()`](https://f-slg.github.io/pobecu/reference/agrupar_unidades.md).
 - **Límites territoriales.** Las cifras usan la División
-  Político-Administrativa vigente en el Censo 2022.
+  Político-Administrativa vigente en el Censo 2022. Los cantones y
+  parroquias creados después (por ejemplo, el cantón Borbón o la
+  parroquia Sosote, que sí están en la Organización Territorial del
+  Estado del CONALI de 2026 y en geoecu 0.4.0) no tienen cifras propias:
+  su población está incluida en la unidad censal que los contenía. Ver
+  [`homologar_canton()`](https://f-slg.github.io/pobecu/reference/homologar_canton.md),
+  [`homologar_parroquia()`](https://f-slg.github.io/pobecu/reference/homologar_parroquia.md)
+  y la viñeta “Mapas de población con geoecu”.
 
 ## 6. Actualización
 

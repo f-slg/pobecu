@@ -2,8 +2,8 @@
 
 Devuelve la capa geográfica del nivel indicado (del paquete
 [geoecu](https://github.com/f-slg/geoecu)) con la población de pobecu ya
-unida, lista para mapear. Ambos paquetes usan los mismos códigos DPA,
-así que no hace falta preparar nada.
+unida, lista para mapear. Ambos paquetes usan los códigos DPA, así que
+no hace falta preparar nada.
 
 ## Usage
 
@@ -83,7 +83,9 @@ pob_mapa(
 
 ## Value
 
-Un objeto `sf` con las columnas de la capa, las de
+Un objeto `sf` con las columnas de
+[`agrupar_unidades()`](https://f-slg.github.io/pobecu/reference/agrupar_unidades.md),
+las de
 [`poblacion()`](https://f-slg.github.io/pobecu/reference/poblacion.md)
 (`anio`, `poblacion` y las desagregaciones pedidas) y `densidad`
 (habitantes por km²). Con varios años o desagregaciones, cada polígono
@@ -92,14 +94,22 @@ se repite una vez por combinación (útil para
 
 ## Details
 
-En el nivel parroquial las parroquias urbanas de geoecu se fusionan en
-su cabecera cantonal con
-[`agrupar_cabeceras()`](https://f-slg.github.io/pobecu/reference/agrupar_cabeceras.md),
-porque esa es la unidad del Censo 2022 y de la estimación parroquial.
+Las cifras de población usan las unidades del Censo 2022, y geoecu
+(desde la versión 0.4.0) la Organización Territorial del Estado del
+CONALI (2026). Para que cada cifra se dibuje sobre el territorio al que
+corresponde, la capa se convierte primero a las unidades del censo con
+[`agrupar_unidades()`](https://f-slg.github.io/pobecu/reference/agrupar_unidades.md):
+por ejemplo, el cantón Borbón se dibuja dentro de Eloy Alfaro y la
+parroquia Sosote dentro de Rocafuerte. Con geoecu 0.3.0 y anteriores,
+las parroquias urbanas se fusionan en su cabecera cantonal.
+
+Las zonas en estudio de geoecu (territorios con límites aún no
+resueltos) se conservan para que el mapa no tenga huecos, con población
+`NA` en cada año y desagregación.
 
 ## See also
 
-[`agrupar_cabeceras()`](https://f-slg.github.io/pobecu/reference/agrupar_cabeceras.md),
+[`agrupar_unidades()`](https://f-slg.github.io/pobecu/reference/agrupar_unidades.md),
 [`pob_tasa()`](https://f-slg.github.io/pobecu/reference/pob_tasa.md).
 
 ## Examples
@@ -109,35 +119,46 @@ m <- pob_mapa("canton", anio = 2025, provincia = "Loja")
 plot(m["densidad"], logz = TRUE)
 
 
-# Parroquias de Cuenca: las 15 urbanas se fusionan en la cabecera
+# Parroquias de Cuenca
 pob_mapa("parroquia", anio = 2030, canton = "Cuenca")
 #> Nota: las cifras parroquiales son una estimación de pobecu a partir de las proyecciones cantonales del INEC; no son cifras oficiales. Ver ?pob_parroquias. (Este aviso se muestra una vez por sesión.)
 #> Simple feature collection with 22 features and 11 fields
-#> Geometry type: GEOMETRY
+#> Geometry type: MULTIPOLYGON
 #> Dimension:     XY
 #> Bounding box:  xmin: -79.67032 ymin: -3.17256 xmax: -78.84732 ymax: -2.5169
 #> Geodetic CRS:  WGS 84
 #> First 10 features:
-#>    dpa_parroq                parroquia     tipo dpa_canton canton dpa_provin
-#> 1      010150                   Cuenca cabecera       0101 CUENCA         01
-#> 2      010151                    Baños    rural       0101 CUENCA         01
-#> 3      010152                    Cumbe    rural       0101 CUENCA         01
-#> 4      010153                  Chaucha    rural       0101 CUENCA         01
-#> 5      010154                    Checa    rural       0101 CUENCA         01
-#> 6      010155               Chiquintad    rural       0101 CUENCA         01
-#> 7      010156                   Llacao    rural       0101 CUENCA         01
-#> 8      010157                Molleturo    rural       0101 CUENCA         01
-#> 9      010158                    Nulti    rural       0101 CUENCA         01
-#> 10     010159 Octavio Cordero Palacios    rural       0101 CUENCA         01
-#>    provincia area_km2 anio poblacion                       geometry    densidad
-#> 1      AZUAY   71.625 2030    368885 POLYGON ((-79.02874 -2.876,... 5150.226876
-#> 2      AZUAY  251.445 2030     24962 MULTIPOLYGON (((-79.04957 -...   99.274195
-#> 3      AZUAY   75.132 2030      6978 MULTIPOLYGON (((-78.97793 -...   92.876537
-#> 4      AZUAY  379.992 2030      2010 MULTIPOLYGON (((-79.29187 -...    5.289585
-#> 5      AZUAY  110.859 2030      3464 MULTIPOLYGON (((-78.98794 -...   31.246899
-#> 6      AZUAY   93.446 2030      6283 MULTIPOLYGON (((-79.12004 -...   67.236693
-#> 7      AZUAY   15.962 2030      9021 MULTIPOLYGON (((-78.91612 -...  565.154743
-#> 8      AZUAY  983.773 2030      6594 MULTIPOLYGON (((-79.2892 -2...    6.702766
-#> 9      AZUAY   27.041 2030      8633 MULTIPOLYGON (((-78.89031 -...  319.255945
-#> 10     AZUAY   20.878 2030      2640 MULTIPOLYGON (((-78.97988 -...  126.448894
+#>    dpa_parroq                parroquia              tipo dpa_canton canton
+#> 1      010150                   Cuenca cabecera cantonal       0101 Cuenca
+#> 2      010151                    Baños   parroquia rural       0101 Cuenca
+#> 3      010152                    Cumbe   parroquia rural       0101 Cuenca
+#> 4      010153                  Chaucha   parroquia rural       0101 Cuenca
+#> 5      010154                    Checa   parroquia rural       0101 Cuenca
+#> 6      010155               Chiquintad   parroquia rural       0101 Cuenca
+#> 7      010156                   Llacao   parroquia rural       0101 Cuenca
+#> 8      010157                Molleturo   parroquia rural       0101 Cuenca
+#> 9      010158                    Nulti   parroquia rural       0101 Cuenca
+#> 10     010159 Octavio Cordero Palacios   parroquia rural       0101 Cuenca
+#>    dpa_provin provincia area_km2 anio poblacion                       geometry
+#> 1          01     Azuay   71.673 2030    368885 MULTIPOLYGON (((-78.98188 -...
+#> 2          01     Azuay  251.444 2030     24962 MULTIPOLYGON (((-79.04957 -...
+#> 3          01     Azuay   75.132 2030      6978 MULTIPOLYGON (((-78.97793 -...
+#> 4          01     Azuay  379.992 2030      2010 MULTIPOLYGON (((-79.29187 -...
+#> 5          01     Azuay  110.859 2030      3464 MULTIPOLYGON (((-78.98794 -...
+#> 6          01     Azuay   93.443 2030      6283 MULTIPOLYGON (((-78.98658 -...
+#> 7          01     Azuay   15.960 2030      9021 MULTIPOLYGON (((-78.89031 -...
+#> 8          01     Azuay  983.773 2030      6594 MULTIPOLYGON (((-79.2892 -2...
+#> 9          01     Azuay   27.038 2030      8633 MULTIPOLYGON (((-78.93991 -...
+#> 10         01     Azuay   20.878 2030      2640 MULTIPOLYGON (((-78.97988 -...
+#>       densidad
+#> 1  5146.777727
+#> 2    99.274590
+#> 3    92.876537
+#> 4     5.289585
+#> 5    31.246899
+#> 6    67.238851
+#> 7   565.225564
+#> 8     6.702766
+#> 9   319.291368
+#> 10  126.448894
 ```

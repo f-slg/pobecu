@@ -32,7 +32,7 @@
 
     <a class="navbar-brand me-2" href="index.html">pobecu</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,7 +90,7 @@
 <li>
 <strong>Denominadores y tasas en una línea.</strong> <code><a href="reference/pob_unir.html">pob_unir()</a></code> y <code><a href="reference/pob_tasa.html">pob_tasa()</a></code> unen la población con tu tabla de casos por código DPA, aunque los códigos vengan de Excel sin ceros a la izquierda.</li>
 <li>
-<strong>Mapas nativos con <a href="https://github.com/f-slg/geoecu" class="external-link">geoecu</a>.</strong> Ambos paquetes usan los mismos códigos DPA, y <code><a href="reference/pob_mapa.html">pob_mapa()</a></code> devuelve la capa <code>sf</code> con población y densidad.</li>
+<strong>Mapas nativos con <a href="https://github.com/f-slg/geoecu" class="external-link">geoecu</a>.</strong> Ambos paquetes usan los códigos DPA, y <code><a href="reference/pob_mapa.html">pob_mapa()</a></code> devuelve la capa <code>sf</code> con población y densidad. Las diferencias entre las unidades del Censo 2022 y la DPA del CONALI (2026) que usa geoecu se resuelven automáticamente.</li>
 <li>
 <strong>Coherente y reproducible.</strong> Las parroquias suman su cantón, los cantones su provincia y las provincias el total nacional. Todo el procesamiento está en <a href="https://github.com/f-slg/pobecu/tree/main/data-raw" class="external-link"><code>data-raw/</code></a> y se regenera cuando el INEC publica una nueva revisión.</li>
 </ul>
@@ -266,10 +266,12 @@
 <span><span class="co">#&gt; 4     111053    El Limo       1110 Puyango         11      Loja 2030      2440</span></span>
 <span><span class="co">#&gt; 5     111054 Mercadillo       1110 Puyango         11      Loja 2030      1373</span></span>
 <span><span class="co">#&gt; 6     111055  Vicentino       1110 Puyango         11      Loja 2030       919</span></span></code></pre></div>
-<p>Las unidades son las <strong>1042 parroquias del Censo 2022</strong>: 221 <strong>cabeceras cantonales</strong> (código terminado en <code>50</code>) y 821 parroquias rurales. El censo no separa las parroquias urbanas: Cuenca, por ejemplo, tiene 15 en la cartografía, pero en el censo son una sola unidad, la cabecera <code>010150</code>. Si tus datos usan códigos de parroquias urbanas, conviértelos y agrégalos antes de unir:</p>
+<p>Las unidades son las <strong>1042 parroquias del Censo 2022</strong>: 221 <strong>cabeceras cantonales</strong> (código terminado en <code>50</code>) y 821 parroquias rurales. El censo no separa las parroquias urbanas: Cuenca, por ejemplo, tiene 15 en muchos registros administrativos, pero en el censo son una sola unidad, la cabecera <code>010150</code>. Tampoco tiene los cantones y parroquias creados después (Borbón, Sevilla Don Bosco, Sosote, etc.), que sí están en la DPA del CONALI (2026) que usa geoecu desde la versión 0.4.0. Si tus datos usan esos códigos, conviértelos y agrégalos antes de unir:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/homologar_parroquia.html">homologar_parroquia</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"010101"</span>, <span class="st">"010115"</span>, <span class="st">"010151"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "010150" "010150" "010151"</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/homologar_parroquia.html">homologar_parroquia</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"010101"</span>, <span class="st">"010115"</span>, <span class="st">"010151"</span>, <span class="st">"131251"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "010150" "010150" "010151" "131250"</span></span>
+<span><span class="fu"><a href="reference/homologar_canton.html">homologar_canton</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"0809"</span>, <span class="st">"1413"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "0802" "1401"</span></span>
 <span></span>
 <span><span class="va">casos</span><span class="op">$</span><span class="va">dpa_parroq</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/homologar_parroquia.html">homologar_parroquia</a></span><span class="op">(</span><span class="va">casos</span><span class="op">$</span><span class="va">dpa_parroq</span><span class="op">)</span></span>
 <span><span class="va">casos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">casos</span> <span class="op">~</span> <span class="va">dpa_parroq</span> <span class="op">+</span> <span class="va">anio</span>, <span class="va">casos</span>, <span class="va">sum</span><span class="op">)</span></span>
@@ -278,18 +280,17 @@
 <div class="section level2">
 <h2 id="mapas-con-geoecu">Mapas con geoecu<a class="anchor" aria-label="anchor" href="#mapas-con-geoecu"></a>
 </h2>
-<p><a href="https://github.com/f-slg/geoecu" class="external-link">geoecu</a> contiene los límites de provincias, cantones y parroquias con los mismos códigos DPA. <code><a href="reference/pob_mapa.html">pob_mapa()</a></code> une ambos paquetes y devuelve un objeto <code>sf</code> con la población y la densidad (hab/km²):</p>
+<p><a href="https://github.com/f-slg/geoecu" class="external-link">geoecu</a> contiene los límites de provincias, cantones y parroquias con códigos DPA, según la Organización Territorial del Estado del CONALI (2026). <code><a href="reference/pob_mapa.html">pob_mapa()</a></code> une ambos paquetes y devuelve un objeto <code>sf</code> con la población y la densidad (hab/km²). Antes de unir, convierte la capa a las unidades del Censo 2022 con <code><a href="reference/agrupar_unidades.html">agrupar_unidades()</a></code>: por ejemplo, el cantón Borbón se dibuja dentro de Eloy Alfaro, que lo incluía en el censo, para que la densidad sea correcta.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mapa</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/pob_mapa.html">pob_mapa</a></span><span class="op">(</span><span class="st">"canton"</span>, anio <span class="op">=</span> <span class="fl">2025</span>, provincia <span class="op">=</span> <span class="st">"Loja"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">mapa</span><span class="op">[</span><span class="st">"densidad"</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Nivel parroquial: las parroquias urbanas de geoecu se fusionan en su</span></span>
-<span><span class="co"># cabecera cantonal (agrupar_cabeceras()) para coincidir con el censo</span></span>
+<span><span class="co"># Nivel parroquial, dos años</span></span>
 <span><span class="fu"><a href="reference/pob_mapa.html">pob_mapa</a></span><span class="op">(</span><span class="st">"parroquia"</span>, anio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2025</span>, <span class="fl">2035</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Una tasa sobre el mapa</span></span>
-<span><span class="fu">geoecu</span><span class="fu">::</span><span class="fu"><a href="https://f-slg.github.io/geoecu/reference/geoecu_unir.html" class="external-link">geoecu_unir</a></span><span class="op">(</span><span class="fu"><a href="reference/pob_tasa.html">pob_tasa</a></span><span class="op">(</span><span class="va">casos</span>, <span class="st">"casos"</span><span class="op">)</span>, codigo <span class="op">=</span> <span class="st">"dpa_canton"</span>,</span>
-<span>                    nivel <span class="op">=</span> <span class="st">"canton"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># Una tasa sobre el mapa, con la capa en unidades del censo</span></span>
+<span><span class="va">capa</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/agrupar_unidades.html">agrupar_unidades</a></span><span class="op">(</span><span class="fu">geoecu</span><span class="fu">::</span><span class="fu"><a href="https://f-slg.github.io/geoecu/reference/read_dpa.html" class="external-link">read_cantones</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/merge.html" class="external-link">merge</a></span><span class="op">(</span><span class="va">capa</span>, <span class="fu"><a href="reference/pob_tasa.html">pob_tasa</a></span><span class="op">(</span><span class="va">casos</span>, <span class="st">"casos"</span><span class="op">)</span>, by <span class="op">=</span> <span class="st">"dpa_canton"</span>, all.x <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>La viñeta <code><a href="articles/pobecu-geoecu.html">vignette("pobecu-geoecu")</a></code> tiene ejemplos completos con <code>ggplot2</code>: densidad, tasas y mapas por año o grupo de edad.</p>
 </div>
 <div class="section level2">
@@ -446,12 +447,14 @@
 <td>Capa <code>sf</code> de geoecu con población y densidad</td>
 </tr>
 <tr>
-<td><code><a href="reference/agrupar_cabeceras.html">agrupar_cabeceras()</a></code></td>
-<td>Fusionar parroquias urbanas de una capa en su cabecera cantonal</td>
+<td><code><a href="reference/agrupar_unidades.html">agrupar_unidades()</a></code></td>
+<td>Convertir una capa de geoecu a las unidades del Censo 2022</td>
 </tr>
 <tr>
-<td><code><a href="reference/homologar_parroquia.html">homologar_parroquia()</a></code></td>
-<td>Convertir códigos de parroquias urbanas al de su cabecera</td>
+<td>
+<code><a href="reference/homologar_parroquia.html">homologar_parroquia()</a></code>, <code><a href="reference/homologar_canton.html">homologar_canton()</a></code>
+</td>
+<td>Convertir códigos de parroquias urbanas o del CONALI (2026) a las unidades del censo</td>
 </tr>
 <tr>
 <td><code><a href="reference/buscar_pob.html">buscar_pob()</a></code></td>
@@ -509,6 +512,10 @@
 </td>
 <td>Logo y figuras, con datos reales</td>
 </tr>
+<tr>
+<td><code>06_equivalencias_conali.R</code></td>
+<td>Comprueba las equivalencias entre la DPA del CONALI (2026) y el Censo 2022</td>
+</tr>
 </tbody>
 </table>
 <p>Cada versión de los datos se publica como un <a href="https://github.com/f-slg/pobecu/releases" class="external-link"><em>release</em></a> (<code>datos-vX.Y.Z</code>), y el número de versión del paquete indica la revisión del INEC que usa.</p>
@@ -519,7 +526,7 @@
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"pobecu"</span><span class="op">)</span></span></code></pre></div>
 <pre><code>Salas Guerrero, R. F. (2026). pobecu: Población del Ecuador por provincia,
-cantón y parroquia. Paquete de R versión 0.1.0.
+cantón y parroquia. Paquete de R versión 0.2.0.
 https://github.com/f-slg/pobecu</code></pre>
 <p>Cita también la fuente de los datos: INEC (2024). <em>Estimaciones y Proyecciones de Población, Revisión 2024</em>. Si usas cifras parroquiales, indica que son una estimación de pobecu y no cifras oficiales.</p>
 </div>
@@ -528,7 +535,7 @@ https://github.com/f-slg/pobecu</code></pre>
 </h2>
 <ul>
 <li>
-<a href="https://github.com/f-slg/geoecu" class="external-link">geoecu</a>: capas geográficas de provincias, cantones y parroquias del Ecuador, con los mismos códigos DPA.</li>
+<a href="https://github.com/f-slg/geoecu" class="external-link">geoecu</a>: capas geográficas de provincias, cantones y parroquias del Ecuador, con códigos DPA (CONALI, 2026).</li>
 </ul>
 </div>
 <div class="section level2">

@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pobecu</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -136,7 +136,7 @@ formato largo, agrupa edades y agrega códigos y nombres.</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pob_fuentes.html">pob_fuentes</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; pobecu 0.1.0 · datos datos-v0.1.0</span></span>
+<span><span class="co">#&gt; pobecu 0.2.0 · datos datos-v0.1.0</span></span>
 <span><span class="co">#&gt; Estimaciones hasta 2022 y proyecciones desde 2023, al 30 de junio de cada año.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;      nivel   periodo      area        edad              tipo</span></span>
@@ -386,10 +386,16 @@ parroquial del censo llega hasta ese grupo.</li>
 las 15 de Cuenca o las de Quito y Guayaquil, no tienen población propia
 en el Censo 2022. Para datos que usan esos códigos, ver
 <code><a href="../reference/homologar_parroquia.html">homologar_parroquia()</a></code> y
-<code><a href="../reference/agrupar_cabeceras.html">agrupar_cabeceras()</a></code>.</li>
+<code><a href="../reference/agrupar_unidades.html">agrupar_unidades()</a></code>.</li>
 <li>
 <strong>Límites territoriales.</strong> Las cifras usan la División
-Político-Administrativa vigente en el Censo 2022.</li>
+Político-Administrativa vigente en el Censo 2022. Los cantones y
+parroquias creados después (por ejemplo, el cantón Borbón o la parroquia
+Sosote, que sí están en la Organización Territorial del Estado del
+CONALI de 2026 y en geoecu 0.4.0) no tienen cifras propias: su población
+está incluida en la unidad censal que los contenía. Ver
+<code><a href="../reference/homologar_canton.html">homologar_canton()</a></code>, <code><a href="../reference/homologar_parroquia.html">homologar_parroquia()</a></code> y la
+viñeta “Mapas de población con geoecu”.</li>
 </ul>
 </div>
 <div class="section level2">

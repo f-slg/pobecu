@@ -16,8 +16,14 @@ calcular tasas y unir con otros datos.
   unen la población con una tabla propia y calculan tasas.
 
 - [`homologar_parroquia()`](https://f-slg.github.io/pobecu/reference/homologar_parroquia.md)
-  convierte códigos de parroquias urbanas al de su cabecera cantonal, la
-  unidad del Censo 2022.
+  y
+  [`homologar_canton()`](https://f-slg.github.io/pobecu/reference/homologar_canton.md)
+  convierten códigos de parroquias urbanas o de la DPA del CONALI (2026)
+  a las unidades del Censo 2022.
+
+- [`pob_mapa()`](https://f-slg.github.io/pobecu/reference/pob_mapa.md) y
+  [`agrupar_unidades()`](https://f-slg.github.io/pobecu/reference/agrupar_unidades.md)
+  unen la población con las capas de geoecu.
 
 - [dpa_pob](https://f-slg.github.io/pobecu/reference/dpa_pob.md) es el
   catálogo de códigos y nombres;
@@ -45,6 +51,8 @@ versión del paquete.
 ## See also
 
 Useful links:
+
+- <https://f-slg.github.io/pobecu/>
 
 - <https://github.com/f-slg/pobecu>
 
