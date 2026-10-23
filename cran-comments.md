@@ -16,9 +16,8 @@ This is the first submission of 'pobecu'.
 ## Notes for the reviewers
 
 * 'geoecu' (Suggests) is the companion package with the boundaries of the
-  same territorial units; it was submitted to CRAN first and 'pobecu' will
-  only be submitted once 'geoecu' is available there. All uses of 'geoecu'
-  are conditional (`requireNamespace()`), and the related examples, tests and
+  same territorial units and is available on CRAN (version 0.4.0). All
+  uses of 'geoecu' are conditional (`requireNamespace()`), and the related examples, tests and
   vignette chunks are skipped when it is not installed.
 
 * Population tables by five-year age groups are shipped with the package
