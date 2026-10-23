@@ -28,19 +28,9 @@ jobs:
         with:
           use-public-rspm: true
 
-      # geoecu (Suggests) aun no esta en CRAN: se instala desde GitHub.
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          dependencies: '"hard"'
-          extra-packages: |
-            any::pkgdown
-            any::knitr
-            any::rmarkdown
-            any::ggplot2
-            any::scales
-            any::sf
-            github::f-slg/geoecu
-            local::.
+          extra-packages: any::pkgdown, local::.
           needs: website
 
       # Descarga previa de las capas de geoecu y de las edades simples para que
