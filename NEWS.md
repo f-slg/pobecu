@@ -1,5 +1,13 @@
 # pobecu (versión de desarrollo)
 
+* `pob_ajustar()` y `pob_estimar()` construyen escenarios 1900-2100 para
+  24 provincias, 221 cantones y 1042 unidades parroquiales, coherentes con
+  el total nacional. Modelo estructural en logaritmos y participaciones CLR,
+  extrapolación amortiguada, bandas Monte Carlo condicionales, diagnósticos
+  y referencias conservadas. No representan jurisdicciones históricas.
+* Metodología técnica, validación temporal en ambos sentidos, análisis de
+  sensibilidad y gráficos reproducibles en el README.
+
 * `pob_unir()` interpreta correctamente columnas de años de tipo factor y
   rechaza años decimales o no finitos, sin truncarlos silenciosamente.
 * `pob_unir()` y `pob_tasa()` conservan las tablas vacías.

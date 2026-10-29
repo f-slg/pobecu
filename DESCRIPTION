@@ -25,7 +25,9 @@ Description: Provides the official population estimates and projections of
     (CONALI, "Comité Nacional de Límites Internos") to census units, and
     native integration with the 'geoecu' package to map population on the
     boundaries of provinces, cantons and parishes. Documentation is in
-    Spanish.
+    Spanish. Includes conditional territorial population scenarios for
+    1900-2100 using structural time series, damped extrapolation and
+    hierarchical compositional allocation with Monte Carlo bands.
 License: MIT + file LICENSE
 URL: https://f-slg.github.io/pobecu/, https://github.com/f-slg/pobecu
 BugReports: https://github.com/f-slg/pobecu/issues
