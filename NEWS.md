@@ -1,4 +1,4 @@
-# pobecu (versión de desarrollo)
+# pobecu 0.3.0
 
 * `pob_ajustar()` y `pob_estimar()` construyen escenarios 1900-2100 para
   24 provincias, 221 cantones y 1042 unidades parroquiales, coherentes con
@@ -19,6 +19,12 @@
   lector independiente del proceso de construcción, y evidencias en `validacion/`.
 * README generado desde R Markdown con resultados reales, seis gráficos,
   interpretación y ejemplos completos. Incluye un guion R y un generador HTML.
+
+* `pob_fuentes()` devuelve un objeto de clase `pob_fuentes`; la información
+  sobre versión y fuentes se muestra con su método `print()`.
+* Requiere geoecu 0.4.1 o posterior (en Suggests), cuya superficie
+  `area_km2` se calcula con una proyección de igual área; la `densidad` de
+  `pob_mapa()` usa esas superficies corregidas.
 
 # pobecu 0.2.0
 
