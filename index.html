@@ -65,7 +65,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><ul>
 <li>
-<a href="#pobecu-">pobecu <img src="reference/figures/logo.png" align="right" height="139" alt="Logo de pobecu"></a>
+<a href="#pobecu">pobecu</a>
 <ul>
 <li><a href="#id_1-instalaci%C3%B3n-y-primera-consulta">1. Instalación y primera consulta</a></li>
 <li><a href="#id_2-consultar-territorios-y-a%C3%B1os">2. Consultar territorios y años</a></li>
@@ -79,14 +79,16 @@
 <li><a href="#id_10-guardar-resultados-y-trabajar-sin-conexi%C3%B3n">10. Guardar resultados y trabajar sin conexión</a></li>
 <li><a href="#id_11-contraste-con-los-archivos-originales">11. Contraste con los archivos originales</a></li>
 <li><a href="#id_12-metodolog%C3%ADa-referencias-y-contribuciones">12. Metodología, referencias y contribuciones</a></li>
+<li><a href="#id_13-reconstrucci%C3%B3n-y-escenarios-de-poblaci%C3%B3n-19002100">13. Reconstrucción y escenarios de población 1900–2100</a></li>
 </ul>
 </li>
 </ul>
 <div class="section level1">
 <div class="page-header">
-<img src="logo.png" class="logo" alt=""><h1 id="pobecu-">pobecu <a class="anchor" aria-label="anchor" href="#pobecu-"></a>
+<img src="logo.png" class="logo" alt=""><h1 id="pobecu">pobecu<a class="anchor" aria-label="anchor" href="#pobecu"></a>
 </h1>
 </div>
+<p><img src="reference/figures/logo.png" align="right" height="139" alt="Logo de pobecu"></p>
 <p><a href="https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml" class="external-link">Pruebas automáticas</a> · <a href="LICENSE.html">Licencia MIT</a></p>
 <p><strong>Población del Ecuador por provincia, cantón y parroquia, lista para analizar en R.</strong> Consulta denominadores por año, sexo, edad y área de residencia; calcula tasas y construye mapas con códigos de la División Político-Administrativa (DPA).</p>
 <p>Este es un paquete independiente. Las cifras nacionales, provinciales y cantonales proceden del <strong>INEC, Revisión 2024, actualización con áreas de 2025</strong>. Las cifras parroquiales son <strong>estimaciones propias de pobecu</strong>, no proyecciones oficiales del INEC.</p>
@@ -844,6 +846,380 @@ Densidad por cantón de Loja en 2025. Población: INEC; geometrías: geoecu, agr
 </ul>
 <p>Si usas datos parroquiales, declara que son estimaciones de pobecu y cita también la fuente censal y las proyecciones cantonales del INEC.</p>
 <p>Los errores y propuestas se reciben en <a href="https://github.com/f-slg/pobecu/issues" class="external-link">Issues</a>. Consulta la <a href="https://github.com/f-slg/pobecu/blob/main/.github/CONTRIBUTING.md" class="external-link">guía de contribución</a> y el <a href="https://github.com/f-slg/pobecu/blob/main/.github/CODE_OF_CONDUCT.md" class="external-link">código de conducta</a>. Código bajo licencia <a href="LICENSE.html">MIT</a>; datos procedentes de las publicaciones del INEC.</p>
+</div>
+<div class="section level2">
+<h2 id="id_13-reconstrucción-y-escenarios-de-población-19002100">13. Reconstrucción y escenarios de población 1900–2100<a class="anchor" aria-label="anchor" href="#id_13-reconstrucci%C3%B3n-y-escenarios-de-poblaci%C3%B3n-19002100"></a>
+</h2>
+<p><code><a href="reference/pob_ajustar.html">pob_ajustar()</a></code> y <code><a href="reference/pob_estimar.html">pob_estimar()</a></code> permiten obtener <strong>totales anuales</strong> para el país, sus <strong>24 provincias, 221 cantones y 1042 unidades parroquiales de referencia</strong>. Son 1288 series y 258888 filas si se solicita toda la jerarquía para 1900–2100. Los modelos extienden las trayectorias disponibles y mantienen exactamente los valores de referencia. <code><a href="reference/poblacion.html">poblacion()</a></code> sigue consultando las tablas originales.</p>
+<p><strong>Interpretación histórica:</strong> el resultado de 1900 representa una reconstrucción sobre las unidades de referencia del Censo 2022. No afirma que una provincia, cantón o parroquia existiera en 1900 ni reconstruye cambios de límites. Las cabeceras cantonales conservan la agregación censal utilizada en el paquete. No se dispone aquí de observaciones locales de 1900 para validar esa reconstrucción. El extremo de 2100 es un escenario condicionado a supuestos, no una proyección oficial del INEC ni una predicción demográfica validada a 75 años.</p>
+<div class="section level3">
+<h3 id="uso-completo-en-r">Uso completo en R<a class="anchor" aria-label="anchor" href="#uso-completo-en-r"></a>
+</h3>
+<p>Ajusta una vez y reutiliza el objeto. El cálculo para todo el país puede tardar varios minutos, según el equipo y el número de simulaciones. Se usan únicamente <code>stats</code> y las tablas incluidas; no se descargan datos adicionales.</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">modelo_territorial</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/pob_ajustar.html">pob_ajustar</a></span><span class="op">(</span></span>
+<span>  ventana <span class="op">=</span> <span class="fl">20</span>,       <span class="co"># Hasta 20 años de cada extremo</span></span>
+<span>  phi_total <span class="op">=</span> <span class="fl">0.98</span>,   <span class="co"># Amortiguación anual del total nacional</span></span>
+<span>  phi_partes <span class="op">=</span> <span class="fl">0.95</span>   <span class="co"># Amortiguación de las participaciones territoriales</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: 12 ajustes usan respaldo lineal; consulte $diagnosticos.</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">modelo_territorial</span><span class="op">$</span><span class="va">diagnosticos</span><span class="op">$</span><span class="va">metodo</span><span class="op">)</span></span>
+<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt;           constante_degenerada                respaldo_lineal</span></span>
+<span><span class="co">#&gt;                             82                             12</span></span>
+<span><span class="co">#&gt; StructTS_sin_ruido_observacion       StructTS_tendencia_local</span></span>
+<span><span class="co">#&gt;                            145                           2337</span></span>
+<span></span>
+<span><span class="va">escenarios</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/pob_estimar.html">pob_estimar</a></span><span class="op">(</span></span>
+<span>  nivel <span class="op">=</span> <span class="st">"todos"</span>, anio <span class="op">=</span> <span class="fl">1900</span><span class="op">:</span><span class="fl">2100</span>,</span>
+<span>  modelo <span class="op">=</span> <span class="va">modelo_territorial</span>, simulaciones <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>  semilla <span class="op">=</span> <span class="fl">2026</span>, nivel_intervalo <span class="op">=</span> <span class="fl">0.95</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">escenarios</span>, <span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">nivel</span>, <span class="va">direccion</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt;            direccion</span></span>
+<span><span class="co">#&gt; nivel       prospectiva referencia retrospectiva</span></span>
+<span><span class="co">#&gt;   canton          14365       5746         24310</span></span>
+<span><span class="co">#&gt;   nacional           50        101            50</span></span>
+<span><span class="co">#&gt;   parroquia       67730      27092        114620</span></span>
+<span><span class="co">#&gt;   provincia        1560       1104          2160</span></span></code></pre></div>
+<p>Para trabajos finales conviene aumentar <code>simulaciones</code> a 1000 o más y comprobar la estabilidad de los cuantiles entre semillas. Más simulaciones reducen el error Monte Carlo; <strong>no corrigen los supuestos ni aumentan la información histórica</strong>. El generador restaura el estado aleatorio de la sesión. Filtrar territorios o solicitar menos años mantiene los mismos resultados con idéntica configuración.</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Como ya calculamos toda la jerarquía, filtramos sin volver a simular.</span></span>
+<span><span class="va">loja_parroquias</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">escenarios</span>, <span class="va">nivel</span> <span class="op">==</span> <span class="st">"parroquia"</span> <span class="op">&amp;</span> <span class="va">dpa_canton</span> <span class="op">==</span> <span class="st">"1101"</span><span class="op">)</span></span>
+<span><span class="va">seleccion</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">loja_parroquias</span>, <span class="va">anio</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1900</span>, <span class="fl">2022</span>, <span class="fl">2050</span>, <span class="fl">2100</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">seleccion</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nombre"</span>, <span class="st">"anio"</span>, <span class="st">"poblacion"</span>, <span class="st">"origen"</span>, <span class="st">"horizonte"</span><span class="op">)</span><span class="op">]</span>, <span class="fl">12</span><span class="op">)</span></span>
+<span><span class="co">#&gt;               nombre anio poblacion                       origen horizonte</span></span>
+<span><span class="co">#&gt; 121204          Loja 1900     26865                modelo_pobecu       110</span></span>
+<span><span class="co">#&gt; 121326          Loja 2022    217989 referencia_parroquial_pobecu         0</span></span>
+<span><span class="co">#&gt; 121354          Loja 2050    261121                modelo_pobecu        15</span></span>
+<span><span class="co">#&gt; 121404          Loja 2100    295253                modelo_pobecu        65</span></span>
+<span><span class="co">#&gt; 121405      Chantaco 1900       327                modelo_pobecu       110</span></span>
+<span><span class="co">#&gt; 121527      Chantaco 2022      1054 referencia_parroquial_pobecu         0</span></span>
+<span><span class="co">#&gt; 121555      Chantaco 2050       640                modelo_pobecu        15</span></span>
+<span><span class="co">#&gt; 121605      Chantaco 2100       570                modelo_pobecu        65</span></span>
+<span><span class="co">#&gt; 121606 Chuquiribamba 1900       624                modelo_pobecu       110</span></span>
+<span><span class="co">#&gt; 121728 Chuquiribamba 2022      2171 referencia_parroquial_pobecu         0</span></span>
+<span><span class="co">#&gt; 121756 Chuquiribamba 2050      1363                modelo_pobecu        15</span></span>
+<span><span class="co">#&gt; 121806 Chuquiribamba 2100      1222                modelo_pobecu        65</span></span>
+<span></span>
+<span><span class="co"># También existe consulta directa, reutilizando el ajuste:</span></span>
+<span><span class="co"># pob_estimar("parroquia", 1900:2100, modelo_territorial, canton = "Loja")</span></span>
+<span><span class="co"># write.csv(escenarios, "poblacion_1900_2100.csv", row.names = FALSE)</span></span>
+<span><span class="co"># saveRDS(modelo_territorial, "modelo_poblacion.rds")</span></span></code></pre></div>
+<p>Las columnas <code>origen</code>, <code>direccion</code>, <code>horizonte</code>, <code>referencia_desde</code> y <code>referencia_hasta</code> permiten auditar cada cifra. <code>extrapolacion_extrema = TRUE</code> identifica distancias mayores de 30 años al extremo de referencia; es una regla informativa, no un umbral estadísticamente validado. El atributo <code>attr(escenarios, "metodologia")</code> conserva la configuración y procedencia. Esta extensión modela <strong>totales territoriales</strong>, sin extender sexo, edades ni residencia urbana/rural. Las consultas publicadas por esas dimensiones continúan disponibles en sus periodos originales.</p>
+</div>
+<div class="section level3">
+<h3 id="modelo-estadístico-estructura-estimación-y-restricciones">Modelo estadístico: estructura, estimación y restricciones<a class="anchor" aria-label="anchor" href="#modelo-estad%C3%ADstico-estructura-estimaci%C3%B3n-y-restricciones"></a>
+</h3>
+<p><strong>1. Anclajes y escala.</strong> El total nacional disponible abarca 1950–2050; las provincias, 1990–2035; cantones y parroquias, 2010–2035. El ajuste predeterminado incluye las proyecciones publicadas. Las series parroquiales de entrada ya son estimaciones del método logístico/IPF descrito en la sección 12. No se tratan estas entradas como nuevos censos independientes. Los años de referencia se conservan exactamente y no reciben intervalos artificiales.</p>
+<p>Para el país se modela <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mi>t</mi></msub><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>N</mi><mi>t</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">z_t=\log(N_t)</annotation></semantics></math>. Para cada conjunto de <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math> territorios hermanos con conteos <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>N</mi><mrow><mi>j</mi><mo>,</mo><mi>t</mi></mrow></msub><annotation encoding="application/x-tex">N_{j,t}</annotation></semantics></math> se emplea la transformación log-ratio centrada:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mrow><mi>j</mi><mo>,</mo><mi>t</mi></mrow></msub><mo>=</mo><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>N</mi><mrow><mi>j</mi><mo>,</mo><mi>t</mi></mrow></msub><mo>+</mo><mn>0.5</mn><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mfrac><mn>1</mn><mi>K</mi></mfrac><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>K</mi></munderover><mrow><mi mathvariant="normal">log</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>N</mi><mrow><mi>k</mi><mo>,</mo><mi>t</mi></mrow></msub><mo>+</mo><mn>0.5</mn><mo stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">z_{j,t}=\log(N_{j,t}+0.5)-\frac{1}{K}\sum_{k=1}^{K}\log(N_{k,t}+0.5).</annotation></semantics></math></p>
+<p>El pseudoconteo 0.5 permite trabajar con ceros; solo afecta la transformación para extrapolar. Los ceros publicados permanecen intactos. Las coordenadas CLR suman cero; se ajustan por separado y se normalizan conjuntamente al volver a conteos. No se estima una matriz multivariante completa de covarianzas entre territorios. Un territorio con participación constante puede producir un modelo degenerado sin innovaciones; esto no demuestra ausencia real de incertidumbre demográfica.</p>
+<p><strong>2. Estado local y máxima verosimilitud.</strong> En cada extremo se usan hasta 20 años consecutivos, con un mínimo de ocho. Para cada coordenada se ajusta:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mi>t</mi></msub><mo>=</mo><msub><mi>μ</mi><mi>t</mi></msub><mo>+</mo><msub><mi>ϵ</mi><mi>t</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>μ</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mi>μ</mi><mi>t</mi></msub><mo>+</mo><msub><mi>b</mi><mi>t</mi></msub><mo>+</mo><msub><mi>η</mi><mi>t</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>b</mi><mrow><mi>t</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mi>b</mi><mi>t</mi></msub><mo>+</mo><msub><mi>ζ</mi><mi>t</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">z_t=\mu_t+\epsilon_t,\qquad
+\mu_{t+1}=\mu_t+b_t+\eta_t,\qquad
+b_{t+1}=b_t+\zeta_t.</annotation></semantics></math></p>
+<p>Las innovaciones gaussianas tienen varianzas <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>σ</mi><mi>ϵ</mi><mn>2</mn></msubsup><annotation encoding="application/x-tex">\sigma_\epsilon^2</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>σ</mi><mi>η</mi><mn>2</mn></msubsup><annotation encoding="application/x-tex">\sigma_\eta^2</annotation></semantics></math> y <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>σ</mi><mi>ζ</mi><mn>2</mn></msubsup><annotation encoding="application/x-tex">\sigma_\zeta^2</annotation></semantics></math>. <code>stats::StructTS(type = "trend")</code> estima esas varianzas por máxima verosimilitud y obtiene estados mediante filtro de Kalman. Las coordenadas se centran y escalan para mejorar la optimización y los parámetros se devuelven a su escala original. Se permiten varianzas cero.</p>
+<p>La retrospectiva ajusta el mismo modelo a los primeros años <strong>en orden inverso</strong>. La pendiente retrospectiva describe ese tiempo invertido: no debe interpretarse como una tasa anual hacia adelante. Este procedimiento es una extrapolación inversa; no equivale a un suavizado histórico condicionado a censos antiguos.</p>
+<p>Se comprueba la convergencia numérica. Si falla el ajuste libre, se intenta el modelo estructural con <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>σ</mi><mi>ϵ</mi><mn>2</mn></msubsup><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">\sigma_\epsilon^2=0</annotation></semantics></math>. Si tampoco converge, se utiliza un respaldo declarado: pendiente OLS y varianza de innovación del nivel igual a la media de los cuadrados de las diferencias de residuos OLS; las otras varianzas son cero. El paquete emite una advertencia y registra el método, código de convergencia y mensajes en <code>modelo_territorial$diagnosticos</code>. La complejidad nominal no oculta fallos de optimización ni convierte esos respaldos en ajustes estructurales exitosos.</p>
+<p><strong>3. Extrapolación amortiguada.</strong> El ajuste histórico anterior no estima la amortiguación. Al extenderlo se fija <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ϕ</mi><mi>N</mi></msub><mo>=</mo><mn>0.98</mn></mrow><annotation encoding="application/x-tex">\phi_N=0.98</annotation></semantics></math> para el país y <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>ϕ</mi><mi>p</mi></msub><mo>=</mo><mn>0.95</mn></mrow><annotation encoding="application/x-tex">\phi_p=0.95</annotation></semantics></math> para las participaciones, aplicando:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>μ</mi><mrow><mi>h</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><msub><mi>μ</mi><mi>h</mi></msub><mo>+</mo><mi>ϕ</mi><msub><mi>b</mi><mi>h</mi></msub><mo>+</mo><msub><mi>η</mi><mi>h</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>b</mi><mrow><mi>h</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>=</mo><mi>ϕ</mi><msub><mi>b</mi><mi>h</mi></msub><mo>+</mo><msub><mi>ζ</mi><mi>h</mi></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">\mu_{h+1}=\mu_h+\phi b_h+\eta_h,\qquad
+b_{h+1}=\phi b_h+\zeta_h.</annotation></semantics></math></p>
+<p>El nivel inicial es el último valor transformado de referencia, para anclar la continuidad; la pendiente inicial es el estado filtrado. Sin innovaciones, el incremento acumulado en <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>h</mi><annotation encoding="application/x-tex">h</annotation></semantics></math> años es <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>b</mi><mn>0</mn></msub><mi>ϕ</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><msup><mi>ϕ</mi><mi>h</mi></msup><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>ϕ</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">b_0\phi(1-\phi^h)/(1-\phi)</annotation></semantics></math>, o <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><msub><mi>b</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">hb_0</annotation></semantics></math> si <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϕ</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\phi=1</annotation></semantics></math>. Con <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ϕ</mi><mo>&lt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\phi&lt;1</annotation></semantics></math> la tendencia central se atenúa a largo plazo. Estos valores son <strong>supuestos de escenario</strong>, no hiperparámetros seleccionados por validación ni estimaciones de equilibrio poblacional. Se debe estudiar su sensibilidad.</p>
+<p><strong>4. Coherencia territorial.</strong> Se vuelve de CLR a participaciones con softmax:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mrow><mi>j</mi><mo>,</mo><mi>t</mi></mrow></msub><mo>=</mo><mfrac><mrow><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>z</mi><mrow><mi>j</mi><mo>,</mo><mi>t</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow><mrow><munder><mo>∑</mo><mi>k</mi></munder><mrow><mi mathvariant="normal">exp</mi><mo>⁡</mo></mrow><mo stretchy="false" form="prefix">(</mo><msub><mi>z</mi><mrow><mi>k</mi><mo>,</mo><mi>t</mi></mrow></msub><mo stretchy="false" form="postfix">)</mo></mrow></mfrac><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>N</mi><mrow><mi>j</mi><mo>,</mo><mi>t</mi></mrow></msub><mo>=</mo><msub><mi>N</mi><mrow><mrow><mi mathvariant="normal">p</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">d</mi><mi mathvariant="normal">r</mi><mi mathvariant="normal">e</mi></mrow><mo>,</mo><mi>t</mi></mrow></msub><mspace width="0.167em"></mspace><msub><mi>p</mi><mrow><mi>j</mi><mo>,</mo><mi>t</mi></mrow></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">p_{j,t}=\frac{\exp(z_{j,t})}{\sum_k\exp(z_{k,t})},\qquad
+N_{j,t}=N_{\mathrm{padre},t}\,p_{j,t}.</annotation></semantics></math></p>
+<p>La implementación resta el máximo antes de exponenciar para evitar desbordamientos. La distribución se repite de país a provincias, cantones y parroquias. Se redondea por mayor residuo en cada padre; los empates siguen el código territorial. Así, los conteos centrales enteros suman exactamente en todos los niveles y años. Es una distribución jerárquica descendente con participaciones dinámicas; no se implementa reconciliación MinT, ajuste bayesiano ni componentes por cohortes. El resultado central es la trayectoria sin innovaciones, no la media de las simulaciones ni necesariamente la mediana marginal después de normalizar.</p>
+<p><strong>5. Bandas condicionales.</strong> Se simulan trayectorias completas de innovaciones con las varianzas ajustadas. Cada simulación de un hijo utiliza la misma simulación de su padre, y las participaciones se normalizan por familia y año. Las trayectorias simuladas continuas suman a su padre; los intervalos publicados son cuantiles marginales. <strong>Los límites inferior y superior no deben sumarse</strong>.</p>
+<p>Los estados iniciales y parámetros se mantienen fijos. Las bandas excluyen incertidumbre de parámetros, de las fuentes, de cambios territoriales y de supuestos futuros. Las innovaciones entre coordenadas y entre los dos sentidos temporales se suponen independientes antes de normalizar; la normalización y los padres comunes inducen dependencia entre los conteos finales. El 95% es nominal y condicional: no garantiza cobertura del 95% para la población real en 1900 o 2100. Las bandas pueden ser muy anchas o degeneradas con series suavizadas. El modelo tampoco introduce guerras, epidemias, cambios migratorios o políticas futuras sin información externa.</p>
+</div>
+<div class="section level3">
+<h3 id="gráfico-nacional-referencias-y-extensión-del-modelo">Gráfico nacional: referencias y extensión del modelo<a class="anchor" aria-label="anchor" href="#gr%C3%A1fico-nacional-referencias-y-extensi%C3%B3n-del-modelo"></a>
+</h3>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">nacional_ext</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">escenarios</span>, <span class="va">nivel</span> <span class="op">==</span> <span class="st">"nacional"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">nacional_ext</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">anio</span>, <span class="va">poblacion</span> <span class="op">/</span> <span class="fl">1e6</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">geom_ribbon</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">nacional_ext</span>, <span class="va">origen</span> <span class="op">==</span> <span class="st">"modelo_pobecu"</span><span class="op">)</span>,</span>
+<span>              <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">limite_inferior</span> <span class="op">/</span> <span class="fl">1e6</span>, ymax <span class="op">=</span> <span class="va">limite_superior</span> <span class="op">/</span> <span class="fl">1e6</span>,</span>
+<span>                  group <span class="op">=</span> <span class="va">direccion</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"#D98A32"</span>, alpha <span class="op">=</span> <span class="fl">0.22</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"#D98A32"</span>, linewidth <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">nacional_ext</span>, <span class="va">origen</span> <span class="op">==</span> <span class="st">"referencia_INEC"</span><span class="op">)</span>,</span>
+<span>            color <span class="op">=</span> <span class="st">"#146C78"</span>, linewidth <span class="op">=</span> <span class="fl">1.1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1950</span>, <span class="fl">2050</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, color <span class="op">=</span> <span class="st">"grey45"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1900</span>, <span class="fl">2100</span>, <span class="fl">25</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_number.html" class="external-link">label_number</a></span><span class="op">(</span>big.mark <span class="op">=</span> <span class="st">"."</span>, decimal.mark <span class="op">=</span> <span class="st">","</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Ecuador: reconstrucción y escenario territorial, 1900–2100"</span>,</span>
+<span>       subtitle <span class="op">=</span> <span class="st">"Verde: trayectoria INEC 1950–2050 · Naranja: extensión estructural amortiguada"</span>,</span>
+<span>       x <span class="op">=</span> <span class="st">"Año"</span>, y <span class="op">=</span> <span class="st">"Población (millones de habitantes)"</span>,</span>
+<span>       caption <span class="op">=</span> <span class="st">"Banda: cuantiles 2,5%–97,5% de 200 simulaciones condicionales. Semilla 2026.\nNo incluye incertidumbre de las fuentes ni de parámetros; los extremos no son cifras oficiales."</span><span class="op">)</span> <span class="op">+</span> <span class="va">tema_pob</span></span></code></pre></div>
+<p><img src="reference/figures/README-modelo-nacional-1.png" alt="" width="100%"></p>
+<p>Las líneas verticales delimitan el soporte nacional publicado. Dentro de ese periodo, la ausencia de banda significa que no se ha cuantificado la incertidumbre de la fuente; no significa que la población se conozca sin error.</p>
+</div>
+<div class="section level3">
+<h3 id="provincias-cantones-y-parroquias-escalas-y-procedencia">Provincias, cantones y parroquias: escalas y procedencia<a class="anchor" aria-label="anchor" href="#provincias-cantones-y-parroquias-escalas-y-procedencia"></a>
+</h3>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Dos ejemplos por nivel; escalas libres para no ocultar territorios pequeños.</span></span>
+<span><span class="va">ejemplos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">escenarios</span>, <span class="va">codigo</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"11"</span>, <span class="st">"17"</span>, <span class="st">"1101"</span>, <span class="st">"1701"</span>, <span class="st">"110150"</span>, <span class="st">"110154"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">ejemplos</span><span class="op">$</span><span class="va">territorio</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">ejemplos</span><span class="op">$</span><span class="va">nivel</span>, <span class="va">ejemplos</span><span class="op">$</span><span class="va">nombre</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"["</span>, <span class="va">ejemplos</span><span class="op">$</span><span class="va">codigo</span>, <span class="st">"]"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">limites</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">ejemplos</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"territorio"</span>, <span class="st">"referencia_desde"</span>, <span class="st">"referencia_hasta"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">ejemplos</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">anio</span>, <span class="va">poblacion</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">geom_ribbon</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">ejemplos</span>, <span class="va">origen</span> <span class="op">==</span> <span class="st">"modelo_pobecu"</span><span class="op">)</span>,</span>
+<span>              <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">limite_inferior</span>, ymax <span class="op">=</span> <span class="va">limite_superior</span>, group <span class="op">=</span> <span class="va">direccion</span><span class="op">)</span>,</span>
+<span>              fill <span class="op">=</span> <span class="st">"#D98A32"</span>, alpha <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"#D98A32"</span>, linewidth <span class="op">=</span> <span class="fl">0.65</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">ejemplos</span>, <span class="va">origen</span> <span class="op">!=</span> <span class="st">"modelo_pobecu"</span><span class="op">)</span>,</span>
+<span>            <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">origen</span><span class="op">)</span>, linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">limites</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">referencia_desde</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="st">"dotted"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">limites</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">referencia_hasta</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="st">"dotted"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">territorio</span>, scales <span class="op">=</span> <span class="st">"free_y"</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_color_manual</a></span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>referencia_INEC <span class="op">=</span> <span class="st">"#146C78"</span>, referencia_parroquial_pobecu <span class="op">=</span> <span class="st">"#7854A8"</span><span class="op">)</span>,</span>
+<span>                     labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Referencia INEC"</span>, <span class="st">"Referencia parroquial pobecu"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1900</span>,<span class="fl">2100</span>,<span class="fl">50</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/label_number.html" class="external-link">label_number</a></span><span class="op">(</span>scale_cut <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="fu"><a href="https://scales.r-lib.org/reference/number.html" class="external-link">cut_short_scale</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>                                                  decimal.mark <span class="op">=</span> <span class="st">","</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Escenarios territoriales con referencias explícitas"</span>,</span>
+<span>       subtitle <span class="op">=</span> <span class="st">"Líneas punteadas: periodo de referencia · Cada panel tiene su propia escala vertical"</span>,</span>
+<span>       x <span class="op">=</span> <span class="st">"Año"</span>, y <span class="op">=</span> <span class="st">"Habitantes"</span>, color <span class="op">=</span> <span class="st">"Datos conservados"</span>,</span>
+<span>       caption <span class="op">=</span> <span class="st">"Extensión naranja y bandas condicionales del 95%. Unidades de referencia del Censo 2022.\nLas cifras parroquiales de 2010–2035 ya son estimaciones de pobecu; no son proyecciones oficiales."</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="va">tema_pob</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-modelo-territorios-1.png" alt="" width="100%"></p>
+<p>Los paneles permiten comparar tendencias, no tamaños visuales entre escalas diferentes. Antes del primer año de referencia local, la asignación territorial se apoya exclusivamente en el modelo de participaciones y en el total padre. Para análisis sobre límites históricos hacen falta insumos territoriales adicionales.</p>
+</div>
+<div class="section level3">
+<h3 id="sensibilidad-a-la-amortiguación">Sensibilidad a la amortiguación<a class="anchor" aria-label="anchor" href="#sensibilidad-a-la-amortiguaci%C3%B3n"></a>
+</h3>
+<p>El siguiente cálculo mantiene el ajuste nacional y cambia únicamente el supuesto sobre cuánto persiste su pendiente. No es una comparación de modelos reestimados.</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Reproduce analíticamente la trayectoria central nacional, sin simulaciones.</span></span>
+<span><span class="va">sensibilidad</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.90</span>, <span class="fl">0.95</span>, <span class="fl">0.98</span>, <span class="fl">1</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">phi</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">n</span> <span class="op">&lt;-</span> <span class="va">nacional_ext</span></span>
+<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">sentido</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"retro"</span>, <span class="st">"pro"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">f</span> <span class="op">&lt;-</span> <span class="va">modelo_territorial</span><span class="op">$</span><span class="va">raiz</span><span class="op">[[</span><span class="va">sentido</span><span class="op">]</span><span class="op">]</span></span>
+<span>    <span class="va">borde</span> <span class="op">&lt;-</span> <span class="kw">if</span><span class="op">(</span><span class="va">sentido</span> <span class="op">==</span> <span class="st">"retro"</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">modelo_territorial</span><span class="op">$</span><span class="va">raiz</span><span class="op">$</span><span class="va">anios</span><span class="op">)</span> <span class="kw">else</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">modelo_territorial</span><span class="op">$</span><span class="va">raiz</span><span class="op">$</span><span class="va">anios</span><span class="op">)</span></span>
+<span>    <span class="va">ids</span> <span class="op">&lt;-</span> <span class="kw">if</span><span class="op">(</span><span class="va">sentido</span> <span class="op">==</span> <span class="st">"retro"</span><span class="op">)</span> <span class="va">n</span><span class="op">$</span><span class="va">anio</span> <span class="op">&lt;</span> <span class="va">borde</span> <span class="kw">else</span> <span class="va">n</span><span class="op">$</span><span class="va">anio</span> <span class="op">&gt;</span> <span class="va">borde</span></span>
+<span>    <span class="va">h</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">n</span><span class="op">$</span><span class="va">anio</span><span class="op">[</span><span class="va">ids</span><span class="op">]</span> <span class="op">-</span> <span class="va">borde</span><span class="op">)</span></span>
+<span>    <span class="va">incremento</span> <span class="op">&lt;-</span> <span class="kw">if</span><span class="op">(</span><span class="va">phi</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="va">h</span> <span class="kw">else</span> <span class="va">phi</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">phi</span><span class="op">^</span><span class="va">h</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">phi</span><span class="op">)</span></span>
+<span>    <span class="va">ancla</span> <span class="op">&lt;-</span> <span class="va">nacional_ext</span><span class="op">$</span><span class="va">poblacion</span><span class="op">[</span><span class="va">nacional_ext</span><span class="op">$</span><span class="va">anio</span> <span class="op">==</span> <span class="va">borde</span><span class="op">]</span></span>
+<span>    <span class="va">n</span><span class="op">$</span><span class="va">poblacion</span><span class="op">[</span><span class="va">ids</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">ancla</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">f</span><span class="op">$</span><span class="va">pendiente</span> <span class="op">*</span> <span class="va">incremento</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  <span class="va">n</span><span class="op">$</span><span class="va">phi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">phi</span><span class="op">)</span>; <span class="va">n</span></span>
+<span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">sensibilidad</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">anio</span>, <span class="va">poblacion</span> <span class="op">/</span> <span class="fl">1e6</span>, color <span class="op">=</span> <span class="va">phi</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html" class="external-link">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1950</span>,<span class="fl">2050</span><span class="op">)</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, color <span class="op">=</span> <span class="st">"grey60"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Dark2"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"El horizonte lejano depende del supuesto de persistencia"</span>,</span>
+<span>       subtitle <span class="op">=</span> <span class="st">"Sensibilidad nacional: mismos datos y estados, cuatro amortiguaciones"</span>,</span>
+<span>       x <span class="op">=</span> <span class="st">"Año"</span>, y <span class="op">=</span> <span class="st">"Población (millones de habitantes)"</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">phi</span><span class="op">[</span><span class="va">N</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>       caption <span class="op">=</span> <span class="st">"Trayectorias centrales, sin bandas. φ = 1 mantiene la pendiente; φ &lt; 1 la atenúa.\nEstas diferencias no constituyen probabilidades de escenarios ni validación de 1900 o 2100."</span><span class="op">)</span> <span class="op">+</span> <span class="va">tema_pob</span></span></code></pre></div>
+<p><img src="reference/figures/README-modelo-sensibilidad-1.png" alt="" width="100%"></p>
+<p>Para estudiar la asignación territorial también debe variarse <code>phi_partes</code>, por ejemplo con <code>pob_ajustar(phi_total = 0.98, phi_partes = 0.90)</code>, y comparar las mismas unidades y años. Ninguna amortiguación queda certificada como óptima por la configuración predeterminada.</p>
+</div>
+<div class="section level3">
+<h3 id="validación-temporal-y-comprobación-contable">Validación temporal y comprobación contable<a class="anchor" aria-label="anchor" href="#validaci%C3%B3n-temporal-y-comprobaci%C3%B3n-contable"></a>
+</h3>
+<p>El script <code>data-raw/09_validar_modelos.R</code> realiza dos pruebas temporales:</p>
+<ul>
+<li>
+<strong>Prospectiva:</strong> retira 2026–2035 de todos los niveles, ajusta hasta 2025 y compara los años retenidos, con horizontes de 1 a 10 años.</li>
+<li>
+<strong>Retrospectiva:</strong> retira los años anteriores a 2015 de todos los niveles y reconstruye 2010–2014, con horizontes de 1 a 5 años.</li>
+</ul>
+<p>Retirar también los años del padre evita que el modelo conozca anticipadamente el total retenido. La ventana y amortiguaciones se fijan antes de estas pruebas. Se compara con un referente sencillo que mantiene la población del año extremo. Se informa MAE, RMSE, WAPE y cobertura condicional por nivel y horizonte:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">W</mi><mi mathvariant="normal">A</mi><mi mathvariant="normal">P</mi><mi mathvariant="normal">E</mi></mrow><mo>=</mo><mn>100</mn><mfrac><mrow><munder><mo>∑</mo><mi>i</mi></munder><mo stretchy="false" form="prefix">|</mo><msub><mover><mi>N</mi><mo accent="true">̂</mo></mover><mi>i</mi></msub><mo>−</mo><msub><mi>N</mi><mi>i</mi></msub><mo stretchy="false" form="prefix">|</mo></mrow><mrow><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>N</mi><mi>i</mi></msub></mrow></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">\mathrm{WAPE}=100\frac{\sum_i |\widehat N_i-N_i|}{\sum_i N_i}.</annotation></semantics></math></p>
+<p>Se evalúa la <strong>reproducción de las trayectorias del paquete</strong>, incluyendo años proyectados, no poblaciones futuras observadas. La validación temporal del método parroquial no es independiente del modelo logístico/IPF que generó sus referencias. Son dos cortes de evaluación; no equivalen a una validación de origen móvil exhaustiva ni prueban precisión en 1900–2100.</p>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="14%">
+<col width="14%">
+<col width="14%">
+<col width="14%">
+<col width="14%">
+<col width="14%">
+<col width="14%">
+</colgroup>
+<thead><tr>
+<th align="left"></th>
+<th align="left">sentido</th>
+<th align="left">nivel</th>
+<th align="left">metodo</th>
+<th align="right">horizonte</th>
+<th align="right">WAPE</th>
+<th align="right">cobertura_condicional</th>
+</tr></thead>
+<tbody>
+<tr>
+<td align="left">5</td>
+<td align="left">prospectiva</td>
+<td align="left">nacional</td>
+<td align="left">estructural_CLR</td>
+<td align="right">5</td>
+<td align="right">0.278</td>
+<td align="right">1.000</td>
+</tr>
+<tr>
+<td align="left">15</td>
+<td align="left">prospectiva</td>
+<td align="left">nacional</td>
+<td align="left">constante</td>
+<td align="right">5</td>
+<td align="right">3.783</td>
+<td align="right">NA</td>
+</tr>
+<tr>
+<td align="left">25</td>
+<td align="left">prospectiva</td>
+<td align="left">provincia</td>
+<td align="left">estructural_CLR</td>
+<td align="right">5</td>
+<td align="right">0.303</td>
+<td align="right">1.000</td>
+</tr>
+<tr>
+<td align="left">35</td>
+<td align="left">prospectiva</td>
+<td align="left">provincia</td>
+<td align="left">constante</td>
+<td align="right">5</td>
+<td align="right">3.831</td>
+<td align="right">NA</td>
+</tr>
+<tr>
+<td align="left">45</td>
+<td align="left">prospectiva</td>
+<td align="left">canton</td>
+<td align="left">estructural_CLR</td>
+<td align="right">5</td>
+<td align="right">0.407</td>
+<td align="right">1.000</td>
+</tr>
+<tr>
+<td align="left">55</td>
+<td align="left">prospectiva</td>
+<td align="left">canton</td>
+<td align="left">constante</td>
+<td align="right">5</td>
+<td align="right">3.964</td>
+<td align="right">NA</td>
+</tr>
+<tr>
+<td align="left">65</td>
+<td align="left">prospectiva</td>
+<td align="left">parroquia</td>
+<td align="left">estructural_CLR</td>
+<td align="right">5</td>
+<td align="right">0.658</td>
+<td align="right">0.999</td>
+</tr>
+<tr>
+<td align="left">75</td>
+<td align="left">prospectiva</td>
+<td align="left">parroquia</td>
+<td align="left">constante</td>
+<td align="right">5</td>
+<td align="right">5.048</td>
+<td align="right">NA</td>
+</tr>
+<tr>
+<td align="left">85</td>
+<td align="left">retrospectiva</td>
+<td align="left">nacional</td>
+<td align="left">estructural_CLR</td>
+<td align="right">5</td>
+<td align="right">1.358</td>
+<td align="right">1.000</td>
+</tr>
+<tr>
+<td align="left">90</td>
+<td align="left">retrospectiva</td>
+<td align="left">nacional</td>
+<td align="left">constante</td>
+<td align="right">5</td>
+<td align="right">9.309</td>
+<td align="right">NA</td>
+</tr>
+<tr>
+<td align="left">95</td>
+<td align="left">retrospectiva</td>
+<td align="left">provincia</td>
+<td align="left">estructural_CLR</td>
+<td align="right">5</td>
+<td align="right">1.460</td>
+<td align="right">0.792</td>
+</tr>
+<tr>
+<td align="left">100</td>
+<td align="left">retrospectiva</td>
+<td align="left">provincia</td>
+<td align="left">constante</td>
+<td align="right">5</td>
+<td align="right">9.309</td>
+<td align="right">NA</td>
+</tr>
+<tr>
+<td align="left">105</td>
+<td align="left">retrospectiva</td>
+<td align="left">canton</td>
+<td align="left">estructural_CLR</td>
+<td align="right">5</td>
+<td align="right">1.477</td>
+<td align="right">0.910</td>
+</tr>
+<tr>
+<td align="left">110</td>
+<td align="left">retrospectiva</td>
+<td align="left">canton</td>
+<td align="left">constante</td>
+<td align="right">5</td>
+<td align="right">9.540</td>
+<td align="right">NA</td>
+</tr>
+<tr>
+<td align="left">115</td>
+<td align="left">retrospectiva</td>
+<td align="left">parroquia</td>
+<td align="left">estructural_CLR</td>
+<td align="right">5</td>
+<td align="right">1.544</td>
+<td align="right">0.924</td>
+</tr>
+<tr>
+<td align="left">120</td>
+<td align="left">retrospectiva</td>
+<td align="left">parroquia</td>
+<td align="left">constante</td>
+<td align="right">5</td>
+<td align="right">9.986</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+<p>Evaluación a cinco años: WAPE (%) y cobertura de bandas condicionales nominales del 95%.</p>
+<p>La comparación debe revisarse por nivel y dirección: un modelo más complejo no garantiza menor error que el referente constante. Una cobertura baja indica que las bandas condicionales subestiman la variabilidad de los valores retenidos; no deben promoverse como intervalos demográficos calibrados. Los resultados completos, los diagnósticos individuales y la auditoría de conservación están en <a href="https://github.com/f-slg/pobecu/tree/main/validacion/modelos-poblacion" class="external-link"><code>validacion/modelos-poblacion</code></a>.</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Prueba verificable: todas las parroquias suman a su cantón en cada año.</span></span>
+<span><span class="va">sumas_parroquiales</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">poblacion</span> <span class="op">~</span> <span class="va">padre</span> <span class="op">+</span> <span class="va">anio</span>,</span>
+<span>                                <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">escenarios</span>, <span class="va">nivel</span> <span class="op">==</span> <span class="st">"parroquia"</span><span class="op">)</span>, <span class="va">sum</span><span class="op">)</span></span>
+<span><span class="va">cantones_ext</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">escenarios</span>, <span class="va">nivel</span> <span class="op">==</span> <span class="st">"canton"</span><span class="op">)</span></span>
+<span><span class="va">i</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">sumas_parroquiales</span><span class="op">$</span><span class="va">padre</span>, <span class="va">sumas_parroquiales</span><span class="op">$</span><span class="va">anio</span><span class="op">)</span>,</span>
+<span>           <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">cantones_ext</span><span class="op">$</span><span class="va">codigo</span>, <span class="va">cantones_ext</span><span class="op">$</span><span class="va">anio</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">sumas_parroquiales</span><span class="op">$</span><span class="va">poblacion</span> <span class="op">-</span> <span class="va">cantones_ext</span><span class="op">$</span><span class="va">poblacion</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">sumas_parroquiales</span><span class="op">$</span><span class="va">poblacion</span> <span class="op">==</span> <span class="va">cantones_ext</span><span class="op">$</span><span class="va">poblacion</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><strong>Declaración sugerida para un análisis:</strong> “Se construyeron escenarios territoriales con pobecu mediante tendencias locales estructurales estimadas por máxima verosimilitud, logaritmo del total nacional, participaciones CLR y distribución jerárquica descendente. Se usaron ventanas de 20 años, amortiguaciones 0.98 y 0.95, y bandas condicionales por simulación de innovaciones. Se conservaron las referencias del paquete y sus unidades censales de 2022. Las cifras fuera de cobertura son reconstrucciones o escenarios propios; no son cifras oficiales ni estimaciones validadas de jurisdicciones históricas.” Añade la versión del paquete, años de entrenamiento, semilla y número de simulaciones realmente usados.</p>
+<p>Referencias del método:</p>
+<ul>
+<li>
+<a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/StructTS.html" class="external-link">R: <code>StructTS</code>, modelo estructural, máxima verosimilitud y estados</a>.</li>
+<li>
+<a href="https://otexts.com/fpp3/hierarchical-forecasting.html" class="external-link">Hyndman y Athanasopoulos: series jerárquicas y coherencia de pronósticos</a>.</li>
+<li>
+<a href="https://otexts.com/fpp3/holt.html" class="external-link">Hyndman y Athanasopoulos: tendencias amortiguadas</a>.</li>
+<li>
+<a href="https://www.ecuadorencifras.gob.ec/documentos/web-inec/Poblacion_y_Demografia/Proyecciones_Poblacionales/censo_2022/revision_2024_areas/Boletin_tecnico_proy_rev2025_vfinal.pdf" class="external-link">INEC: metodología y cobertura de sus proyecciones</a>.</li>
+</ul>
+</div>
 </div>
 </div>
 
