@@ -11,7 +11,7 @@
 #'   defecto se usa `dpa_provin`, `dpa_canton` o `dpa_parroq` según el nivel.
 #' @param anio Nombre de la columna de `datos` con el año, o un año fijo
 #'   (número) para toda la tabla. Por defecto se usa la columna `anio` si
-#'   existe.
+#'   existe. Acepta columnas numéricas, de texto o factor con años enteros.
 #' @param sexo,edad Desagregación de la población, como en [poblacion()]. Si
 #'   la usas, `datos` debe tener columnas `sexo` (`"hombre"`/`"mujer"`) y/o
 #'   `edad` con los mismos valores que devuelve [poblacion()].
@@ -45,7 +45,7 @@ pob_unir <- function(datos, nivel = c("canton", "provincia", "parroquia"),
   # Ano: columna, numero fijo o columna `anio` por defecto
   if (is.numeric(anio)) {
     if (length(anio) != 1) stop("`anio` fijo debe ser un solo a\u00f1o.", call. = FALSE)
-    anios <- rep(as.integer(anio), nrow(datos))
+    anios <- rep(.anios_union(anio), nrow(datos))
   } else {
     col_anio <- if (is.null(anio)) "anio" else anio
     if (!col_anio %in% names(datos)) {
@@ -53,7 +53,11 @@ pob_unir <- function(datos, nivel = c("canton", "provincia", "parroquia"),
            "Ind\u00edcala con `anio` o usa un a\u00f1o fijo, por ejemplo anio = 2025.",
            call. = FALSE)
     }
-    anios <- as.integer(datos[[col_anio]])
+    anios <- .anios_union(datos[[col_anio]])
+  }
+  if (!nrow(datos)) {
+    datos$poblacion <- numeric(0)
+    return(datos)
   }
   anios_validos <- intersect(unique(stats::na.omit(anios)), .pobecu_anios[[nivel]])
   if (!length(anios_validos)) {
@@ -86,10 +90,14 @@ pob_unir <- function(datos, nivel = c("canton", "provincia", "parroquia"),
 #' @inheritParams pob_unir
 #' @param casos Nombre de la columna de `datos` con el numerador (casos,
 #'   defunciones, nacimientos, etc.).
-#' @param por Base de la tasa. Por defecto 100 000 habitantes.
+#' @param por Base de la tasa: un número finito mayor que cero.
+#'   Por defecto 100 000 habitantes.
 #' @param ... Otros argumentos para [pob_unir()] (`codigo`, `anio`, `sexo`,
 #'   `edad`).
-#' @return `datos` con las columnas `poblacion` y `tasa`.
+#' @return `datos` con las columnas `poblacion` y `tasa`. Si la población
+#'   es cero, la tasa es `NA_real_` y se emite una advertencia. Los casos
+#'   deben ser numéricos, finitos y no negativos; se permiten valores `NA`
+#'   y numeradores fraccionarios (por ejemplo, ponderados).
 #' @export
 #' @examples
 #' casos <- data.frame(dpa_provin = c("01", "11", "17"), anio = 2024,
@@ -98,15 +106,49 @@ pob_unir <- function(datos, nivel = c("canton", "provincia", "parroquia"),
 pob_tasa <- function(datos, casos, nivel = c("canton", "provincia", "parroquia"),
                      por = 1e5, ...) {
   nivel <- match.arg(nivel)
-  if (!casos %in% names(datos)) {
+  if (!is.data.frame(datos)) stop("`datos` debe ser un data.frame.", call. = FALSE)
+  if (!is.character(casos) || length(casos) != 1L || is.na(casos) ||
+      !casos %in% names(datos)) {
     stop("No se encontr\u00f3 la columna '", casos, "' en `datos`.", call. = FALSE)
   }
+  if (!is.numeric(por) || length(por) != 1L || !is.finite(por) || por <= 0) {
+    stop("`por` debe ser un n\u00famero finito mayor que cero.", call. = FALSE)
+  }
+  n <- datos[[casos]]
+  if (!is.numeric(n) || any(!is.na(n) & (!is.finite(n) | n < 0))) {
+    stop("Los casos deben ser num\u00e9ricos, finitos y no negativos (o NA).",
+         call. = FALSE)
+  }
   datos <- pob_unir(datos, nivel = nivel, ...)
-  datos$tasa <- datos[[casos]] / datos$poblacion * por
+  cero <- !is.na(datos$poblacion) & datos$poblacion == 0
+  denominador <- as.numeric(datos$poblacion)
+  denominador[cero] <- NA_real_
+  datos$tasa <- n / denominador * por
+  if (any(cero)) {
+    warning(sum(cero), " fila(s) con poblaci\u00f3n cero: la tasa se devuelve como NA.",
+            call. = FALSE)
+  }
   datos
 }
 
 # --- internas ----------------------------------------------------------------
+
+.anios_union <- function(x) {
+  if (is.factor(x)) x <- as.character(x)
+  if (!is.numeric(x) && !is.character(x)) {
+    stop("Los a\u00f1os deben ser enteros, texto o factor con a\u00f1os enteros.",
+         call. = FALSE)
+  }
+  n <- suppressWarnings(as.numeric(x))
+  malos <- !is.na(x) & (is.na(n) | !is.finite(n) | n != trunc(n) |
+                         abs(n) > .Machine$integer.max)
+  if (any(malos)) {
+    stop("Los a\u00f1os deben ser enteros finitos (o NA); revisa: ",
+         paste(utils::head(unique(x[malos]), 5), collapse = ", "), ".",
+         call. = FALSE)
+  }
+  as.integer(n)
+}
 
 .columna <- function(datos, nombre) {
   if (!nombre %in% names(datos)) {

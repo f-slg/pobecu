@@ -1,3 +1,17 @@
+# pobecu (versión de desarrollo)
+
+* `pob_unir()` interpreta correctamente columnas de años de tipo factor y
+  rechaza años decimales o no finitos, sin truncarlos silenciosamente.
+* `pob_unir()` y `pob_tasa()` conservan las tablas vacías.
+* `pob_tasa()` devuelve `NA_real_` con advertencia cuando la población es
+  cero. Valida numeradores numéricos no negativos y una base finita positiva;
+  conserva `NA` y admite numeradores ponderados fraccionarios.
+* Nuevas pruebas de regresión para esos casos.
+* Auditoría reproducible contra los Excel originales del INEC, mediante un
+  lector independiente del proceso de construcción, y evidencias en `validacion/`.
+* README generado desde R Markdown con resultados reales, seis gráficos,
+  interpretación y ejemplos completos. Incluye un guion R y un generador HTML.
+
 # pobecu 0.2.0
 
 ## Compatibilidad con geoecu 0.4.0

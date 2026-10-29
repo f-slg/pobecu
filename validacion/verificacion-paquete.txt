@@ -1,0 +1,26 @@
+Fecha: 2026-10-28
+Entorno: Linux, R 4.5.2
+Versión: pobecu 0.2.0.9000
+
+R CMD check --no-manual:
+  Status: OK
+  0 errores, 0 advertencias, 0 notas.
+  Ejemplos, pruebas y reconstrucción de las dos viñetas: OK.
+  No se compiló el manual PDF (no está instalado pdflatex).
+
+testthat (incluidas edades simples y mapas con datos locales):
+  FAIL 0 | WARN 0 | SKIP 0 | PASS 120
+
+Auditoría completa de fuentes:
+  20 comprobaciones; 0 diferencias, 0 claves faltantes y 0 claves extras.
+  Véase resumen.csv para los tamaños y tipos de comparación.
+
+Documentación:
+  README.Rmd ejecutado para producir Markdown y HTML.
+  Seis gráficos generados con R y revisados visualmente.
+  HTML autónomo: siete imágenes embebidas (seis gráficos y un logo),
+  sin recursos externos de imagen, JavaScript o CSS.
+
+Alcance:
+  Verificación local; no equivale a una aceptación por CRAN ni sustituye
+  las comprobaciones de Windows y macOS de GitHub Actions.

@@ -23,7 +23,7 @@ defecto se usa \code{dpa_provin}, \code{dpa_canton} o \code{dpa_parroq} según e
 
 \item{anio}{Nombre de la columna de \code{datos} con el año, o un año fijo
 (número) para toda la tabla. Por defecto se usa la columna \code{anio} si
-existe.}
+existe. Acepta columnas numéricas, de texto o factor con años enteros.}
 
 \item{sexo, edad}{Desagregación de la población, como en \code{\link[=poblacion]{poblacion()}}. Si
 la usas, \code{datos} debe tener columnas \code{sexo} (\code{"hombre"}/\code{"mujer"}) y/o

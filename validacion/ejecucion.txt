@@ -1,0 +1,6 @@
+Fecha: 2026-10-28
+R: R version 4.5.2 (2025-10-31)
+Paquete: 0.2.0.9000
+Proyecciones MD5: e7f967696261c1ccd95436f3c274f600
+Censo MD5: 0a30a82cbb100ccf8073be625a4ca152
+Edades simples MD5: 6859b0d7c4f84e8f223e1b9d063c6080
