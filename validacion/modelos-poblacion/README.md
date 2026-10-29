@@ -31,8 +31,8 @@ A cinco años prospectivos, el WAPE es 0.278% nacional, 0.303% provincial,
 1.477% y 1.544%, respectivamente. El referente constante obtiene mayor WAPE
 para esos ocho casos. Esto no prueba superioridad universal sobre otros modelos.
 
-La cobertura retrospectiva a cinco años es 79.2% provincial, 91.0% cantonal y
-92.4% parroquial, inferior al 95% nominal. Prospectivamente es casi 100% para
+La cobertura retrospectiva a cinco años es 83.3% provincial, 91.9% cantonal y
+92.6% parroquial, inferior al 95% nominal. Prospectivamente es casi 100% para
 ese horizonte. Las bandas no están calibradas como intervalos demográficos:
 los errores están correlacionados territorialmente, los datos fuente están
 suavizados y los modelos fuente no aportan aquí su incertidumbre. La cobertura
