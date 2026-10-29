@@ -1,6 +1,5 @@
 
-- [pobecu
-  <img src="man/figures/logo.png" align="right" height="139" alt="Logo de pobecu" />](#pobecu-)
+- [pobecu](#pobecu)
   - [1. Instalación y primera
     consulta](#1-instalación-y-primera-consulta)
   - [2. Consultar territorios y años](#2-consultar-territorios-y-años)
@@ -25,7 +24,9 @@
   - [13. Reconstrucción y escenarios de población
     1900–2100](#13-reconstrucción-y-escenarios-de-población-19002100)
 
-# pobecu <img src="man/figures/logo.png" align="right" height="139" alt="Logo de pobecu" />
+# pobecu
+
+<img src="man/figures/logo.png" align="right" height="139" alt="Logo de pobecu" />
 
 [Pruebas
 automáticas](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml)

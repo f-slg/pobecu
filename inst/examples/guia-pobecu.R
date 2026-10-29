@@ -16,7 +16,9 @@
 #'
 
 #'
-#' # pobecu <img src="man/figures/logo.png" align="right" height="139" alt="Logo de pobecu" />
+#' # pobecu
+#'
+#' <img src="man/figures/logo.png" align="right" height="139" alt="Logo de pobecu" />
 #'
 #' [Pruebas automáticas](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml)
 #' · [Licencia MIT](LICENSE.md)
