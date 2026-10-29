@@ -1137,6 +1137,6 @@ Referencias del método:
 - [Hyndman y Athanasopoulos: series jerárquicas y coherencia de
   pronósticos](https://otexts.com/fpp3/hierarchical-forecasting.html).
 - [Hyndman y Athanasopoulos: tendencias
-  amortiguadas](https://otexts.com/fpp3/holt.html).
+  amortiguadas](https://otexts.com/fpp3/exponential-smoothing.html#sec-holt).
 - [INEC: metodología y cobertura de sus
   proyecciones](https://www.ecuadorencifras.gob.ec/documentos/web-inec/Poblacion_y_Demografia/Proyecciones_Poblacionales/censo_2022/revision_2024_areas/Boletin_tecnico_proy_rev2025_vfinal.pdf).
