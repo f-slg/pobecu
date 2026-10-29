@@ -9,16 +9,16 @@ vignette: >
 
 ```{r, include = FALSE}
 disponible <- requireNamespace("geoecu", quietly = TRUE) &&
-  requireNamespace("ggplot2", quietly = TRUE) &&
-  geoecu::geoecu_datos_disponibles()
+  utils::packageVersion("geoecu") >= "0.4.1" &&
+  requireNamespace("ggplot2", quietly = TRUE) && geoecu::geoecu_datos_disponibles()
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 7,
                       fig.height = 5, dpi = 96, eval = disponible)
 ```
 
 pobecu y [geoecu](https://github.com/f-slg/geoecu) usan **los códigos DPA**.
-geoecu aporta los límites de provincias, cantones y parroquias, y pobecu la
-población. Con `pob_mapa()` obtienes en una sola línea la capa `sf` con la
-población y la densidad, lista para `ggplot2` o `plot()`.
+geoecu 0.4.1 aporta límites y superficie `area_km2`, calculada sobre el
+elipsoide WGS84 a partir de la geometría de resolución alta. pobecu integra
+esa superficie con la población y calcula habitantes por km² con `pob_mapa()`.
 
 ```{r, eval = !disponible, echo = FALSE, results = "asis"}
 cat("> Esta viñeta necesita los paquetes geoecu y ggplot2 con las capas de",
@@ -61,11 +61,16 @@ nrow(esmeraldas)                    # cantones en geoecu
 nrow(agrupar_unidades(esmeraldas))  # cantones del censo
 ```
 
-## Densidad cantonal
+## Densidad cantonal: habitantes por superficie
+
+`pob_mapa()` agrupa las unidades CONALI que corresponden a cada unidad del
+Censo 2022 y suma las áreas de sus polígonos. Así numerador y denominador
+corresponden al mismo territorio. La fórmula es `poblacion / area_km2`.
 
 ```{r}
 cant <- pob_mapa("canton", anio = 2025)
 cant <- geoecu::reubicar_galapagos(cant)
+sf::st_drop_geometry(cant)[, c("canton", "poblacion", "area_km2", "densidad")]
 
 ggplot(cant) +
   geom_sf(aes(fill = densidad), color = "white", linewidth = 0.1) +
@@ -75,6 +80,11 @@ ggplot(cant) +
        caption = "Fuente: INEC, Revisión 2024; límites: geoecu (CONALI)") +
   theme_void()
 ```
+
+La densidad es un promedio en la superficie completa del cantón; no describe
+la distribución de habitantes dentro del polígono. Las zonas en estudio
+conservan `NA`. Las áreas de residencia urbana y rural no tienen geometrías
+propias en pobecu.
 
 ## Parroquias
 

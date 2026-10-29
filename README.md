@@ -71,13 +71,13 @@ Para ver la cobertura disponible:
 pob_fuentes()
 #> pobecu 0.2.0.9000 · datos datos-v0.1.0
 #> Estimaciones hasta 2022 y proyecciones desde 2023, al 30 de junio de cada año.
-#>
+#> 
 #>      nivel   periodo      area        edad              tipo
 #>   nacional 1950-2050 2010-2035      0-100+           oficial
 #>  provincia 1990-2035 2010-2035      0-100+           oficial
 #>     canton 2010-2035 2010-2035      0-100+           oficial
 #>  parroquia 2010-2035        no 0-4 ... 85+ estimación pobecu
-#>
+#> 
 #> Fuentes:
 #> * INEC, Estimaciones y Proyecciones de Población, Revisión 2024 (actualización con áreas, 2025).
 #>   https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/
@@ -527,10 +527,13 @@ analizar esos territorios.
 
 ### Mapa de densidad
 
-La primera consulta cartográfica descarga las capas de `geoecu`. El
-ejemplo usa Loja para que los cantones sean legibles. `pob_mapa()`
-agrupa las unidades y devuelve un objeto `sf`; la densidad divide
-habitantes entre `area_km2`.
+La primera consulta cartográfica descarga las capas de `geoecu`. Instala
+`geoecu` 0.4.1 o posterior: cada capa aporta `area_km2`, superficie
+calculada sobre el elipsoide WGS84 a partir de la geometría de
+resolución alta. `pob_mapa()` agrupa las unidades CONALI que pertenecen
+a una unidad del Censo 2022, suma las áreas de los polígonos y calcula
+`densidad = poblacion / area_km2`. Así, población y superficie
+corresponden a la misma división territorial.
 
 ``` r
 mapa <- pob_mapa("canton", anio = 2025, provincia = "Loja")
@@ -578,11 +581,25 @@ geoecu, agrupadas a unidades censales.
 
 </div>
 
-La densidad es un promedio territorial: no muestra dónde se concentran
-los habitantes dentro de un cantón. Con `sexo`, `edad` o `area`, el
-cociente usa la superficie completa del polígono; en particular, no mide
-la densidad sobre una superficie urbana o rural delimitada por separado.
-Las zonas en estudio se conservan con población `NA`.
+La densidad es el promedio de habitantes por km² en toda la unidad; no
+muestra su distribución interna. Si pides sexo, edad o residencia
+urbana/rural, el área sigue siendo la superficie completa del
+territorio. No equivale a densidad de superficie habitada. Las zonas en
+estudio conservan población `NA`.
+
+Comprueba los insumos y reproduce el cociente con la tabla del mapa:
+
+``` r
+stopifnot(all.equal(mapa$densidad, mapa$poblacion / mapa$area_km2))
+head(detalle_mapa[c("canton", "poblacion", "area_km2", "densidad")])
+#>         canton poblacion area_km2 densidad
+#> 1         Loja    258514  1891.24   136.69
+#> 2       Calvas     26374   851.00    30.99
+#> 3     Catamayo     36428   651.85    55.88
+#> 4       Celica     14676   521.60    28.14
+#> 5 Chaguarpamba      6875   313.23    21.95
+#> 6    Espíndola     14277   516.25    27.66
+```
 
 ## 10. Guardar resultados y trabajar sin conexión
 
@@ -695,15 +712,15 @@ amplía los ejemplos cartográficos.
 ``` r
 citation("pobecu")
 #> To cite package 'pobecu' in publications use:
-#>
+#> 
 #>   Salas Guerrero, R. F. (2026). pobecu: Población del Ecuador por provincia,
 #>   cantón y parroquia. Paquete de R versión 0.2.0.9000.
 #>   https://github.com/f-slg/pobecu
-#>
+#> 
 #>   INEC (2024). Estimaciones y Proyecciones de Población del Ecuador, Revisión
 #>   2024. Quito: Instituto Nacional de Estadística y Censos.
 #>   https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/
-#>
+#> 
 #> To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)',
 #> 'toBibtex(.)', or set 'options(citation.bibtex.max=999)'.
 ```
@@ -762,10 +779,10 @@ modelo_territorial <- pob_ajustar(
 )
 #> Warning: 12 ajustes usan respaldo lineal; consulte $diagnosticos.
 table(modelo_territorial$diagnosticos$metodo)
-#>
-#>           constante_degenerada                respaldo_lineal
-#>                             82                             12
-#> StructTS_sin_ruido_observacion       StructTS_tendencia_local
+#> 
+#>           constante_degenerada                respaldo_lineal 
+#>                             82                             12 
+#> StructTS_sin_ruido_observacion       StructTS_tendencia_local 
 #>                            145                           2337
 
 escenarios <- pob_estimar(

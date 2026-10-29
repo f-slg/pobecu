@@ -90,6 +90,11 @@ pob_mapa <- function(nivel = c("canton", "provincia", "parroquia"), anio = NULL,
     for (v in names(combos)) vacias[[v]] <- rep(combos[[v]], times = sum(sin))
     res <- rbind(res[!sin, ], vacias)
   }
+  if (!"area_km2" %in% names(res)) {
+    stop("Se requiere geoecu 0.4.1 o posterior, que incluye `area_km2`. ",
+         "Actualízalo con install.packages(\"geoecu\") o remotes::install_github(\"f-slg/geoecu\").",
+         call. = FALSE)
+  }
   res$densidad <- res$poblacion / res$area_km2
   orden <- intersect(c(clave, "anio", "sexo", "area", "edad"), names(res))
   res <- res[do.call(order, unname(lapply(orden, function(v) res[[v]]))), ]
