@@ -1,31 +1,5 @@
 # pobecu
 
-- [pobecu](#pobecu)
-  - [1. Instalación y primera
-    consulta](#id_1-instalaci%C3%B3n-y-primera-consulta)
-  - [2. Consultar territorios y
-    años](#id_2-consultar-territorios-y-a%C3%B1os)
-  - [3. Evolución nacional: estimaciones y
-    proyecciones](#id_3-evoluci%C3%B3n-nacional-estimaciones-y-proyecciones)
-  - [4. Comparar provincias](#id_4-comparar-provincias)
-  - [5. Edades simples, grupos y
-    pirámides](#id_5-edades-simples-grupos-y-pir%C3%A1mides)
-  - [6. Población urbana y rural](#id_6-poblaci%C3%B3n-urbana-y-rural)
-  - [7. Unir denominadores y calcular
-    tasas](#id_7-unir-denominadores-y-calcular-tasas)
-  - [8. Parroquias: estimación y
-    coherencia](#id_8-parroquias-estimaci%C3%B3n-y-coherencia)
-  - [9. Códigos territoriales y mapas con
-    geoecu](#id_9-c%C3%B3digos-territoriales-y-mapas-con-geoecu)
-  - [10. Guardar resultados y trabajar sin
-    conexión](#id_10-guardar-resultados-y-trabajar-sin-conexi%C3%B3n)
-  - [11. Contraste con los archivos
-    originales](#id_11-contraste-con-los-archivos-originales)
-  - [12. Metodología, referencias y
-    contribuciones](#id_12-metodolog%C3%ADa-referencias-y-contribuciones)
-  - [13. Reconstrucción y escenarios de población
-    1900–2100](#id_13-reconstrucci%C3%B3n-y-escenarios-de-poblaci%C3%B3n-19002100)
-
 ![Logo de pobecu](reference/figures/logo.png)
 
 [Pruebas

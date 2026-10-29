@@ -66,26 +66,19 @@ head(modelo$diagnosticos)
 #> 4     01    EC provincia     pro                2016                2035 20
 #> 5     02    EC provincia   retro                1990                2009 20
 #> 6     02    EC provincia     pro                2016                2035 20
-#>                           metodo convergencia    pendiente var_nivel
-#> 1       StructTS_tendencia_local            0 -0.025541233         0
-#> 2       StructTS_tendencia_local            0  0.003842644         0
-#> 3       StructTS_tendencia_local            0  0.007417301         0
-#> 4       StructTS_tendencia_local            0 -0.002033895         0
-#> 5 StructTS_sin_ruido_observacion            0  0.012997541         0
-#> 6       StructTS_tendencia_local            0 -0.002758758         0
-#>   var_pendiente var_observacion
-#> 1  4.349116e-05               0
-#> 2  2.954892e-06               0
-#> 3  1.044394e-06               0
-#> 4  2.082802e-06               0
-#> 5  7.349575e-06               0
-#> 6  1.271848e-05               0
-#>                                                                                                advertencia
-#> 1                                                                                                         
-#> 2                                                                                                         
-#> 3                                                                                                         
-#> 4                                                                                                         
-#> 5 possible convergence problem: 'optim' gave code = 52 and message ‘ERROR: ABNORMAL_TERMINATION_IN_LNSRCH’
-#> 6                                                                                                         
+#>                     metodo convergencia    pendiente var_nivel var_pendiente
+#> 1 StructTS_tendencia_local            0 -0.025541233         0  4.349116e-05
+#> 2 StructTS_tendencia_local            0  0.003842644         0  2.954892e-06
+#> 3 StructTS_tendencia_local            0  0.007417301         0  1.044394e-06
+#> 4 StructTS_tendencia_local            0 -0.002033895         0  2.082802e-06
+#> 5 StructTS_tendencia_local            0  0.012997541         0  7.349458e-06
+#> 6 StructTS_tendencia_local            0 -0.002758758         0  1.271848e-05
+#>   var_observacion advertencia
+#> 1               0            
+#> 2               0            
+#> 3               0            
+#> 4               0            
+#> 5               0            
+#> 6               0            
 # }
 ```
