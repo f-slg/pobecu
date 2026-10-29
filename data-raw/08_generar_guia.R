@@ -13,7 +13,15 @@ rmarkdown::render("README.Rmd", output_format = "html_document",
 knitr::purl("README.Rmd", output = "inst/examples/guia-pobecu.R",
             documentation = 2, quiet = TRUE)
 # knitr puede dejar espacios después de #> y #'; evita diferencias de formato.
-for (archivo in c("README.md", "inst/examples/guia-pobecu.R")) {
-  lineas <- readLines(archivo, warn = FALSE, encoding = "UTF-8")
-  writeLines(sub("[ \t]+$", "", lineas), archivo, useBytes = TRUE)
+# github_document agrega un índice largo que no se usa en el README de geoecu.
+# Retíralo también aquí para que la versión generada conserve la portada limpia.
+lineas <- readLines("README.md", warn = FALSE, encoding = "UTF-8")
+inicio <- match("- [pobecu](#pobecu)", lineas)
+if (!is.na(inicio)) {
+  titulo <- match("# pobecu", lineas[(inicio + 1L):length(lineas)]) + inicio
+  if (!is.na(titulo)) lineas <- lineas[-seq.int(inicio, titulo - 1L)]
 }
+writeLines(sub("[ \t]+$", "", lineas), "README.md", useBytes = TRUE)
+archivo <- "inst/examples/guia-pobecu.R"
+lineas <- readLines(archivo, warn = FALSE, encoding = "UTF-8")
+writeLines(sub("[ \t]+$", "", lineas), archivo, useBytes = TRUE)

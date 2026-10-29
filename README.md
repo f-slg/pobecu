@@ -1,29 +1,4 @@
 
-- [pobecu](#pobecu)
-  - [1. Instalación y primera
-    consulta](#1-instalación-y-primera-consulta)
-  - [2. Consultar territorios y años](#2-consultar-territorios-y-años)
-  - [3. Evolución nacional: estimaciones y
-    proyecciones](#3-evolución-nacional-estimaciones-y-proyecciones)
-  - [4. Comparar provincias](#4-comparar-provincias)
-  - [5. Edades simples, grupos y
-    pirámides](#5-edades-simples-grupos-y-pirámides)
-  - [6. Población urbana y rural](#6-población-urbana-y-rural)
-  - [7. Unir denominadores y calcular
-    tasas](#7-unir-denominadores-y-calcular-tasas)
-  - [8. Parroquias: estimación y
-    coherencia](#8-parroquias-estimación-y-coherencia)
-  - [9. Códigos territoriales y mapas con
-    geoecu](#9-códigos-territoriales-y-mapas-con-geoecu)
-  - [10. Guardar resultados y trabajar sin
-    conexión](#10-guardar-resultados-y-trabajar-sin-conexión)
-  - [11. Contraste con los archivos
-    originales](#11-contraste-con-los-archivos-originales)
-  - [12. Metodología, referencias y
-    contribuciones](#12-metodología-referencias-y-contribuciones)
-  - [13. Reconstrucción y escenarios de población
-    1900–2100](#13-reconstrucción-y-escenarios-de-población-19002100)
-
 # pobecu
 
 <img src="man/figures/logo.png" align="right" height="139" alt="Logo de pobecu" />
