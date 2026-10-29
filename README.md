@@ -543,22 +543,22 @@ detalle_mapa$area_km2 <- round(detalle_mapa$area_km2, 2)
 detalle_mapa$densidad <- round(detalle_mapa$densidad, 2)
 detalle_mapa[order(-detalle_mapa$densidad), ]
 #>    dpa_canton       canton poblacion area_km2 densidad
-#> 1        1101         Loja    258514  1891.24   136.69
+#> 1        1101         Loja    258514  1890.99   136.71
 #> 3        1103     Catamayo     36428   651.85    55.88
-#> 14       1114       Pindal     10987   202.00    54.39
-#> 16       1116       Olmedo      4134   113.78    36.33
-#> 8        1108       Macará     18520   573.03    32.32
-#> 2        1102       Calvas     26374   851.00    30.99
-#> 4        1104       Celica     14676   521.60    28.14
-#> 6        1106    Espíndola     14277   516.25    27.66
-#> 11       1111     Saraguro     29588  1084.88    27.27
-#> 10       1110      Puyango     16559   636.99    26.00
-#> 5        1105 Chaguarpamba      6875   313.23    21.95
-#> 9        1109       Paltas     22929  1156.17    19.83
-#> 7        1107    Gonzanamá     12421   681.90    18.22
+#> 14       1114       Pindal     10987   202.12    54.36
+#> 16       1116       Olmedo      4134   113.80    36.33
+#> 8        1108       Macará     18520   573.28    32.31
+#> 2        1102       Calvas     26374   851.17    30.99
+#> 4        1104       Celica     14676   521.86    28.12
+#> 6        1106    Espíndola     14277   516.26    27.65
+#> 11       1111     Saraguro     29588  1084.80    27.28
+#> 10       1110      Puyango     16559   637.33    25.98
+#> 5        1105 Chaguarpamba      6875   313.31    21.94
+#> 9        1109       Paltas     22929  1156.54    19.83
+#> 7        1107    Gonzanamá     12421   681.95    18.21
 #> 15       1115     Quilanga      3925   236.52    16.59
-#> 12       1112    Sozoranga      6917   421.88    16.40
-#> 13       1113    Zapotillo     15333  1211.58    12.66
+#> 12       1112    Sozoranga      6917   422.02    16.39
+#> 13       1113    Zapotillo     15333  1212.38    12.65
 
 grafico_mapa <- ggplot(mapa) +
   geom_sf(aes(fill = densidad), color = "white", linewidth = 0.3) +
@@ -593,12 +593,12 @@ Comprueba los insumos y reproduce el cociente con la tabla del mapa:
 stopifnot(all.equal(mapa$densidad, mapa$poblacion / mapa$area_km2))
 head(detalle_mapa[c("canton", "poblacion", "area_km2", "densidad")])
 #>         canton poblacion area_km2 densidad
-#> 1         Loja    258514  1891.24   136.69
-#> 2       Calvas     26374   851.00    30.99
+#> 1         Loja    258514  1890.99   136.71
+#> 2       Calvas     26374   851.17    30.99
 #> 3     Catamayo     36428   651.85    55.88
-#> 4       Celica     14676   521.60    28.14
-#> 5 Chaguarpamba      6875   313.23    21.95
-#> 6    Espíndola     14277   516.25    27.66
+#> 4       Celica     14676   521.86    28.12
+#> 5 Chaguarpamba      6875   313.31    21.94
+#> 6    Espíndola     14277   516.26    27.65
 ```
 
 ## 10. Guardar resultados y trabajar sin conexión
@@ -1088,11 +1088,11 @@ precisión en 1900–2100.
 | 75 | prospectiva | parroquia | constante | 5 | 5.048 | NA |
 | 85 | retrospectiva | nacional | estructural_CLR | 5 | 1.358 | 1.000 |
 | 90 | retrospectiva | nacional | constante | 5 | 9.309 | NA |
-| 95 | retrospectiva | provincia | estructural_CLR | 5 | 1.460 | 0.792 |
+| 95 | retrospectiva | provincia | estructural_CLR | 5 | 1.460 | 0.833 |
 | 100 | retrospectiva | provincia | constante | 5 | 9.309 | NA |
-| 105 | retrospectiva | canton | estructural_CLR | 5 | 1.477 | 0.910 |
+| 105 | retrospectiva | canton | estructural_CLR | 5 | 1.477 | 0.919 |
 | 110 | retrospectiva | canton | constante | 5 | 9.540 | NA |
-| 115 | retrospectiva | parroquia | estructural_CLR | 5 | 1.544 | 0.924 |
+| 115 | retrospectiva | parroquia | estructural_CLR | 5 | 1.544 | 0.926 |
 | 120 | retrospectiva | parroquia | constante | 5 | 9.986 | NA |
 
 Evaluación a cinco años: WAPE (%) y cobertura de bandas condicionales
