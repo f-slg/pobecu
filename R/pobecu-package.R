@@ -37,7 +37,8 @@
 #' nivel y qué cifras son oficiales del INEC y cuáles son estimaciones del
 #' paquete.
 #'
-#' @return Un `data.frame` (de forma invisible) con una fila por nivel.
+#' @return Un `data.frame` de clase `pob_fuentes` con una fila por nivel. Al
+#'   imprimirlo se muestran también la versión de los datos y las fuentes.
 #' @export
 #' @examples
 #' pob_fuentes()
@@ -53,11 +54,17 @@ pob_fuentes <- function() {
                "pobecu, a partir de INEC (proyecci\u00f3n cantonal) y Censo 2022"),
     stringsAsFactors = FALSE
   )
+  class(x) <- c("pob_fuentes", "data.frame")
+  x
+}
+
+#' @export
+print.pob_fuentes <- function(x, ...) {
   cat("pobecu ", as.character(utils::packageVersion("pobecu")),
       " \u00b7 datos ", .pobecu_version_datos, "\n",
       "Estimaciones hasta 2022 y proyecciones desde 2023, al 30 de junio de cada a\u00f1o.\n\n",
       sep = "")
-  print(x[, 1:5], row.names = FALSE)
+  print(as.data.frame(unclass(x))[, 1:5], row.names = FALSE)
   cat("\nFuentes:\n",
       "* INEC, Estimaciones y Proyecciones de Poblaci\u00f3n, ", .pobecu_revision, ".\n",
       "  https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/\n",
