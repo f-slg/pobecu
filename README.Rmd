@@ -124,6 +124,7 @@ nacional$periodo <- ifelse(nacional$anio <= 2022, "Estimación", "Proyección")
 tema_pob <- theme_minimal(base_size = 12) +
   theme(panel.grid.minor = element_blank(),
         plot.title = element_text(face = "bold"),
+        plot.caption = element_text(hjust = 0, color = "grey35", size = 9),
         plot.margin = margin(10, 20, 10, 10),
         legend.position = "bottom")
 
@@ -136,7 +137,8 @@ grafico_serie <- ggplot(nacional, aes(anio, poblacion / 1e6)) +
   annotate("text", x = 2036, y = 16, label = "Proyecciones", color = "#BA6518") +
   labs(title = "Población del Ecuador, 1950–2050",
        subtitle = "La línea discontinua marca el comienzo del periodo proyectado",
-       x = "Año", y = "Millones de habitantes") + tema_pob
+       x = "Año", y = "Millones de habitantes",
+       caption = "Fuente: INEC, Revisión 2024. Población al 30 de junio de cada año.") + tema_pob
 grafico_serie
 
 subset(nacional, anio %in% c(1950, 2010, 2022, 2025, 2030, 2050))
@@ -156,8 +158,13 @@ top10
 
 ggplot(top10, aes(poblacion / 1e6, reorder(provincia, poblacion))) +
   geom_col(fill = "#227C89", width = 0.7) +
+  geom_text(aes(label = scales::number(poblacion, accuracy = 1, big.mark = " ")),
+            hjust = -0.1, size = 3.3) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.25))) +
   labs(title = "Provincias con mayor población, 2025",
-       x = "Millones de habitantes", y = NULL) + tema_pob
+       subtitle = "Diez primeras provincias; las etiquetas muestran habitantes",
+       x = "Millones de habitantes", y = NULL,
+       caption = "Fuente: INEC, Revisión 2024. Proyección al 30 de junio de 2025.") + tema_pob
 ```
 
 ## 5. Edades simples, grupos y pirámides
@@ -195,7 +202,9 @@ ggplot(pir, aes(posicion, edad, fill = sexo)) +
   scale_fill_manual(values = c(hombre = "#227C89", mujer = "#CB7436")) +
   scale_x_continuous(labels = function(x) paste0(abs(x), "%")) +
   labs(title = "Pirámides de población del Ecuador",
-       x = "Porcentaje de la población total de cada año", y = "Edad", fill = "Sexo") +
+       subtitle = "Grupos de cinco años; 100+ reúne a las personas de 100 años y más",
+       x = "Porcentaje de la población total de cada año", y = "Edad", fill = "Sexo",
+       caption = "Fuente: INEC, Revisión 2024. Ambos años son proyecciones.\nEl porcentaje usa como denominador el total de ambos sexos de cada año.") +
   tema_pob
 ```
 
@@ -212,13 +221,21 @@ INEC, no a un resultado observado ni a un intervalo de confianza.
 areas <- poblacion("provincia", anio = 2025,
                    provincia = c("Guayas", "Pichincha", "Manabí"), area = TRUE)
 areas
+areas$porcentaje <- 100 * areas$poblacion /
+  ave(areas$poblacion, areas$provincia, FUN = sum)
 
 ggplot(areas, aes(provincia, poblacion, fill = area)) +
   geom_col(position = "fill", width = 0.65) +
+  geom_text(aes(label = paste0(format(round(porcentaje, 1), nsmall = 1), "%"),
+                color = area),
+            position = position_fill(vjust = 0.5), fontface = "bold") +
+  scale_color_manual(values = c(rural = "#153F57", urbana = "white"), guide = "none") +
   scale_y_continuous(labels = scales::label_percent()) +
   scale_fill_manual(values = c(rural = "#D6A547", urbana = "#227C89")) +
-  labs(title = "¿Qué proporción vive en cada área?",
-       x = NULL, y = "Porcentaje de habitantes", fill = "Área") + tema_pob
+  labs(title = "Población urbana y rural por provincia, 2025",
+       subtitle = "Guayas, Manabí y Pichincha; cada barra suma 100%",
+       x = NULL, y = "Porcentaje de habitantes", fill = "Área",
+       caption = "Fuente: INEC, Revisión 2024. Área de residencia; no clasificación administrativa.") + tema_pob
 ```
 
 Las barras muestran proporciones: dos provincias pueden tener una composición
@@ -299,13 +316,16 @@ parroquias
 
 ggplot(parroquias, aes(reorder(parroquia, poblacion), poblacion, fill = factor(anio))) +
   geom_col(position = "dodge", width = 0.7) +
+  geom_text(aes(label = scales::number(poblacion, accuracy = 1, big.mark = " ")),
+            position = position_dodge(width = 0.7), hjust = -0.1, size = 3) +
   coord_flip() +
   scale_y_continuous(labels = scales::label_number(big.mark = " ", decimal.mark = ","),
-                     expand = expansion(mult = c(0, 0.1))) +
+                     expand = expansion(mult = c(0, 0.17))) +
   scale_fill_manual(values = c("2025" = "#227C89", "2035" = "#CB7436")) +
   labs(title = "Parroquias de Puyango, 2025 y 2035",
        subtitle = "Estimación pobecu a partir del INEC y los censos",
-       x = NULL, y = "Habitantes", fill = "Año") + tema_pob
+       x = NULL, y = "Habitantes", fill = "Año",
+       caption = "Fuente: estimación pobecu basada en proyecciones INEC y censos 2010/2022.\nNo son cifras oficiales parroquiales ni se muestran intervalos de incertidumbre.") + tema_pob
 
 control <- aggregate(poblacion ~ anio, parroquias, sum)
 oficial <- poblacion("canton", anio = c(2025, 2035), canton = "Puyango")
@@ -350,13 +370,18 @@ devuelve un objeto `sf`; la densidad divide habitantes entre `area_km2`.
 
 ```{r mapa, fig.height=6, fig.cap="Densidad por cantón de Loja en 2025. Población: INEC; geometrías: geoecu, agrupadas a unidades censales."}
 mapa <- pob_mapa("canton", anio = 2025, provincia = "Loja")
-head(sf::st_drop_geometry(mapa)[, c("dpa_canton", "canton", "poblacion", "densidad")])
+detalle_mapa <- sf::st_drop_geometry(mapa)[,
+  c("dpa_canton", "canton", "poblacion", "area_km2", "densidad")]
+detalle_mapa$area_km2 <- round(detalle_mapa$area_km2, 2)
+detalle_mapa$densidad <- round(detalle_mapa$densidad, 2)
+detalle_mapa[order(-detalle_mapa$densidad), ]
 
 grafico_mapa <- ggplot(mapa) +
   geom_sf(aes(fill = densidad), color = "white", linewidth = 0.3) +
   scale_fill_viridis_c(trans = "sqrt", name = "Hab./km²") +
   labs(title = "Densidad de población de los cantones de Loja",
-       subtitle = "2025 · Escala de color con transformación de raíz cuadrada") +
+       subtitle = "2025 · Escala de color con transformación de raíz cuadrada",
+       caption = "Población: INEC, Revisión 2024. Límites: geoecu, agrupados a unidades censales.\nDensidad = habitantes / superficie total en km²; promedio de cada cantón.") +
   tema_pob
 grafico_mapa
 ```

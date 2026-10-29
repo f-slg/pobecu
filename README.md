@@ -169,6 +169,7 @@ nacional$periodo <- ifelse(nacional$anio <= 2022, "Estimación", "Proyección")
 tema_pob <- theme_minimal(base_size = 12) +
   theme(panel.grid.minor = element_blank(),
         plot.title = element_text(face = "bold"),
+        plot.caption = element_text(hjust = 0, color = "grey35", size = 9),
         plot.margin = margin(10, 20, 10, 10),
         legend.position = "bottom")
 
@@ -181,7 +182,8 @@ grafico_serie <- ggplot(nacional, aes(anio, poblacion / 1e6)) +
   annotate("text", x = 2036, y = 16, label = "Proyecciones", color = "#BA6518") +
   labs(title = "Población del Ecuador, 1950–2050",
        subtitle = "La línea discontinua marca el comienzo del periodo proyectado",
-       x = "Año", y = "Millones de habitantes") + tema_pob
+       x = "Año", y = "Millones de habitantes",
+       caption = "Fuente: INEC, Revisión 2024. Población al 30 de junio de cada año.") + tema_pob
 grafico_serie
 ```
 
@@ -235,8 +237,13 @@ top10
 
 ggplot(top10, aes(poblacion / 1e6, reorder(provincia, poblacion))) +
   geom_col(fill = "#227C89", width = 0.7) +
+  geom_text(aes(label = scales::number(poblacion, accuracy = 1, big.mark = " ")),
+            hjust = -0.1, size = 3.3) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.25))) +
   labs(title = "Provincias con mayor población, 2025",
-       x = "Millones de habitantes", y = NULL) + tema_pob
+       subtitle = "Diez primeras provincias; las etiquetas muestran habitantes",
+       x = "Millones de habitantes", y = NULL,
+       caption = "Fuente: INEC, Revisión 2024. Proyección al 30 de junio de 2025.") + tema_pob
 ```
 
 <div class="figure">
@@ -295,7 +302,9 @@ ggplot(pir, aes(posicion, edad, fill = sexo)) +
   scale_fill_manual(values = c(hombre = "#227C89", mujer = "#CB7436")) +
   scale_x_continuous(labels = function(x) paste0(abs(x), "%")) +
   labs(title = "Pirámides de población del Ecuador",
-       x = "Porcentaje de la población total de cada año", y = "Edad", fill = "Sexo") +
+       subtitle = "Grupos de cinco años; 100+ reúne a las personas de 100 años y más",
+       x = "Porcentaje de la población total de cada año", y = "Edad", fill = "Sexo",
+       caption = "Fuente: INEC, Revisión 2024. Ambos años son proyecciones.\nEl porcentaje usa como denominador el total de ambos sexos de cada año.") +
   tema_pob
 ```
 
@@ -332,13 +341,21 @@ areas
 #> 4         13    Manabí 2025  rural    717549
 #> 5         17 Pichincha 2025 urbana   2070248
 #> 6         17 Pichincha 2025  rural   1224230
+areas$porcentaje <- 100 * areas$poblacion /
+  ave(areas$poblacion, areas$provincia, FUN = sum)
 
 ggplot(areas, aes(provincia, poblacion, fill = area)) +
   geom_col(position = "fill", width = 0.65) +
+  geom_text(aes(label = paste0(format(round(porcentaje, 1), nsmall = 1), "%"),
+                color = area),
+            position = position_fill(vjust = 0.5), fontface = "bold") +
+  scale_color_manual(values = c(rural = "#153F57", urbana = "white"), guide = "none") +
   scale_y_continuous(labels = scales::label_percent()) +
   scale_fill_manual(values = c(rural = "#D6A547", urbana = "#227C89")) +
-  labs(title = "¿Qué proporción vive en cada área?",
-       x = NULL, y = "Porcentaje de habitantes", fill = "Área") + tema_pob
+  labs(title = "Población urbana y rural por provincia, 2025",
+       subtitle = "Guayas, Manabí y Pichincha; cada barra suma 100%",
+       x = NULL, y = "Porcentaje de habitantes", fill = "Área",
+       caption = "Fuente: INEC, Revisión 2024. Área de residencia; no clasificación administrativa.") + tema_pob
 ```
 
 <div class="figure">
@@ -460,13 +477,16 @@ parroquias
 
 ggplot(parroquias, aes(reorder(parroquia, poblacion), poblacion, fill = factor(anio))) +
   geom_col(position = "dodge", width = 0.7) +
+  geom_text(aes(label = scales::number(poblacion, accuracy = 1, big.mark = " ")),
+            position = position_dodge(width = 0.7), hjust = -0.1, size = 3) +
   coord_flip() +
   scale_y_continuous(labels = scales::label_number(big.mark = " ", decimal.mark = ","),
-                     expand = expansion(mult = c(0, 0.1))) +
+                     expand = expansion(mult = c(0, 0.17))) +
   scale_fill_manual(values = c("2025" = "#227C89", "2035" = "#CB7436")) +
   labs(title = "Parroquias de Puyango, 2025 y 2035",
        subtitle = "Estimación pobecu a partir del INEC y los censos",
-       x = NULL, y = "Habitantes", fill = "Año") + tema_pob
+       x = NULL, y = "Habitantes", fill = "Año",
+       caption = "Fuente: estimación pobecu basada en proyecciones INEC y censos 2010/2022.\nNo son cifras oficiales parroquiales ni se muestran intervalos de incertidumbre.") + tema_pob
 ```
 
 <div class="figure">
@@ -536,20 +556,35 @@ habitantes entre `area_km2`.
 
 ``` r
 mapa <- pob_mapa("canton", anio = 2025, provincia = "Loja")
-head(sf::st_drop_geometry(mapa)[, c("dpa_canton", "canton", "poblacion", "densidad")])
-#>   dpa_canton       canton poblacion  densidad
-#> 1       1101         Loja    258514 136.68985
-#> 2       1102       Calvas     26374  30.99167
-#> 3       1103     Catamayo     36428  55.88428
-#> 4       1104       Celica     14676  28.13666
-#> 5       1105 Chaguarpamba      6875  21.94866
-#> 6       1106    Espíndola     14277  27.65526
+detalle_mapa <- sf::st_drop_geometry(mapa)[,
+  c("dpa_canton", "canton", "poblacion", "area_km2", "densidad")]
+detalle_mapa$area_km2 <- round(detalle_mapa$area_km2, 2)
+detalle_mapa$densidad <- round(detalle_mapa$densidad, 2)
+detalle_mapa[order(-detalle_mapa$densidad), ]
+#>    dpa_canton       canton poblacion area_km2 densidad
+#> 1        1101         Loja    258514  1891.24   136.69
+#> 3        1103     Catamayo     36428   651.85    55.88
+#> 14       1114       Pindal     10987   202.00    54.39
+#> 16       1116       Olmedo      4134   113.78    36.33
+#> 8        1108       Macará     18520   573.03    32.32
+#> 2        1102       Calvas     26374   851.00    30.99
+#> 4        1104       Celica     14676   521.60    28.14
+#> 6        1106    Espíndola     14277   516.25    27.66
+#> 11       1111     Saraguro     29588  1084.88    27.27
+#> 10       1110      Puyango     16559   636.99    26.00
+#> 5        1105 Chaguarpamba      6875   313.23    21.95
+#> 9        1109       Paltas     22929  1156.17    19.83
+#> 7        1107    Gonzanamá     12421   681.90    18.22
+#> 15       1115     Quilanga      3925   236.52    16.59
+#> 12       1112    Sozoranga      6917   421.88    16.40
+#> 13       1113    Zapotillo     15333  1211.58    12.66
 
 grafico_mapa <- ggplot(mapa) +
   geom_sf(aes(fill = densidad), color = "white", linewidth = 0.3) +
   scale_fill_viridis_c(trans = "sqrt", name = "Hab./km²") +
   labs(title = "Densidad de población de los cantones de Loja",
-       subtitle = "2025 · Escala de color con transformación de raíz cuadrada") +
+       subtitle = "2025 · Escala de color con transformación de raíz cuadrada",
+       caption = "Población: INEC, Revisión 2024. Límites: geoecu, agrupados a unidades censales.\nDensidad = habitantes / superficie total en km²; promedio de cada cantón.") +
   tema_pob
 grafico_mapa
 ```
