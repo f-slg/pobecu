@@ -7,7 +7,8 @@
 pob_fuentes()
 }
 \value{
-Un \code{data.frame} (de forma invisible) con una fila por nivel.
+Un \code{data.frame} de clase \code{pob_fuentes} con una fila por nivel. Al
+imprimirlo se muestran también la versión de los datos y las fuentes.
 }
 \description{
 Muestra de dónde provienen los datos de pobecu, qué periodo cubre cada
