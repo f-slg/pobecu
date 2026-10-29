@@ -521,11 +521,15 @@ antes de analizar esos territorios.
 
 ### Mapa de densidad
 
-La primera consulta cartográfica descarga las capas de `geoecu`. El
-ejemplo usa Loja para que los cantones sean legibles.
+La primera consulta cartográfica descarga las capas de `geoecu`. Instala
+`geoecu` 0.4.1 o posterior: cada capa aporta `area_km2`, superficie
+calculada sobre el elipsoide WGS84 a partir de la geometría de
+resolución alta.
 [`pob_mapa()`](https://f-slg.github.io/pobecu/reference/pob_mapa.md)
-agrupa las unidades y devuelve un objeto `sf`; la densidad divide
-habitantes entre `area_km2`.
+agrupa las unidades CONALI que pertenecen a una unidad del Censo 2022,
+suma las áreas de los polígonos y calcula
+`densidad = poblacion / area_km2`. Así, población y superficie
+corresponden a la misma división territorial.
 
 ``` r
 
@@ -570,11 +574,26 @@ censales.](reference/figures/README-mapa-1.png)
 Densidad por cantón de Loja en 2025. Población: INEC; geometrías:
 geoecu, agrupadas a unidades censales.
 
-La densidad es un promedio territorial: no muestra dónde se concentran
-los habitantes dentro de un cantón. Con `sexo`, `edad` o `area`, el
-cociente usa la superficie completa del polígono; en particular, no mide
-la densidad sobre una superficie urbana o rural delimitada por separado.
-Las zonas en estudio se conservan con población `NA`.
+La densidad es el promedio de habitantes por km² en toda la unidad; no
+muestra su distribución interna. Si pides sexo, edad o residencia
+urbana/rural, el área sigue siendo la superficie completa del
+territorio. No equivale a densidad de superficie habitada. Las zonas en
+estudio conservan población `NA`.
+
+Comprueba los insumos y reproduce el cociente con la tabla del mapa:
+
+``` r
+
+stopifnot(all.equal(mapa$densidad, mapa$poblacion / mapa$area_km2))
+head(detalle_mapa[c("canton", "poblacion", "area_km2", "densidad")])
+#>         canton poblacion area_km2 densidad
+#> 1         Loja    258514  1891.24   136.69
+#> 2       Calvas     26374   851.00    30.99
+#> 3     Catamayo     36428   651.85    55.88
+#> 4       Celica     14676   521.60    28.14
+#> 5 Chaguarpamba      6875   313.23    21.95
+#> 6    Espíndola     14277   516.25    27.66
+```
 
 ## 10. Guardar resultados y trabajar sin conexión
 
