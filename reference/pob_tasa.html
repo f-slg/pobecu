@@ -9,7 +9,7 @@ habitantes (por defecto, por 100 000)."><meta property="og:image" content="https
 
     <a class="navbar-brand me-2" href="../index.html">pobecu</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +73,8 @@ defunciones, nacimientos, etc.).</p></dd>
 
 
 <dt id="arg-por">por<a class="anchor" aria-label="anchor" href="#arg-por"></a></dt>
-<dd><p>Base de la tasa. Por defecto 100 000 habitantes.</p></dd>
+<dd><p>Base de la tasa: un número finito mayor que cero.
+Por defecto 100 000 habitantes.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -83,7 +84,10 @@ defunciones, nacimientos, etc.).</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p><code>datos</code> con las columnas <code>poblacion</code> y <code>tasa</code>.</p>
+    <p><code>datos</code> con las columnas <code>poblacion</code> y <code>tasa</code>. Si la población
+es cero, la tasa es <code>NA_real_</code> y se emite una advertencia. Los casos
+deben ser numéricos, finitos y no negativos; se permiten valores <code>NA</code>
+y numeradores fraccionarios (por ejemplo, ponderados).</p>
     </div>
 
     <div class="section level2">

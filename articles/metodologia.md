@@ -25,7 +25,7 @@ las verificaciones que pasan los datos y sus limitaciones.
 ``` r
 
 pob_fuentes()
-#> pobecu 0.2.0 · datos datos-v0.1.0
+#> pobecu 0.2.0.9000 · datos datos-v0.1.0
 #> Estimaciones hasta 2022 y proyecciones desde 2023, al 30 de junio de cada año.
 #> 
 #>      nivel   periodo      area        edad              tipo
