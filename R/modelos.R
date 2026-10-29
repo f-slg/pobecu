@@ -98,11 +98,18 @@ pob_estimar <- function(nivel = c("provincia", "canton", "parroquia", "nacional"
   # filtrar no altera una trayectoria para semilla y configuración iguales.
   anos <- 1900:2100
   salidas <- list()
+  # Solo se resumen los territorios y años pedidos; la simulación del árbol
+  # completo no cambia, así que los resultados son los mismos.
+  necesita <- function(nodo) (nivel == "todos" || nodo$nivel == nivel) &&
+    (is.null(cp) || substr(nodo$codigo, 1, 2) %in% cp) &&
+    (is.null(cc) || substr(nodo$codigo, 1, 4) %in% cc)
   guardar <- function(nodo, punto, draws, rango) {
+    if (!necesita(nodo)) return(invisible(NULL))
     conocido <- anos >= min(rango) & anos <= max(rango)
-    q <- t(apply(draws, 1, stats::quantile,
-                 probs = c((1-nivel_intervalo)/2, (1+nivel_intervalo)/2), names = FALSE))
-    q[conocido, ] <- NA_real_
+    q <- matrix(NA_real_, length(anos), 2)
+    filas <- which(!conocido & anos %in% anio)
+    if (length(filas)) q[filas, ] <- .cuantiles_filas(draws[filas, , drop = FALSE],
+      c((1-nivel_intervalo)/2, (1+nivel_intervalo)/2))
     h <- pmax(min(rango) - anos, anos - max(rango), 0)
     d <- data.frame(nivel = nodo$nivel, codigo = nodo$codigo, nombre = nodo$nombre,
       padre = nodo$padre, anio = anos, poblacion = punto,
@@ -154,9 +161,6 @@ pob_estimar <- function(nivel = c("provincia", "canton", "parroquia", "nacional"
   }
   recorrer("EC", punto, draws)
   r <- do.call(rbind, salidas); rownames(r) <- NULL
-  if (nivel != "todos") r <- r[r$nivel == nivel, , drop = FALSE]
-  if (!is.null(cp)) r <- r[substr(r$codigo, 1, 2) %in% cp, , drop = FALSE]
-  if (!is.null(cc)) r <- r[substr(r$codigo, 1, 4) %in% cc, , drop = FALSE]
   r$dpa_provin <- ifelse(r$nivel == "nacional", NA_character_, substr(r$codigo, 1, 2))
   r$dpa_canton <- ifelse(r$nivel %in% c("canton", "parroquia"), substr(r$codigo, 1, 4), NA_character_)
   r$dpa_parroq <- ifelse(r$nivel == "parroquia", r$codigo, NA_character_)
@@ -304,6 +308,20 @@ pob_estimar <- function(nivel = c("provincia", "canton", "parroquia", "nacional"
   }
   if (any(!is.finite(draws)) || any(!is.finite(punto))) stop("Trayectoria no finita.", call. = FALSE)
   list(punto = punto, draws = draws)
+}
+
+# Cuantiles tipo 7 (los de stats::quantile()) de cada fila, con un solo order().
+.cuantiles_filas <- function(x, probs) {
+  n <- ncol(x)
+  s <- matrix(x[order(row(x), x)], nrow = n)
+  indice <- 1 + (n - 1) * probs
+  lo <- floor(indice); hi <- ceiling(indice)
+  vapply(seq_along(probs), function(k) {
+    a <- s[lo[k], ]; b <- s[hi[k], ]; h <- indice[k] - lo[k]
+    i <- h > 0 & b != a
+    a[i] <- (1 - h) * a[i] + h * b[i]
+    a
+  }, numeric(nrow(x)))
 }
 
 .repartir_entero <- function(total, pesos) {
