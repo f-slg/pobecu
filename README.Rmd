@@ -21,7 +21,9 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", error = FALSE,
 options(width = 92)
 ```
 
-# pobecu <img src="man/figures/logo.png" align="right" height="139" alt="Logo de pobecu" />
+# pobecu
+
+<img src="man/figures/logo.png" align="right" height="139" alt="Logo de pobecu" />
 
 [Pruebas automáticas](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml)
 · [Licencia MIT](LICENSE.md)
@@ -483,3 +485,329 @@ Los errores y propuestas se reciben en [Issues](https://github.com/f-slg/pobecu/
 Consulta la [guía de contribución](https://github.com/f-slg/pobecu/blob/main/.github/CONTRIBUTING.md) y el
 [código de conducta](https://github.com/f-slg/pobecu/blob/main/.github/CODE_OF_CONDUCT.md). Código bajo licencia
 [MIT](LICENSE.md); datos procedentes de las publicaciones del INEC.
+
+## 13. Reconstrucción y escenarios de población 1900–2100
+
+`pob_ajustar()` y `pob_estimar()` permiten obtener **totales anuales** para el
+país, sus **24 provincias, 221 cantones y 1042 unidades parroquiales de referencia**.
+Son 1288 series y 258888 filas si se solicita toda la jerarquía para 1900–2100.
+Los modelos extienden las trayectorias disponibles y mantienen exactamente los
+valores de referencia. `poblacion()` sigue consultando las tablas originales.
+
+**Interpretación histórica:** el resultado de 1900 representa una reconstrucción
+sobre las unidades de referencia del Censo 2022. No afirma que una provincia,
+cantón o parroquia existiera en 1900 ni reconstruye cambios de límites. Las
+cabeceras cantonales conservan la agregación censal utilizada en el paquete.
+No se dispone aquí de observaciones locales de 1900 para validar esa reconstrucción.
+El extremo de 2100 es un escenario condicionado a supuestos, no una proyección
+oficial del INEC ni una predicción demográfica validada a 75 años.
+
+### Uso completo en R
+
+Ajusta una vez y reutiliza el objeto. El cálculo para todo el país puede tardar
+varios minutos, según el equipo y el número de simulaciones. Se usan únicamente
+`stats` y las tablas incluidas; no se descargan datos adicionales.
+
+```{r modelo-ajuste}
+modelo_territorial <- pob_ajustar(
+  ventana = 20,       # Hasta 20 años de cada extremo
+  phi_total = 0.98,   # Amortiguación anual del total nacional
+  phi_partes = 0.95   # Amortiguación de las participaciones territoriales
+)
+table(modelo_territorial$diagnosticos$metodo)
+
+escenarios <- pob_estimar(
+  nivel = "todos", anio = 1900:2100,
+  modelo = modelo_territorial, simulaciones = 200,
+  semilla = 2026, nivel_intervalo = 0.95
+)
+with(escenarios, table(nivel, direccion))
+```
+
+Para trabajos finales conviene aumentar `simulaciones` a 1000 o más y comprobar
+la estabilidad de los cuantiles entre semillas. Más simulaciones reducen el error
+Monte Carlo; **no corrigen los supuestos ni aumentan la información histórica**.
+El generador restaura el estado aleatorio de la sesión. Filtrar territorios o
+solicitar menos años mantiene los mismos resultados con idéntica configuración.
+
+```{r modelo-consulta}
+# Como ya calculamos toda la jerarquía, filtramos sin volver a simular.
+loja_parroquias <- subset(escenarios, nivel == "parroquia" & dpa_canton == "1101")
+seleccion <- subset(loja_parroquias, anio %in% c(1900, 2022, 2050, 2100))
+head(seleccion[c("nombre", "anio", "poblacion", "origen", "horizonte")], 12)
+
+# También existe consulta directa, reutilizando el ajuste:
+# pob_estimar("parroquia", 1900:2100, modelo_territorial, canton = "Loja")
+# write.csv(escenarios, "poblacion_1900_2100.csv", row.names = FALSE)
+# saveRDS(modelo_territorial, "modelo_poblacion.rds")
+```
+
+Las columnas `origen`, `direccion`, `horizonte`, `referencia_desde` y
+`referencia_hasta` permiten auditar cada cifra. `extrapolacion_extrema = TRUE`
+identifica distancias mayores de 30 años al extremo de referencia; es una regla
+informativa, no un umbral estadísticamente validado. El atributo
+`attr(escenarios, "metodologia")` conserva la configuración y procedencia.
+Esta extensión modela **totales territoriales**, sin extender sexo, edades ni
+residencia urbana/rural. Las consultas publicadas por esas dimensiones continúan
+disponibles en sus periodos originales.
+
+### Modelo estadístico: estructura, estimación y restricciones
+
+**1. Anclajes y escala.** El total nacional disponible abarca 1950–2050;
+las provincias, 1990–2035; cantones y parroquias, 2010–2035. El ajuste predeterminado
+incluye las proyecciones publicadas. Las series parroquiales de entrada ya son
+estimaciones del método logístico/IPF descrito en la sección 12. No se tratan
+estas entradas como nuevos censos independientes. Los años de referencia se
+conservan exactamente y no reciben intervalos artificiales.
+
+Para el país se modela $z_t=\log(N_t)$. Para cada conjunto de $K$ territorios
+hermanos con conteos $N_{j,t}$ se emplea la transformación log-ratio centrada:
+
+$$
+z_{j,t}=\log(N_{j,t}+0.5)-\frac{1}{K}\sum_{k=1}^{K}\log(N_{k,t}+0.5).
+$$
+
+El pseudoconteo 0.5 permite trabajar con ceros; solo afecta la transformación para
+extrapolar. Los ceros publicados permanecen intactos. Las coordenadas CLR suman
+cero; se ajustan por separado y se normalizan conjuntamente al volver a conteos.
+No se estima una matriz multivariante completa de covarianzas entre territorios.
+Un territorio con participación constante puede producir un modelo degenerado
+sin innovaciones; esto no demuestra ausencia real de incertidumbre demográfica.
+
+**2. Estado local y máxima verosimilitud.** En cada extremo se usan hasta 20 años
+consecutivos, con un mínimo de ocho. Para cada coordenada se ajusta:
+
+$$
+z_t=\mu_t+\epsilon_t,\qquad
+\mu_{t+1}=\mu_t+b_t+\eta_t,\qquad
+b_{t+1}=b_t+\zeta_t.
+$$
+
+Las innovaciones gaussianas tienen varianzas $\sigma_\epsilon^2$,
+$\sigma_\eta^2$ y $\sigma_\zeta^2$. `stats::StructTS(type = "trend")` estima
+esas varianzas por máxima verosimilitud y obtiene estados mediante filtro de
+Kalman. Las coordenadas se centran y escalan para mejorar la optimización y los
+parámetros se devuelven a su escala original. Se permiten varianzas cero.
+
+La retrospectiva ajusta el mismo modelo a los primeros años **en orden inverso**.
+La pendiente retrospectiva describe ese tiempo invertido: no debe interpretarse
+como una tasa anual hacia adelante. Este procedimiento es una extrapolación
+inversa; no equivale a un suavizado histórico condicionado a censos antiguos.
+
+Se comprueba la convergencia numérica. Si falla el ajuste libre, se intenta el
+modelo estructural con $\sigma_\epsilon^2=0$. Si tampoco converge, se utiliza un
+respaldo declarado: pendiente OLS y varianza de innovación del nivel igual a la
+media de los cuadrados de las diferencias de residuos OLS; las otras varianzas
+son cero. El paquete emite una advertencia y registra el método, código de
+convergencia y mensajes en `modelo_territorial$diagnosticos`. La complejidad
+nominal no oculta fallos de optimización ni convierte esos respaldos en ajustes
+estructurales exitosos.
+
+**3. Extrapolación amortiguada.** El ajuste histórico anterior no estima la
+amortiguación. Al extenderlo se fija $\phi_N=0.98$ para el país y
+$\phi_p=0.95$ para las participaciones, aplicando:
+
+$$
+\mu_{h+1}=\mu_h+\phi b_h+\eta_h,\qquad
+b_{h+1}=\phi b_h+\zeta_h.
+$$
+
+El nivel inicial es el último valor transformado de referencia, para anclar la
+continuidad; la pendiente inicial es el estado filtrado. Sin innovaciones, el
+incremento acumulado en $h$ años es
+$b_0\phi(1-\phi^h)/(1-\phi)$, o $hb_0$ si $\phi=1$.
+Con $\phi<1$ la tendencia central se atenúa a largo plazo. Estos valores son
+**supuestos de escenario**, no hiperparámetros seleccionados por validación ni
+estimaciones de equilibrio poblacional. Se debe estudiar su sensibilidad.
+
+**4. Coherencia territorial.** Se vuelve de CLR a participaciones con softmax:
+
+$$
+p_{j,t}=\frac{\exp(z_{j,t})}{\sum_k\exp(z_{k,t})},\qquad
+N_{j,t}=N_{\mathrm{padre},t}\,p_{j,t}.
+$$
+
+La implementación resta el máximo antes de exponenciar para evitar desbordamientos.
+La distribución se repite de país a provincias, cantones y parroquias. Se redondea
+por mayor residuo en cada padre; los empates siguen el código territorial. Así,
+los conteos centrales enteros suman exactamente en todos los niveles y años.
+Es una distribución jerárquica descendente con participaciones dinámicas; no se
+implementa reconciliación MinT, ajuste bayesiano ni componentes por cohortes.
+El resultado central es la trayectoria sin innovaciones, no la media de las
+simulaciones ni necesariamente la mediana marginal después de normalizar.
+
+**5. Bandas condicionales.** Se simulan trayectorias completas de innovaciones
+con las varianzas ajustadas. Cada simulación de un hijo utiliza la misma
+simulación de su padre, y las participaciones se normalizan por familia y año.
+Las trayectorias simuladas continuas suman a su padre; los intervalos publicados
+son cuantiles marginales. **Los límites inferior y superior no deben sumarse**.
+
+Los estados iniciales y parámetros se mantienen fijos. Las bandas excluyen
+incertidumbre de parámetros, de las fuentes, de cambios territoriales y de
+supuestos futuros. Las innovaciones entre coordenadas y entre los dos sentidos
+temporales se suponen independientes antes de normalizar; la normalización y
+los padres comunes inducen dependencia entre los conteos finales. El 95% es
+nominal y condicional: no garantiza cobertura del 95% para la población real en
+1900 o 2100. Las bandas pueden ser muy anchas o degeneradas con series suavizadas.
+El modelo tampoco introduce guerras, epidemias, cambios migratorios o políticas
+futuras sin información externa.
+
+### Gráfico nacional: referencias y extensión del modelo
+
+```{r modelo-nacional, fig.height=5.4}
+nacional_ext <- subset(escenarios, nivel == "nacional")
+ggplot(nacional_ext, aes(anio, poblacion / 1e6)) +
+  geom_ribbon(data = subset(nacional_ext, origen == "modelo_pobecu"),
+              aes(ymin = limite_inferior / 1e6, ymax = limite_superior / 1e6,
+                  group = direccion), fill = "#D98A32", alpha = 0.22) +
+  geom_line(color = "#D98A32", linewidth = 0.8) +
+  geom_line(data = subset(nacional_ext, origen == "referencia_INEC"),
+            color = "#146C78", linewidth = 1.1) +
+  geom_vline(xintercept = c(1950, 2050), linetype = "dashed", color = "grey45") +
+  scale_x_continuous(breaks = seq(1900, 2100, 25)) +
+  scale_y_continuous(labels = scales::label_number(big.mark = ".", decimal.mark = ",")) +
+  labs(title = "Ecuador: reconstrucción y escenario territorial, 1900–2100",
+       subtitle = "Verde: trayectoria INEC 1950–2050 · Naranja: extensión estructural amortiguada",
+       x = "Año", y = "Población (millones de habitantes)",
+       caption = "Banda: cuantiles 2,5%–97,5% de 200 simulaciones condicionales. Semilla 2026.\nNo incluye incertidumbre de las fuentes ni de parámetros; los extremos no son cifras oficiales.") + tema_pob
+```
+
+Las líneas verticales delimitan el soporte nacional publicado. Dentro de ese
+periodo, la ausencia de banda significa que no se ha cuantificado la incertidumbre
+de la fuente; no significa que la población se conozca sin error.
+
+### Provincias, cantones y parroquias: escalas y procedencia
+
+```{r modelo-territorios, fig.height=8.5}
+# Dos ejemplos por nivel; escalas libres para no ocultar territorios pequeños.
+ejemplos <- subset(escenarios, codigo %in% c("11", "17", "1101", "1701", "110150", "110154"))
+ejemplos$territorio <- paste(ejemplos$nivel, ejemplos$nombre, paste0("[", ejemplos$codigo, "]"))
+limites <- unique(ejemplos[c("territorio", "referencia_desde", "referencia_hasta")])
+ggplot(ejemplos, aes(anio, poblacion)) +
+  geom_ribbon(data = subset(ejemplos, origen == "modelo_pobecu"),
+              aes(ymin = limite_inferior, ymax = limite_superior, group = direccion),
+              fill = "#D98A32", alpha = 0.2) +
+  geom_line(color = "#D98A32", linewidth = 0.65) +
+  geom_line(data = subset(ejemplos, origen != "modelo_pobecu"),
+            aes(color = origen), linewidth = 1) +
+  geom_vline(data = limites, aes(xintercept = referencia_desde), linetype = "dotted") +
+  geom_vline(data = limites, aes(xintercept = referencia_hasta), linetype = "dotted") +
+  facet_wrap(~territorio, scales = "free_y", ncol = 2) +
+  scale_color_manual(values = c(referencia_INEC = "#146C78", referencia_parroquial_pobecu = "#7854A8"),
+                     labels = c("Referencia INEC", "Referencia parroquial pobecu")) +
+  scale_x_continuous(breaks = seq(1900,2100,50)) +
+  scale_y_continuous(labels = scales::label_number(scale_cut = scales::cut_short_scale(),
+                                                  decimal.mark = ",")) +
+  labs(title = "Escenarios territoriales con referencias explícitas",
+       subtitle = "Líneas punteadas: periodo de referencia · Cada panel tiene su propia escala vertical",
+       x = "Año", y = "Habitantes", color = "Datos conservados",
+       caption = "Extensión naranja y bandas condicionales del 95%. Unidades de referencia del Censo 2022.\nLas cifras parroquiales de 2010–2035 ya son estimaciones de pobecu; no son proyecciones oficiales.") +
+  tema_pob + theme(legend.position = "bottom")
+```
+
+Los paneles permiten comparar tendencias, no tamaños visuales entre escalas
+diferentes. Antes del primer año de referencia local, la asignación territorial
+se apoya exclusivamente en el modelo de participaciones y en el total padre.
+Para análisis sobre límites históricos hacen falta insumos territoriales adicionales.
+
+### Sensibilidad a la amortiguación
+
+El siguiente cálculo mantiene el ajuste nacional y cambia únicamente el supuesto
+sobre cuánto persiste su pendiente. No es una comparación de modelos reestimados.
+
+```{r modelo-sensibilidad, fig.height=5}
+# Reproduce analíticamente la trayectoria central nacional, sin simulaciones.
+sensibilidad <- do.call(rbind, lapply(c(0.90, 0.95, 0.98, 1), function(phi) {
+  n <- nacional_ext
+  for (sentido in c("retro", "pro")) {
+    f <- modelo_territorial$raiz[[sentido]]
+    borde <- if(sentido == "retro") min(modelo_territorial$raiz$anios) else max(modelo_territorial$raiz$anios)
+    ids <- if(sentido == "retro") n$anio < borde else n$anio > borde
+    h <- abs(n$anio[ids] - borde)
+    incremento <- if(phi == 1) h else phi * (1 - phi^h) / (1-phi)
+    ancla <- nacional_ext$poblacion[nacional_ext$anio == borde]
+    n$poblacion[ids] <- round(ancla * exp(f$pendiente * incremento))
+  }
+  n$phi <- factor(phi); n
+}))
+ggplot(sensibilidad, aes(anio, poblacion / 1e6, color = phi)) +
+  geom_line(linewidth = 0.8) +
+  geom_vline(xintercept = c(1950,2050), linetype = "dashed", color = "grey60") +
+  scale_color_brewer(palette = "Dark2") +
+  labs(title = "El horizonte lejano depende del supuesto de persistencia",
+       subtitle = "Sensibilidad nacional: mismos datos y estados, cuatro amortiguaciones",
+       x = "Año", y = "Población (millones de habitantes)", color = expression(phi[N]),
+       caption = "Trayectorias centrales, sin bandas. φ = 1 mantiene la pendiente; φ < 1 la atenúa.\nEstas diferencias no constituyen probabilidades de escenarios ni validación de 1900 o 2100.") + tema_pob
+```
+
+Para estudiar la asignación territorial también debe variarse `phi_partes`, por
+ejemplo con `pob_ajustar(phi_total = 0.98, phi_partes = 0.90)`, y comparar las
+mismas unidades y años. Ninguna amortiguación queda certificada como óptima por
+la configuración predeterminada.
+
+### Validación temporal y comprobación contable
+
+El script `data-raw/09_validar_modelos.R` realiza dos pruebas temporales:
+
+- **Prospectiva:** retira 2026–2035 de todos los niveles, ajusta hasta 2025 y
+  compara los años retenidos, con horizontes de 1 a 10 años.
+- **Retrospectiva:** retira los años anteriores a 2015 de todos los niveles y
+  reconstruye 2010–2014, con horizontes de 1 a 5 años.
+
+Retirar también los años del padre evita que el modelo conozca anticipadamente
+el total retenido. La ventana y amortiguaciones se fijan antes de estas pruebas.
+Se compara con un referente sencillo que mantiene la población del año extremo.
+Se informa MAE, RMSE, WAPE y cobertura condicional por nivel y horizonte:
+
+$$
+\mathrm{WAPE}=100\frac{\sum_i |\widehat N_i-N_i|}{\sum_i N_i}.
+$$
+
+Se evalúa la **reproducción de las trayectorias del paquete**, incluyendo años
+proyectados, no poblaciones futuras observadas. La validación temporal del método
+parroquial no es independiente del modelo logístico/IPF que generó sus referencias.
+Son dos cortes de evaluación; no equivalen a una validación de origen móvil
+exhaustiva ni prueban precisión en 1900–2100.
+
+```{r modelo-validacion, echo=FALSE, purl=FALSE}
+validacion_modelos <- read.csv("validacion/modelos-poblacion/validacion-temporal.csv")
+resumen_modelos <- subset(validacion_modelos, horizonte == 5,
+                          select = c(sentido, nivel, metodo, horizonte, WAPE, cobertura_condicional))
+knitr::kable(resumen_modelos, digits = 3,
+             caption = "Evaluación a cinco años: WAPE (%) y cobertura de bandas condicionales nominales del 95%.")
+```
+
+La comparación debe revisarse por nivel y dirección: un modelo más complejo no
+garantiza menor error que el referente constante. Una cobertura baja indica que
+las bandas condicionales subestiman la variabilidad de los valores retenidos;
+no deben promoverse como intervalos demográficos calibrados. Los resultados
+completos, los diagnósticos individuales y la auditoría de conservación están en
+[`validacion/modelos-poblacion`](https://github.com/f-slg/pobecu/tree/main/validacion/modelos-poblacion).
+
+```{r modelo-coherencia}
+# Prueba verificable: todas las parroquias suman a su cantón en cada año.
+sumas_parroquiales <- aggregate(poblacion ~ padre + anio,
+                                subset(escenarios, nivel == "parroquia"), sum)
+cantones_ext <- subset(escenarios, nivel == "canton")
+i <- match(paste(sumas_parroquiales$padre, sumas_parroquiales$anio),
+           paste(cantones_ext$codigo, cantones_ext$anio))
+max(abs(sumas_parroquiales$poblacion - cantones_ext$poblacion[i]))
+stopifnot(all(sumas_parroquiales$poblacion == cantones_ext$poblacion[i]))
+```
+
+**Declaración sugerida para un análisis:** “Se construyeron escenarios territoriales
+con pobecu mediante tendencias locales estructurales estimadas por máxima
+verosimilitud, logaritmo del total nacional, participaciones CLR y distribución
+jerárquica descendente. Se usaron ventanas de 20 años, amortiguaciones 0.98 y
+0.95, y bandas condicionales por simulación de innovaciones. Se conservaron las
+referencias del paquete y sus unidades censales de 2022. Las cifras fuera de
+cobertura son reconstrucciones o escenarios propios; no son cifras oficiales
+ni estimaciones validadas de jurisdicciones históricas.” Añade la versión del
+paquete, años de entrenamiento, semilla y número de simulaciones realmente usados.
+
+Referencias del método:
+
+- [R: `StructTS`, modelo estructural, máxima verosimilitud y estados](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/StructTS.html).
+- [Hyndman y Athanasopoulos: series jerárquicas y coherencia de pronósticos](https://otexts.com/fpp3/hierarchical-forecasting.html).
+- [Hyndman y Athanasopoulos: tendencias amortiguadas](https://otexts.com/fpp3/holt.html).
+- [INEC: metodología y cobertura de sus proyecciones](https://www.ecuadorencifras.gob.ec/documentos/web-inec/Poblacion_y_Demografia/Proyecciones_Poblacionales/censo_2022/revision_2024_areas/Boletin_tecnico_proy_rev2025_vfinal.pdf).

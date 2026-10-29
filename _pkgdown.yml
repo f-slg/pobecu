@@ -48,6 +48,10 @@ reference:
   contents:
   - poblacion
   - pob_fuentes
+- title: Escenarios territoriales 1900-2100
+  contents:
+  - pob_ajustar
+  - pob_estimar
 - title: Tasas y denominadores
   contents:
   - pob_unir
