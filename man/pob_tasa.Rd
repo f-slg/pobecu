@@ -20,13 +20,17 @@ defunciones, nacimientos, etc.).}
 
 \item{nivel}{\code{"canton"} (por defecto), \code{"provincia"} o \code{"parroquia"}.}
 
-\item{por}{Base de la tasa. Por defecto 100 000 habitantes.}
+\item{por}{Base de la tasa: un número finito mayor que cero.
+Por defecto 100 000 habitantes.}
 
 \item{...}{Otros argumentos para \code{\link[=pob_unir]{pob_unir()}} (\code{codigo}, \code{anio}, \code{sexo},
 \code{edad}).}
 }
 \value{
-\code{datos} con las columnas \code{poblacion} y \code{tasa}.
+\code{datos} con las columnas \code{poblacion} y \code{tasa}. Si la población
+es cero, la tasa es \code{NA_real_} y se emite una advertencia. Los casos
+deben ser numéricos, finitos y no negativos; se permiten valores \code{NA}
+y numeradores fraccionarios (por ejemplo, ponderados).
 }
 \description{
 Une la población con \code{\link[=pob_unir]{pob_unir()}} y calcula una tasa por cada \code{por}

@@ -1,130 +1,275 @@
-# pobecu <img src="man/figures/logo.png" align="right" height="139" alt="logo de pobecu" />
 
-<!-- badges: start -->
-[![R-CMD-check](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml)
-[![Licencia: MIT](https://img.shields.io/badge/licencia-MIT-blue.svg)](https://github.com/f-slg/pobecu/blob/main/LICENSE.md)
-[![Datos: INEC Revisión 2024](https://img.shields.io/badge/datos-INEC%20Revisi%C3%B3n%202024-0F2233.svg)](https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/)
-<!-- badges: end -->
+- [pobecu
+  <img src="man/figures/logo.png" align="right" height="139" alt="Logo de pobecu" />](#pobecu-)
+  - [1. Instalación y primera
+    consulta](#1-instalación-y-primera-consulta)
+  - [2. Consultar territorios y años](#2-consultar-territorios-y-años)
+  - [3. Evolución nacional: estimaciones y
+    proyecciones](#3-evolución-nacional-estimaciones-y-proyecciones)
+  - [4. Comparar provincias](#4-comparar-provincias)
+  - [5. Edades simples, grupos y
+    pirámides](#5-edades-simples-grupos-y-pirámides)
+  - [6. Población urbana y rural](#6-población-urbana-y-rural)
+  - [7. Unir denominadores y calcular
+    tasas](#7-unir-denominadores-y-calcular-tasas)
+  - [8. Parroquias: estimación y
+    coherencia](#8-parroquias-estimación-y-coherencia)
+  - [9. Códigos territoriales y mapas con
+    geoecu](#9-códigos-territoriales-y-mapas-con-geoecu)
+  - [10. Guardar resultados y trabajar sin
+    conexión](#10-guardar-resultados-y-trabajar-sin-conexión)
+  - [11. Contraste con los archivos
+    originales](#11-contraste-con-los-archivos-originales)
+  - [12. Metodología, referencias y
+    contribuciones](#12-metodología-referencias-y-contribuciones)
 
-**pobecu** da acceso en una línea de código a la **población del Ecuador por
-provincia, cantón y parroquia**, desde 1950 hasta 2050, con los **códigos
-de la División Político-Administrativa (DPA)**. Está pensado para obtener
-denominadores de tasas, coberturas e indicadores sin descargar ni limpiar
-hojas de cálculo.
+# pobecu <img src="man/figures/logo.png" align="right" height="139" alt="Logo de pobecu" />
 
-> **Nota:** pobecu es un paquete independiente, desarrollado a título
-> personal. No es un producto oficial del INEC ni de ninguna otra
-> institución. Las cifras nacionales, provinciales y cantonales son las
-> oficiales del INEC, sin modificar. Las parroquiales son una estimación
-> propia del paquete, documentada abajo.
+[Pruebas
+automáticas](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml)
+· [Licencia MIT](LICENSE.md)
 
-<img src="man/figures/README-principal.png" width="100%" alt="Tres paneles: población del Ecuador 1950-2050, de 3,5 a 21,1 millones; pirámide de población 2025 con el contorno de 2050; y mapa de densidad por cantón en 2025" />
+**Población del Ecuador por provincia, cantón y parroquia, lista para
+analizar en R.** Consulta denominadores por año, sexo, edad y área de
+residencia; calcula tasas y construye mapas con códigos de la División
+Político-Administrativa (DPA).
 
-## ¿Para qué sirve?
+Este es un paquete independiente. Las cifras nacionales, provinciales y
+cantonales proceden del **INEC, Revisión 2024, actualización con áreas
+de 2025**. Las cifras parroquiales son **estimaciones propias de
+pobecu**, no proyecciones oficiales del INEC.
 
-Casi todo indicador de salud pública, educación o planificación necesita un
-denominador de población: la incidencia de una enfermedad, la mortalidad, la
-cobertura de vacunación, la razón de médicos por habitante o el tamaño de una
-población objetivo. En Ecuador esas cifras vienen del INEC en archivos Excel
-extensos, con formatos que cambian entre revisiones, sin un formato común
-entre niveles y sin datos parroquiales proyectados.
+Este README se genera ejecutando
+[README.Rmd](https://github.com/f-slg/pobecu/blob/main/README.Rmd): las
+salidas `#>` son resultados reales de R y las figuras se producen con el
+código que las precede. Puedes abrir el Rmd en RStudio y elegir **Knit →
+Knit to HTML** para ver código, resultados y gráficos en un documento
+navegable. También tienes el [guion completo para
+R](https://github.com/f-slg/pobecu/blob/main/inst/examples/guia-pobecu.R):
+ejecútalo por bloques en RStudio o con
+`source("inst/examples/guia-pobecu.R", echo = TRUE)` desde la raíz del
+repositorio para imprimir código, resultados y gráficos.
 
-pobecu resuelve eso:
+## 1. Instalación y primera consulta
 
-- **Cifras oficiales listas para usar.** Las *Estimaciones y Proyecciones de
-  Población, Revisión 2024* del INEC: nacional 1950-2050, provincial
-  1990-2035 y cantonal 2010-2035, por **sexo**, **edad simple** y **área
-  urbana/rural**.
-- **Parroquias proyectadas hasta 2035.** El INEC no publica proyecciones
-  parroquiales. pobecu ofrece una estimación que **suma exactamente** la
-  cifra oficial de cada cantón, por sexo y edad.
-- **Grupos de edad a medida.** Quinquenales, edades simples, etapas de vida
-  del INEC o cualquier corte, por ejemplo `c(0, 1, 5, 15, 65)`.
-- **Denominadores y tasas en una línea.** `pob_unir()` y `pob_tasa()` unen la
-  población con tu tabla de casos por código DPA, aunque los códigos vengan
-  de Excel sin ceros a la izquierda.
-- **Mapas nativos con [geoecu](https://github.com/f-slg/geoecu).** Ambos
-  paquetes usan los códigos DPA, y `pob_mapa()` devuelve la capa `sf` con
-  población y densidad. Las diferencias entre las unidades del Censo 2022 y
-  la DPA del CONALI (2026) que usa geoecu se resuelven automáticamente.
-- **Coherente y reproducible.** Las parroquias suman su cantón, los cantones
-  su provincia y las provincias el total nacional. Todo el procesamiento está
-  en [`data-raw/`](https://github.com/f-slg/pobecu/tree/main/data-raw) y se
-  regenera cuando el INEC publica una nueva revisión.
+Ejecuta la instalación una sola vez. La compilación de viñetas es
+opcional; la consulta de grupos quinquenales no necesita conexión a
+Internet.
 
-## Instalación
+``` r
+install.packages("remotes")
+remotes::install_github("f-slg/pobecu")
 
-```r
-# install.packages("remotes")
-remotes::install_github("f-slg/pobecu", build_vignettes = TRUE)
+# Para reproducir los gráficos de esta guía
+install.packages(c("ggplot2", "scales"))
 
-# Opcional, para mapas
-remotes::install_github("f-slg/geoecu")
+# Solo para los mapas
+install.packages(c("geoecu", "sf"))
+
+# Solo para abrir esta guía como documento HTML desde RStudio
+install.packages(c("rmarkdown", "knitr"))
 ```
 
-Los grupos quinquenales vienen dentro del paquete (1,2 MB) y funcionan sin
-conexión. Las edades simples (2 MB) se descargan automáticamente la primera
-vez que se piden y se guardan en caché.
-
-## Guía rápida
-
-La función principal es `poblacion()`:
-
-```r
+``` r
 library(pobecu)
+library(ggplot2)
 
-poblacion(nivel = "canton",     # "nacional", "provincia", "canton" o "parroquia"
-          anio = 2025,          # uno o varios años; NULL = todos
-          provincia = NULL,     # filtro por nombre o código: "Loja", "11", 11
-          canton = NULL,        # filtro por nombre o código
-          sexo = FALSE,         # TRUE: hombre / mujer
-          area = FALSE,         # TRUE: urbana / rural (2010-2035)
-          edad = NULL)          # NULL, "quinquenal", "simple", "etapas" o cortes
+poblacion("nacional", anio = c(2022, 2025, 2030))
+#>   anio poblacion
+#> 1 2022  17715301
+#> 2 2025  18103660
+#> 3 2030  18815497
 ```
 
-Población de las provincias en 2025:
+Cada fila representa una combinación de territorio, año y
+desagregaciones. `poblacion` cuenta habitantes; `anio` es el año de
+referencia al **30 de junio**. Hasta 2022 se trata de estimaciones
+demográficas del pasado; desde 2023, de proyecciones. Las cifras de 2022
+no equivalen al conteo del censo.
 
-```r
-poblacion("provincia", anio = 2025)
-#>   dpa_provin provincia anio poblacion
-#> 1         01     Azuay 2025    834958
-#> 2         02   Bolívar 2025    204351
-#> 3         03     Cañar 2025    237460
-#> 4         04    Carchi 2025    177020
-#> 5         05  Cotopaxi 2025    493382
-#> ...
+Para ver la cobertura disponible:
+
+``` r
+pob_fuentes()
+#> pobecu 0.2.0.9000 · datos datos-v0.1.0
+#> Estimaciones hasta 2022 y proyecciones desde 2023, al 30 de junio de cada año.
+#>
+#>      nivel   periodo      area        edad              tipo
+#>   nacional 1950-2050 2010-2035      0-100+           oficial
+#>  provincia 1990-2035 2010-2035      0-100+           oficial
+#>     canton 2010-2035 2010-2035      0-100+           oficial
+#>  parroquia 2010-2035        no 0-4 ... 85+ estimación pobecu
+#>
+#> Fuentes:
+#> * INEC, Estimaciones y Proyecciones de Población, Revisión 2024 (actualización con áreas, 2025).
+#>   https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/
+#> * INEC, VIII Censo de Población y VII de Vivienda 2022.
+#>   https://www.censoecuador.gob.ec/resultados-censo/
+#> Las cifras parroquiales no son oficiales: ver ?pob_parroquias.
 ```
 
-Un cantón por sexo y año. Los nombres no distinguen tildes ni mayúsculas:
+| Nivel | Años | Edad | Área urbana/rural | Naturaleza |
+|----|----|----|----|----|
+| Nacional | 1950–2050 | Simple o quinquenal, hasta 100+ | 2010–2035 | INEC |
+| Provincia | 1990–2035 | Simple o quinquenal, hasta 100+ | 2010–2035 | INEC |
+| Cantón | 2010–2035 | Simple o quinquenal, hasta 100+ | 2010–2035 | INEC |
+| Parroquia | 2010–2035 | Quinquenal, hasta 85+ | No disponible | Estimación pobecu |
 
-```r
+## 2. Consultar territorios y años
+
+Los nombres admiten mayúsculas o minúsculas y tildes. Los códigos
+numéricos recuperan sus ceros iniciales. Para nombres repetidos, como
+Bolívar u Olmedo, indica también la provincia o utiliza el código DPA.
+
+``` r
+# Todas las provincias; mostramos las seis primeras filas
+provincias_2025 <- poblacion("provincia", anio = 2025)
+head(provincias_2025)
+#>   dpa_provin  provincia anio poblacion
+#> 1         01      Azuay 2025    834958
+#> 2         02    Bolívar 2025    204351
+#> 3         03      Cañar 2025    237460
+#> 4         04     Carchi 2025    177020
+#> 5         05   Cotopaxi 2025    493382
+#> 6         06 Chimborazo 2025    487355
+
+# Un cantón, dos años y desagregación por sexo
 poblacion("canton", anio = 2025:2026, canton = "loja", sexo = TRUE)
 #>   dpa_canton canton dpa_provin provincia anio   sexo poblacion
 #> 1       1101   Loja         11      Loja 2025 hombre    124296
 #> 2       1101   Loja         11      Loja 2025  mujer    134218
 #> 3       1101   Loja         11      Loja 2026 hombre    125024
 #> 4       1101   Loja         11      Loja 2026  mujer    134953
+
+# Buscar un territorio antes de consultar
+buscar_pob("olmedo", nivel = "canton")
+#>   dpa_canton canton dpa_provin provincia
+#> 1       1116 Olmedo         11      Loja
+#> 2       1318 Olmedo         13    Manabí
+
+# Resolver la ambigüedad con la provincia
+poblacion("canton", anio = 2025, provincia = "Loja", canton = "Olmedo")
+#>   dpa_canton canton dpa_provin provincia anio poblacion
+#> 1       1116 Olmedo         11      Loja 2025      4134
 ```
 
-### Grupos de edad
+`sexo = FALSE` suma hombres y mujeres. `edad = NULL` suma todas las
+edades. `anio = NULL` devuelve todos los años disponibles para ese
+nivel; conviene especificarlo si solo necesitas un corte anual.
 
-| `edad =`                  | Resultado                                           | Niveles |
-|---------------------------|-----------------------------------------------------|---------|
-| `NULL`                    | sin desagregar                                      | todos |
-| `"quinquenal"`            | `0-4`, `5-9`, ..., `100+` (parroquias: hasta `85+`) | todos |
-| `"simple"`                | 0, 1, 2, ..., 100 (100 = 100 y más)                 | nacional, provincia, cantón |
-| `"etapas"`                | `0-11`, `12-17`, `18-29`, `30-64`, `65+` (INEC)     | nacional, provincia, cantón |
-| `c(0, 1, 5)` (cortes)     | `0`, `1-4`, `5+`: cualquier agrupación              | todos (parroquias: múltiplos de 5) |
+## 3. Evolución nacional: estimaciones y proyecciones
 
-```r
-# Menores de 1 año y de 1 a 4: poblaciones objetivo de vacunación
+El gráfico distingue los periodos para evitar interpretar el futuro como
+un dato observado. El eje vertical se expresa en millones de habitantes.
+
+``` r
+nacional <- poblacion("nacional")
+nacional$periodo <- ifelse(nacional$anio <= 2022, "Estimación", "Proyección")
+
+tema_pob <- theme_minimal(base_size = 12) +
+  theme(panel.grid.minor = element_blank(),
+        plot.title = element_text(face = "bold"),
+        plot.margin = margin(10, 20, 10, 10),
+        legend.position = "bottom")
+
+grafico_serie <- ggplot(nacional, aes(anio, poblacion / 1e6)) +
+  geom_line(color = "#153F57", linewidth = 0.9) +
+  geom_line(data = subset(nacional, anio >= 2023),
+            color = "#BA6518", linewidth = 1) +
+  geom_vline(xintercept = 2022.5, linetype = "dashed", color = "grey45") +
+  annotate("text", x = 1992, y = 21, label = "Estimaciones", color = "#153F57") +
+  annotate("text", x = 2036, y = 16, label = "Proyecciones", color = "#BA6518") +
+  labs(title = "Población del Ecuador, 1950–2050",
+       subtitle = "La línea discontinua marca el comienzo del periodo proyectado",
+       x = "Año", y = "Millones de habitantes") + tema_pob
+grafico_serie
+```
+
+<div class="figure">
+
+<img src="man/figures/README-serie-1.png" alt="Población del Ecuador: estimaciones hasta 2022 y proyecciones desde 2023. Fuente: INEC, Revisión 2024." width="100%" />
+<p class="caption">
+
+Población del Ecuador: estimaciones hasta 2022 y proyecciones desde
+2023. Fuente: INEC, Revisión 2024.
+</p>
+
+</div>
+
+``` r
+
+subset(nacional, anio %in% c(1950, 2010, 2022, 2025, 2030, 2050))
+#>     anio poblacion    periodo
+#> 1   1950   3536810 Estimación
+#> 61  2010  14883661 Estimación
+#> 73  2022  17715301 Estimación
+#> 76  2025  18103660 Proyección
+#> 81  2030  18815497 Proyección
+#> 101 2050  21141923 Proyección
+```
+
+La curva resume el volumen total de población. Una curva creciente no
+significa que todos los territorios o grupos de edad crezcan al mismo
+ritmo.
+
+## 4. Comparar provincias
+
+Ordenar las barras facilita reconocer la concentración de población. Se
+muestran las diez provincias más pobladas, sin confundir este ranking
+con densidad.
+
+``` r
+top10 <- head(provincias_2025[order(-provincias_2025$poblacion), ], 10)
+top10
+#>    dpa_provin                      provincia anio poblacion
+#> 9          09                         Guayas 2025   4788157
+#> 17         17                      Pichincha 2025   3294478
+#> 13         13                         Manabí 2025   1715057
+#> 12         12                       Los Ríos 2025    978487
+#> 1          01                          Azuay 2025    834958
+#> 7          07                         El Oro 2025    753036
+#> 8          08                     Esmeraldas 2025    605377
+#> 18         18                     Tungurahua 2025    581842
+#> 23         23 Santo Domingo De Los Tsáchilas 2025    528509
+#> 11         11                           Loja 2025    498457
+
+ggplot(top10, aes(poblacion / 1e6, reorder(provincia, poblacion))) +
+  geom_col(fill = "#227C89", width = 0.7) +
+  labs(title = "Provincias con mayor población, 2025",
+       x = "Millones de habitantes", y = NULL) + tema_pob
+```
+
+<div class="figure">
+
+<img src="man/figures/README-provincias-1.png" alt="Diez provincias más pobladas en 2025. Fuente: INEC." width="100%" />
+<p class="caption">
+
+Diez provincias más pobladas en 2025. Fuente: INEC.
+</p>
+
+</div>
+
+## 5. Edades simples, grupos y pirámides
+
+| `edad`            | Qué devuelve                            | Datos necesarios |
+|-------------------|-----------------------------------------|------------------|
+| `NULL`            | Todas las edades sumadas                | Incluidos        |
+| `"quinquenal"`    | 0–4, 5–9, …, 100+; parroquias hasta 85+ | Incluidos        |
+| `"simple"`        | 0, 1, 2, …, 100 (100 significa 100+)    | Descarga inicial |
+| `"etapas"`        | 0–11, 12–17, 18–29, 30–64, 65+          | Descarga inicial |
+| `c(0, 5, 15, 65)` | 0–4, 5–14, 15–64, 65+                   | Incluidos        |
+| `c(0, 1, 5)`      | 0, 1–4, 5+                              | Descarga inicial |
+
+Los cortes son los **inicios** de cada grupo; el último es abierto. Para
+parroquias solo se admiten cortes múltiplos de cinco hasta 85. El
+archivo de edades simples se descarga una vez y queda guardado en caché.
+
+``` r
 poblacion("canton", anio = 2026, canton = "Loja", edad = c(0, 1, 5))
 #>   dpa_canton canton dpa_provin provincia anio edad poblacion
 #> 1       1101   Loja         11      Loja 2026    0      3427
 #> 2       1101   Loja         11      Loja 2026  1-4     15224
 #> 3       1101   Loja         11      Loja 2026   5+    241326
-
-# Etapas de vida del INEC
 poblacion("provincia", anio = 2030, provincia = "Pichincha", edad = "etapas")
 #>   dpa_provin provincia anio  edad poblacion
 #> 1         17 Pichincha 2030  0-11    447539
@@ -132,290 +277,440 @@ poblacion("provincia", anio = 2030, provincia = "Pichincha", edad = "etapas")
 #> 3         17 Pichincha 2030 18-29    620040
 #> 4         17 Pichincha 2030 30-64   1665096
 #> 5         17 Pichincha 2030   65+    371097
-
-# Urbano y rural, con menores de 5 y adultos mayores
-poblacion("canton", anio = 2025, provincia = "Azuay", area = TRUE,
-          edad = c(0, 5, 65))
 ```
 
-## Pirámides y estructura por edad
+La pirámide usa porcentajes del **total de ambos sexos de cada año**.
+Los valores negativos solo colocan a los hombres a la izquierda; la
+población no es negativa.
 
-Con `sexo = TRUE` y `edad = "quinquenal"` tienes todo lo necesario para una
-pirámide de población de cualquier territorio y año:
+``` r
+pir <- poblacion("nacional", anio = c(2025, 2050),
+                 sexo = TRUE, edad = "quinquenal")
+pir$porcentaje <- 100 * pir$poblacion / ave(pir$poblacion, pir$anio, FUN = sum)
+pir$posicion <- ifelse(pir$sexo == "hombre", -pir$porcentaje, pir$porcentaje)
 
-```r
-library(ggplot2)
-
-pir <- poblacion("nacional", anio = c(1950, 1990, 2025, 2050),
-                 sexo = TRUE, edad = seq(0, 90, 5))
-pir$pct <- 100 * pir$poblacion / ave(pir$poblacion, pir$anio, FUN = sum)
-
-ggplot(pir, aes(ifelse(sexo == "hombre", -pct, pct), edad, fill = sexo)) +
-  geom_col(width = 0.9) +
-  facet_wrap(~anio, nrow = 1) +
+ggplot(pir, aes(posicion, edad, fill = sexo)) +
+  geom_col(width = 0.85) +
+  facet_wrap(~anio) +
+  scale_fill_manual(values = c(hombre = "#227C89", mujer = "#CB7436")) +
   scale_x_continuous(labels = function(x) paste0(abs(x), "%")) +
-  labs(x = NULL, y = NULL)
+  labs(title = "Pirámides de población del Ecuador",
+       x = "Porcentaje de la población total de cada año", y = "Edad", fill = "Sexo") +
+  tema_pob
 ```
 
-<img src="man/figures/README-piramides.png" width="100%" alt="Cuatro pirámides de población del Ecuador en 1950, 1990, 2025 y 2050: la base ancha de 1950 se estrecha y en 2050 la estructura es casi rectangular" />
+<div class="figure">
 
-La transición demográfica también se ve en los grandes grupos de edad, y la
-desagregación por área permite comparar la población urbana y la rural de
-cada provincia o cantón:
+<img src="man/figures/README-piramide-1.png" alt="Estructura de la población nacional por sexo y edad en 2025 y 2050. Fuente: INEC." width="100%" />
+<p class="caption">
 
-```r
-poblacion("nacional", edad = c(0, 15, 65))                     # 1950-2050
-poblacion("provincia", anio = 2025, provincia = "Chimborazo",
-          sexo = TRUE, area = TRUE, edad = "quinquenal")
+Estructura de la población nacional por sexo y edad en 2025 y 2050.
+Fuente: INEC.
+</p>
+
+</div>
+
+Un mayor peso de los grupos de edad avanzada señala envejecimiento de la
+estructura poblacional. La comparación de 2050 corresponde a la
+proyección del INEC, no a un resultado observado ni a un intervalo de
+confianza.
+
+## 6. Población urbana y rural
+
+`area = TRUE` separa residencia urbana y rural. Este argumento exige
+años entre 2010 y 2035; por eso se especifica `anio` incluso al
+consultar el nivel nacional.
+
+``` r
+areas <- poblacion("provincia", anio = 2025,
+                   provincia = c("Guayas", "Pichincha", "Manabí"), area = TRUE)
+areas
+#>   dpa_provin provincia anio   area poblacion
+#> 1         09    Guayas 2025 urbana   4087913
+#> 2         09    Guayas 2025  rural    700244
+#> 3         13    Manabí 2025 urbana    997508
+#> 4         13    Manabí 2025  rural    717549
+#> 5         17 Pichincha 2025 urbana   2070248
+#> 6         17 Pichincha 2025  rural   1224230
+
+ggplot(areas, aes(provincia, poblacion, fill = area)) +
+  geom_col(position = "fill", width = 0.65) +
+  scale_y_continuous(labels = scales::label_percent()) +
+  scale_fill_manual(values = c(rural = "#D6A547", urbana = "#227C89")) +
+  labs(title = "¿Qué proporción vive en cada área?",
+       x = NULL, y = "Porcentaje de habitantes", fill = "Área") + tema_pob
 ```
 
-<img src="man/figures/README-estructura.png" width="100%" alt="Izquierda: porcentaje de población de 0 a 14, 15 a 64 y 65 y más años entre 1950 y 2050; los mayores de 65 pasan de cerca de 5% a casi 18%. Derecha: pirámides urbana y rural de Chimborazo en 2025" />
+<div class="figure">
 
-## Tasas y denominadores
+<img src="man/figures/README-areas-1.png" alt="Composición urbana y rural de tres provincias en 2025. Fuente: INEC." width="100%" />
+<p class="caption">
 
-`pob_tasa()` agrega a tu tabla la población del territorio y año
-correspondientes, y calcula la tasa por 100 000 habitantes (u otra base):
+Composición urbana y rural de tres provincias en 2025. Fuente: INEC.
+</p>
 
-```r
-casos <- data.frame(dpa_canton = c(1101, 1102, 701),   # códigos como número
-                    anio = 2024, casos = c(120, 8, 40))
-pob_tasa(casos, "casos")
+</div>
+
+Las barras muestran proporciones: dos provincias pueden tener una
+composición similar y cantidades de habitantes muy diferentes. El área
+de residencia no equivale a la clasificación administrativa de una
+parroquia.
+
+## 7. Unir denominadores y calcular tasas
+
+Los siguientes numeradores son **ficticios** y sirven únicamente para
+aprender el procedimiento. La población utilizada como denominador sí
+procede del INEC. Numerador y denominador deben corresponder al mismo
+territorio, periodo, sexo y grupo de edad.
+
+``` r
+casos <- data.frame(
+  dpa_canton = c(1101, 1102, 701),
+  anio = 2025,
+  casos = c(120, 8, 40)
+)
+tasas <- pob_tasa(casos, "casos", por = 100000)
+tasas
 #>   dpa_canton anio casos poblacion     tasa
-#> 1       1101 2024   120    257110 46.67263
-#> 2       1102 2024     8     26544 30.13864
-#> 3        701 2024    40    321196 12.45346
+#> 1       1101 2025   120    258514 46.41915
+#> 2       1102 2025     8     26374 30.33290
+#> 3        701 2025    40    324062 12.34332
+
+# Comprobación de la fórmula: casos / habitantes × base
+stopifnot(all.equal(tasas$tasa, tasas$casos / tasas$poblacion * 100000))
 ```
 
-`pob_unir()` solo agrega la columna `poblacion`, lo que sirve para
-coberturas o tasas específicas por sexo y edad:
+`pob_unir(casos)` agrega solo `poblacion`. `pob_tasa()` agrega además
+`tasa`. Las funciones conservan el orden y los códigos originales de la
+tabla. Un código sin correspondencia deja `NA` y genera una advertencia.
 
-```r
-vacunas <- data.frame(dpa_provin = c("01", "11"), anio = 2025, edad = "0",
-                      vacunados = c(11800, 6900))
-v <- pob_unir(vacunas, nivel = "provincia", edad = "simple")
-v$cobertura <- 100 * v$vacunados / v$poblacion
-v
-#>   dpa_provin anio edad vacunados poblacion cobertura
-#> 1         01 2025    0     11800     12589  93.73262
-#> 2         11 2025    0      6900      7316  94.31383
+Para tasas específicas, pide explícitamente las desagregaciones: tener
+una columna `sexo` o `edad` no activa automáticamente su uso.
+
+``` r
+casos_sexo <- data.frame(dpa_provin = "11", anio = factor("2025"),
+                         sexo = c("hombre", "mujer"), casos = c(10, 14))
+pob_tasa(casos_sexo, "casos", nivel = "provincia", sexo = TRUE)
+#>   dpa_provin anio   sexo casos poblacion     tasa
+#> 1         11 2025 hombre    10    243527 4.106321
+#> 2         11 2025  mujer    14    254930 5.491704
+
+# Numeradores ficticios de menores de un año
+vacunas <- data.frame(dpa_provin = c("01", "11"), anio = 2025,
+                      edad = "0", vacunados = c(11800, 6900))
+cobertura <- pob_unir(vacunas, nivel = "provincia", edad = "simple")
+cobertura$cobertura_pct <- 100 * cobertura$vacunados / cobertura$poblacion
+cobertura
+#>   dpa_provin anio edad vacunados poblacion cobertura_pct
+#> 1         01 2025    0     11800     12589      93.73262
+#> 2         11 2025    0      6900      7316      94.31383
 ```
 
-Los años pueden venir de una columna (`anio` por defecto) o fijarse con
-`anio = 2025`. Si un código o año no existe, la fila queda con `NA` y se
-avisa.
+No sumes ni promedies tasas para obtener una tasa conjunta: suma primero
+los casos y sus denominadores compatibles y calcula después el cociente.
+Una cobertura superior a 100% requiere revisar numeradores, residencia,
+duplicados y población objetivo; no debe recortarse automáticamente.
 
-## Parroquias
+### Población cero y entradas inválidas
 
-```r
-poblacion("parroquia", anio = 2030, canton = "Puyango")
-#>   dpa_parroq  parroquia dpa_canton  canton dpa_provin provincia anio poblacion
-#> 1     111050     Alamor       1110 Puyango         11      Loja 2030      9334
-#> 2     111051      Ciano       1110 Puyango         11      Loja 2030      1271
-#> 3     111052  El Arenal       1110 Puyango         11      Loja 2030      1287
-#> 4     111053    El Limo       1110 Puyango         11      Loja 2030      2440
-#> 5     111054 Mercadillo       1110 Puyango         11      Loja 2030      1373
-#> 6     111055  Vicentino       1110 Puyango         11      Loja 2030       919
+Una tasa con denominador cero es indefinida, incluso si hay cero casos.
+Desde esta versión se devuelve `NA` con advertencia, en lugar de `Inf` o
+`NaN`.
+
+``` r
+ejemplo_cero <- data.frame(dpa_parroq = "060256", anio = 2025,
+                           sexo = "hombre", edad = "70-74", casos = 1)
+pob_tasa(ejemplo_cero, "casos", nivel = "parroquia",
+         sexo = TRUE, edad = "quinquenal")
+#> Nota: las cifras parroquiales son una estimación de pobecu a partir de las proyecciones cantonales del INEC; no son cifras oficiales. Ver ?pob_parroquias. (Este aviso se muestra una vez por sesión.)
+#> Warning: 1 fila(s) con población cero: la tasa se devuelve como NA.
+#>   dpa_parroq anio   sexo  edad casos poblacion tasa
+#> 1     060256 2025 hombre 70-74     1         0   NA
 ```
 
-Las unidades son las **1042 parroquias del Censo 2022**: 221 **cabeceras
-cantonales** (código terminado en `50`) y 821 parroquias rurales. El censo
-no separa las parroquias urbanas: Cuenca, por ejemplo, tiene 15 en muchos
-registros administrativos, pero en el censo son una sola unidad, la
-cabecera `010150`. Tampoco tiene los cantones y parroquias creados después
-(Borbón, Sevilla Don Bosco, Sosote, etc.), que sí están en la DPA del CONALI
-(2026) que usa geoecu desde la versión 0.4.0. Si tus datos usan esos
-códigos, conviértelos y agrégalos antes de unir:
+Los años decimales se rechazan; los factores se interpretan por su
+etiqueta. La base `por` debe ser positiva y finita. Los casos deben ser
+numéricos y no negativos; `NA` permanece desconocido y los casos
+ponderados pueden ser fraccionarios.
 
-```r
+## 8. Parroquias: estimación y coherencia
+
+El paquete representa **1042 unidades del Censo 2022**: 221 cabeceras
+cantonales y 821 parroquias rurales. Las parroquias urbanas de un cantón
+se agrupan en la cabecera con sufijo `50`. Las estimaciones se
+construyen repartiendo la proyección cantonal según las participaciones
+censales y ajustando la estructura por sexo y edad.
+
+``` r
+parroquias <- poblacion("parroquia", anio = c(2025, 2035), canton = "Puyango")
+parroquias
+#>    dpa_parroq  parroquia dpa_canton  canton dpa_provin provincia anio poblacion
+#> 1      111050     Alamor       1110 Puyango         11      Loja 2025      9205
+#> 2      111050     Alamor       1110 Puyango         11      Loja 2035      9550
+#> 3      111051      Ciano       1110 Puyango         11      Loja 2025      1327
+#> 4      111051      Ciano       1110 Puyango         11      Loja 2035      1232
+#> 5      111052  El Arenal       1110 Puyango         11      Loja 2025      1213
+#> 6      111052  El Arenal       1110 Puyango         11      Loja 2035      1374
+#> 7      111053    El Limo       1110 Puyango         11      Loja 2025      2457
+#> 8      111053    El Limo       1110 Puyango         11      Loja 2035      2446
+#> 9      111054 Mercadillo       1110 Puyango         11      Loja 2025      1344
+#> 10     111054 Mercadillo       1110 Puyango         11      Loja 2035      1415
+#> 11     111055  Vicentino       1110 Puyango         11      Loja 2025      1013
+#> 12     111055  Vicentino       1110 Puyango         11      Loja 2035       845
+
+ggplot(parroquias, aes(reorder(parroquia, poblacion), poblacion, fill = factor(anio))) +
+  geom_col(position = "dodge", width = 0.7) +
+  coord_flip() +
+  scale_y_continuous(labels = scales::label_number(big.mark = " ", decimal.mark = ","),
+                     expand = expansion(mult = c(0, 0.1))) +
+  scale_fill_manual(values = c("2025" = "#227C89", "2035" = "#CB7436")) +
+  labs(title = "Parroquias de Puyango, 2025 y 2035",
+       subtitle = "Estimación pobecu a partir del INEC y los censos",
+       x = NULL, y = "Habitantes", fill = "Año") + tema_pob
+```
+
+<div class="figure">
+
+<img src="man/figures/README-parroquias-1.png" alt="Estimaciones propias de pobecu para las parroquias de Puyango. No son cifras oficiales del INEC." width="100%" />
+<p class="caption">
+
+Estimaciones propias de pobecu para las parroquias de Puyango. No son
+cifras oficiales del INEC.
+</p>
+
+</div>
+
+``` r
+
+control <- aggregate(poblacion ~ anio, parroquias, sum)
+oficial <- poblacion("canton", anio = c(2025, 2035), canton = "Puyango")
+control$diferencia <- control$poblacion - oficial$poblacion[match(control$anio, oficial$anio)]
+control
+#>   anio poblacion diferencia
+#> 1 2025     16559          0
+#> 2 2035     16862          0
+stopifnot(all(control$diferencia == 0))
+```
+
+Que la suma sea exacta verifica coherencia contable, **no demuestra que
+la estimación de cada parroquia sea exacta**. El modelo prolonga
+tendencias censales 2010–2022, no ofrece intervalos de incertidumbre y
+puede no captar cambios locales recientes. El redondeo preserva el total
+cantonal de cada sexo y grupo de edad; los totales parroquiales pueden
+diferir ligeramente del objetivo previo al redondeo.
+
+## 9. Códigos territoriales y mapas con geoecu
+
+`geoecu` desde 0.4.0 usa la DPA del CONALI 2026. `pobecu` usa unidades
+del Censo 2022. Antes de unir casos con población, convierte y
+**agrega** los códigos:
+
+``` r
 homologar_parroquia(c("010101", "010115", "010151", "131251"))
 #> [1] "010150" "010150" "010151" "131250"
 homologar_canton(c("0809", "1413"))
 #> [1] "0802" "1401"
 
-casos$dpa_parroq <- homologar_parroquia(casos$dpa_parroq)
-casos <- aggregate(casos ~ dpa_parroq + anio, casos, sum)
-pob_tasa(casos, "casos", nivel = "parroquia")
+# Casos ficticios: Borbón y Eloy Alfaro deben formar una sola unidad censal
+casos_nuevos <- data.frame(dpa_canton = c("0802", "0809"), anio = 2025,
+                           casos = c(7, 5))
+casos_nuevos$dpa_canton <- homologar_canton(casos_nuevos$dpa_canton)
+casos_censo <- aggregate(casos ~ dpa_canton + anio, casos_nuevos, sum)
+pob_tasa(casos_censo, "casos")
+#>   dpa_canton anio casos poblacion     tasa
+#> 1       0802 2025    12     52040 23.05919
 ```
 
-## Mapas con geoecu
+La conversión de códigos no siempre reconstruye exactamente los límites
+antiguos. Por ejemplo, La Magdalena proviene de varias parroquias y se
+asigna a Shushufindi, su origen mayoritario. Esa equivalencia es una
+aproximación territorial: consúltala en `?homologar_parroquia` antes de
+analizar esos territorios.
 
-[geoecu](https://github.com/f-slg/geoecu) contiene los límites de
-provincias, cantones y parroquias con códigos DPA, según la Organización
-Territorial del Estado del CONALI (2026). `pob_mapa()` une ambos paquetes y
-devuelve un objeto `sf` con la población y la densidad (hab/km²). Antes de
-unir, convierte la capa a las unidades del Censo 2022 con
-`agrupar_unidades()`: por ejemplo, el cantón Borbón se dibuja dentro de Eloy
-Alfaro, que lo incluía en el censo, para que la densidad sea correcta.
+### Mapa de densidad
 
-```r
+La primera consulta cartográfica descarga las capas de `geoecu`. El
+ejemplo usa Loja para que los cantones sean legibles. `pob_mapa()`
+agrupa las unidades y devuelve un objeto `sf`; la densidad divide
+habitantes entre `area_km2`.
+
+``` r
 mapa <- pob_mapa("canton", anio = 2025, provincia = "Loja")
-plot(mapa["densidad"])
+head(sf::st_drop_geometry(mapa)[, c("dpa_canton", "canton", "poblacion", "densidad")])
+#>   dpa_canton       canton poblacion  densidad
+#> 1       1101         Loja    258514 136.68985
+#> 2       1102       Calvas     26374  30.99167
+#> 3       1103     Catamayo     36428  55.88428
+#> 4       1104       Celica     14676  28.13666
+#> 5       1105 Chaguarpamba      6875  21.94866
+#> 6       1106    Espíndola     14277  27.65526
 
-# Nivel parroquial, dos años
-pob_mapa("parroquia", anio = c(2025, 2035))
-
-# Una tasa sobre el mapa, con la capa en unidades del censo
-capa <- agrupar_unidades(geoecu::read_cantones())
-merge(capa, pob_tasa(casos, "casos"), by = "dpa_canton", all.x = TRUE)
+grafico_mapa <- ggplot(mapa) +
+  geom_sf(aes(fill = densidad), color = "white", linewidth = 0.3) +
+  scale_fill_viridis_c(trans = "sqrt", name = "Hab./km²") +
+  labs(title = "Densidad de población de los cantones de Loja",
+       subtitle = "2025 · Escala de color con transformación de raíz cuadrada") +
+  tema_pob
+grafico_mapa
 ```
 
-La viñeta `vignette("pobecu-geoecu")` tiene ejemplos completos con
-`ggplot2`: densidad, tasas y mapas por año o grupo de edad.
+<div class="figure">
 
-## Metodología
+<img src="man/figures/README-mapa-1.png" alt="Densidad por cantón de Loja en 2025. Población: INEC; geometrías: geoecu, agrupadas a unidades censales." width="100%" />
+<p class="caption">
 
-### Cifras oficiales del INEC
+Densidad por cantón de Loja en 2025. Población: INEC; geometrías:
+geoecu, agrupadas a unidades censales.
+</p>
 
-Las cifras nacionales, provinciales y cantonales son las de la
-[*Revisión 2024*](https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/)
-del INEC, basada en el Censo de Población y Vivienda 2022 y calculada por
-edad simple y año calendario. Son **estimaciones** hasta 2022 y
-**proyecciones** desde 2023, siempre al 30 de junio de cada año.
+</div>
 
-| Nivel | Método del INEC |
-|---|---|
-| Nacional y provincial | **Componentes demográficos por cohortes**: la población avanza año a año por la ecuación compensadora (nacimientos, defunciones y migración) para cada cohorte de edad y sexo. La fecundidad, la mortalidad y la migración se reconstruyen desde 1950 con censos, estadísticas vitales y encuestas, y se proyectan con curvas logísticas. |
-| Cantonal | **Extrapolación logística de proporciones** (Arriaga, 1994) con variables sintomáticas (Bay, 1998): la provincia proyectada se reparte entre sus cantones según su participación, y el sexo y la edad se ajustan por *raking*. |
-| Urbano y rural | **Proyecciones derivadas** (Naciones Unidas, 1974; CEPAL, 2024): porcentaje urbano de cada cantón y sexo proyectado con una curva logística; la población rural es la diferencia. |
+La densidad es un promedio territorial: no muestra dónde se concentran
+los habitantes dentro de un cantón. Con `sexo`, `edad` o `area`, el
+cociente usa la superficie completa del polígono; en particular, no mide
+la densidad sobre una superficie urbana o rural delimitada por separado.
+Las zonas en estudio se conservan con población `NA`.
 
-pobecu no modifica estas cifras. Solo las pasa a formato largo, agrupa
-edades y agrega códigos y nombres.
+## 10. Guardar resultados y trabajar sin conexión
 
-### Estimación parroquial (pobecu)
+``` r
+# En la carpeta de trabajo de tu sesión de R
+write.csv(tasas, "tasas_cantonales.csv", row.names = FALSE, fileEncoding = "UTF-8")
+ggsave("poblacion_nacional.png", grafico_serie, width = 9, height = 5, dpi = 300)
+ggsave("densidad_loja.png", grafico_mapa, width = 8, height = 6, dpi = 300)
 
-Como el INEC no proyecta parroquias, pobecu aplica un nivel más abajo la
-misma lógica que usa el INEC entre provincia y cantón:
+# Preparar las edades simples mientras hay Internet
+poblacion("nacional", anio = 2025, edad = "simple")
+pobecu_cache_dir()
+pobecu_datos_disponibles()
 
-1. **Participación en el cantón.** Se calcula la proporción de la población
-   del cantón que vive en cada parroquia en los censos 2010 y 2022, ambos con
-   los límites de 2022. Esa proporción se interpola y extrapola de forma
-   lineal en la escala logit (curva logística), y luego se reescala para que
-   sume 1 en cada cantón.
-2. **Total parroquial** = proporción × población oficial del cantón.
-3. **Sexo y edad por ajuste proporcional iterativo (IPF o *raking*).** Se
-   parte de la estructura de cada parroquia en el Censo 2022 y se ajusta a
-   dos márgenes: el total parroquial y la estructura oficial del cantón por
-   sexo y edad.
-4. **Redondeo por mayor residuo**, de modo que las parroquias suman
-   *exactamente* la cifra oficial del cantón por sexo y grupo de edad.
+# En otro equipo: copiar pobecu_edad_simple.rds a una carpeta existente
+pobecu_usar_carpeta("ruta/a/mis_datos")
+# También se puede definir POBECU_CARPETA en .Renviron
+```
 
-Hay dos excepciones. En los 17 cantones con parroquias creadas después de
-2010 se usa la participación constante de 2022. En los 41 cantones de una
-sola parroquia, esa parroquia recibe todo el cantón. La columna `metodo` de
-`dpa_pob` indica qué se aplicó a cada parroquia.
+`pobecu_usar_carpeta(NULL)` restablece la búsqueda predeterminada
+(incluida `POBECU_CARPETA`, si está definida). `pobecu_limpiar_cache()`
+elimina los archivos descargados de pobecu; úsalo solo si quieres
+descargarlos otra vez. Los mapas tienen una caché independiente,
+gestionada por `geoecu`.
 
-<img src="man/figures/README-parroquias.png" width="100%" alt="Izquierda: participación de las parroquias del cantón Salinas entre 2010 y 2035; José Luis Tamayo pasa de 32% a 53% y la cabecera Salinas baja de 51% a 30%. Derecha: mapa del crecimiento anual proyectado 2025-2035 de las 1042 parroquias" />
+## 11. Contraste con los archivos originales
 
-### Verificaciones
+La auditoría está en
+[validacion/README.md](https://github.com/f-slg/pobecu/blob/main/validacion/README.md),
+con fuentes, huellas de los archivos, alcance y resultados. El script
+[07_validar_fuentes.R](https://github.com/f-slg/pobecu/blob/main/data-raw/07_validar_fuentes.R)
+lee directamente los Excel con un lector independiente del usado para
+construir el paquete y comprueba:
 
-Los scripts se detienen si falla cualquiera de estas condiciones:
+- Cada celda de edad simple y cada grupo quinquenal de los tres niveles
+  oficiales.
+- Hombre + mujer = total y urbano + rural = total en los tabulados
+  originales.
+- Los conteos censales 2010 y 2022 de las 1042 parroquias por sus
+  nombres territoriales.
+- Las estimaciones parroquiales sumadas a su cantón, en todos los años,
+  sexos y edades.
 
-- en cada año, el total nacional es igual a la suma de las provincias y a
-  la de los cantones;
-- urbano + rural = total en cada cantón, año, sexo y edad;
-- las parroquias suman su cantón en cada año, sexo y grupo de edad;
-- las 1042 parroquias tienen código DPA único y su estructura censal suma su
-  total.
+La validación de cifras no constituye una validación predictiva del
+modelo parroquial. Los Excel son la referencia de contraste; una cifra
+aislada en la página resumen del INEC puede contener errores de
+transcripción.
 
-Los tests comparan además con cifras publicadas por el INEC; por ejemplo,
-Guayaquil tiene 2 908 589 habitantes en 2022 y 3 218 450 en 2035.
+| comprobacion             |  celdas | diferencias | faltantes | extras | max_diferencia |
+|:-------------------------|--------:|------------:|----------:|-------:|---------------:|
+| nacional-total-sexos     |   10201 |           0 |         0 |      0 |              0 |
+| nacional-area-sexos      |    5252 |           0 |         0 |      0 |              0 |
+| nacional-urbano-rural    |    5252 |           0 |         0 |      0 |              0 |
+| nacional-edades-simples  |   25654 |           0 |         0 |      0 |              0 |
+| nacional-quinquenales    |    5334 |           0 |         0 |      0 |              0 |
+| provincia-total-sexos    |  111504 |           0 |         0 |      0 |              0 |
+| provincia-area-sexos     |  126048 |           0 |         0 |      0 |              0 |
+| provincia-urbano-rural   |  126048 |           0 |         0 |      0 |              0 |
+| provincia-edades-simples |  349056 |           0 |         0 |      0 |              0 |
+| provincia-quinquenales   |   72576 |           0 |         0 |      0 |              0 |
+| canton-total-sexos       |  580346 |           0 |         0 |      0 |              0 |
+| canton-area-sexos        | 1160692 |           0 |         0 |      0 |              0 |
+| canton-urbano-rural      | 1160692 |           0 |         0 |      0 |              0 |
+| canton-edades-simples    | 2321384 |           0 |         0 |      0 |              0 |
+| canton-quinquenales      |  482664 |           0 |         0 |      0 |              0 |
+| censo_2010               |    1042 |           0 |         0 |      0 |              0 |
+| censo_2022               |    1042 |           0 |         0 |      0 |              0 |
+| parroquias-suman-canton  |  206856 |           0 |         0 |      0 |              0 |
+| provincia-suma-nacional  |    1932 |           0 |         0 |      0 |              0 |
+| canton-suma-provincia    |   26208 |           0 |         0 |      0 |              0 |
 
-### Limitaciones
+Resultados de la auditoría reproducible.
 
-- La estimación parroquial **prolonga la tendencia 2010-2022**: las
-  parroquias que crecieron o decrecieron mucho entre los censos siguen esa
-  dirección hasta 2035. La incertidumbre aumenta con la distancia a 2022.
-- Las parroquias no tienen desagregación urbana/rural, y su último grupo de
-  edad es `85+`.
-- Las cifras de 2022 no coinciden con el conteo censal, porque la proyección
-  del INEC corrige la omisión censal y se refiere a junio. En promedio, la
-  estimación es un 4% mayor que el conteo.
-- Los límites son los de la DPA vigente en el Censo 2022.
+### Reproducir esta guía desde el repositorio
 
-La metodología completa, con fórmulas, gráficos de validación y
-referencias, está en `vignette("metodologia")`.
+``` r
+install.packages(c("pkgload", "readxl", "rmarkdown", "knitr", "roxygen2", "testthat"))
+# Directorio de trabajo: la raíz de tu copia de pobecu
+source("data-raw/08_generar_guia.R")
+```
 
-## Datos incluidos
+El script genera `README.md`, las figuras, `guia-pobecu.html` y el guion
+`inst/examples/guia-pobecu.R`. La versión HTML conserva los gráficos
+dentro del archivo y se puede abrir sin conexión. La guía usa años fijos
+para reproducir los mismos ejemplos; no cambia sus resultados al cambiar
+el año del sistema.
 
-| Objeto | Contenido | Filas |
-|---|---|---|
-| `pob_nacional` | 1950-2050 × área × sexo × 21 grupos quinquenales | 5 334 |
-| `pob_provincias` | 24 provincias, 1990-2035 × área × sexo × grupos | 72 576 |
-| `pob_cantones` | 221 cantones, 2010-2035 × área × sexo × grupos | 482 664 |
-| `pob_parroquias` | 1042 parroquias, 2010-2035 × sexo × 18 grupos (estimación) | 975 312 |
-| `dpa_pob` | catálogo: códigos, nombres, tipo, método, censos 2010 y 2022 | 1 042 |
-| edades simples | 0-100+ para los niveles oficiales (descarga en el primer uso) | 2,7 M |
+## 12. Metodología, referencias y contribuciones
 
-Todas las tablas usan el mismo formato largo (`anio`, `area`, `sexo`,
-`grupo_edad`, `poblacion`), pero lo más cómodo es consultarlas con
-`poblacion()`. `pob_fuentes()` muestra la revisión y el periodo de cada
-nivel.
+Las cifras oficiales se reorganizan en formato largo y se agregan por
+edad sin cambiar sus valores. Para parroquias, el procedimiento es:
 
-## Funciones
+1.  Calcular la participación parroquial en su cantón en los censos 2010
+    y 2022.
+2.  Interpolar y extrapolar las participaciones en escala logit y
+    normalizarlas dentro de cada cantón. Si faltan antecedentes de 2010,
+    mantener la participación de 2022.
+3.  Repartir la población cantonal oficial y ajustar sexo y edad
+    mediante ajuste proporcional iterativo (IPF), partiendo de la
+    estructura censal de 2022.
+4.  Redondear por mayor residuo preservando cada total cantonal por sexo
+    y edad.
 
-| Función | Para qué |
-|---|---|
-| `poblacion()` | Consultar población por nivel, año, sexo, área y edad |
-| `pob_unir()`, `pob_tasa()` | Unir población a una tabla propia y calcular tasas |
-| `pob_mapa()` | Capa `sf` de geoecu con población y densidad |
-| `agrupar_unidades()` | Convertir una capa de geoecu a las unidades del Censo 2022 |
-| `homologar_parroquia()`, `homologar_canton()` | Convertir códigos de parroquias urbanas o del CONALI (2026) a las unidades del censo |
-| `buscar_pob()` | Buscar territorios por nombre o código |
-| `formatear_codigo()`, `normalizar_nombre()` | Limpiar códigos DPA y nombres |
-| `pob_fuentes()` | Fuentes, revisión y cobertura de los datos |
-| `pobecu_cache_dir()`, `pobecu_usar_carpeta()`, `pobecu_limpiar_cache()` | Gestionar los datos descargados (por ejemplo, para trabajar sin conexión) |
+Las fuentes, fórmulas y limitaciones se desarrollan en la [viñeta
+metodológica](https://f-slg.github.io/pobecu/articles/metodologia.html).
+La [viñeta de
+mapas](https://f-slg.github.io/pobecu/articles/pobecu-geoecu.html)
+amplía los ejemplos cartográficos.
 
-## Actualización
-
-Cuando el INEC publique una nueva revisión de sus proyecciones, los scripts
-de [`data-raw/`](https://github.com/f-slg/pobecu/tree/main/data-raw)
-descargan los tabulados, reconstruyen todas las tablas y la estimación
-parroquial, y regeneran las figuras de este README:
-
-| Script | Qué hace |
-|---|---|
-| `01_preparar_datos.R` | Descarga y lee los tabulados del INEC y asigna códigos DPA a las parroquias del censo |
-| `02_estimar_parroquias.R` | Estimación parroquial (participación logística, IPF y redondeo) |
-| `03_construir_datos.R` | Tablas del paquete y archivo de edades simples para el *release* |
-| `04_logo.R`, `05_figuras_readme.R` | Logo y figuras, con datos reales |
-| `06_equivalencias_conali.R` | Comprueba las equivalencias entre la DPA del CONALI (2026) y el Censo 2022 |
-
-Cada versión de los datos se publica como un
-[*release*](https://github.com/f-slg/pobecu/releases) (`datos-vX.Y.Z`), y
-el número de versión del paquete indica la revisión del INEC que usa.
-
-## Cómo citar
-
-```r
+``` r
 citation("pobecu")
+#> To cite package 'pobecu' in publications use:
+#>
+#>   Salas Guerrero, R. F. (2026). pobecu: Población del Ecuador por provincia,
+#>   cantón y parroquia. Paquete de R versión 0.2.0.9000.
+#>   https://github.com/f-slg/pobecu
+#>
+#>   INEC (2024). Estimaciones y Proyecciones de Población del Ecuador, Revisión
+#>   2024. Quito: Instituto Nacional de Estadística y Censos.
+#>   https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/
+#>
+#> To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)',
+#> 'toBibtex(.)', or set 'options(citation.bibtex.max=999)'.
 ```
 
-```
-Salas Guerrero, R. F. (2026). pobecu: Población del Ecuador por provincia,
-cantón y parroquia. Paquete de R versión 0.2.0.
-https://github.com/f-slg/pobecu
-```
+Fuentes primarias:
 
-Cita también la fuente de los datos: INEC (2024). *Estimaciones y
-Proyecciones de Población, Revisión 2024*. Si usas cifras parroquiales,
-indica que son una estimación de pobecu y no cifras oficiales.
+- [INEC: Estimaciones y Proyecciones de
+  Población](https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/).
+- [Tabulados oficiales de proyecciones, actualización con
+  áreas](https://www.ecuadorencifras.gob.ec/documentos/web-inec/Poblacion_y_Demografia/Proyecciones_Poblacionales/censo_2022/revision_2024_areas/Tabulados_Estimacion_Proyeccion_v2.xlsx).
+- [INEC: estructura poblacional del Censo
+  2022](https://www.censoecuador.gob.ec/wp-content/uploads/2024/04/01_2022_CPV_Estructura_poblacional.xlsx).
 
-## Paquetes relacionados
+Si usas datos parroquiales, declara que son estimaciones de pobecu y
+cita también la fuente censal y las proyecciones cantonales del INEC.
 
-- [geoecu](https://github.com/f-slg/geoecu): capas geográficas de
-  provincias, cantones y parroquias del Ecuador, con códigos DPA (CONALI,
-  2026).
-
-## Contribuir
-
-Las preguntas de uso van en [Discussions](https://github.com/f-slg/pobecu/discussions/categories/q-a),
-y los errores y propuestas en [issues](https://github.com/f-slg/pobecu/issues/new/choose).
-Consulta la [guía de contribución](https://github.com/f-slg/pobecu/blob/main/.github/CONTRIBUTING.md).
-Este proyecto sigue un [código de conducta](https://github.com/f-slg/pobecu/blob/main/.github/CODE_OF_CONDUCT.md):
-al participar, te comprometes a respetarlo.
-
-## Licencia
-
-El código se distribuye bajo licencia
-[MIT](https://github.com/f-slg/pobecu/blob/main/LICENSE.md). Los datos
-provienen del INEC, que los publica en acceso abierto.
+Los errores y propuestas se reciben en
+[Issues](https://github.com/f-slg/pobecu/issues). Consulta la [guía de
+contribución](https://github.com/f-slg/pobecu/blob/main/.github/CONTRIBUTING.md)
+y el [código de
+conducta](https://github.com/f-slg/pobecu/blob/main/.github/CODE_OF_CONDUCT.md).
+Código bajo licencia [MIT](LICENSE.md); datos procedentes de las
+publicaciones del INEC.
