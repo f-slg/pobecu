@@ -26,6 +26,6 @@ This is an update of 'pobecu' (0.2.0 -> 0.3.0). It adds the functions
   pobecu_datos_disponibles()` and the corresponding tests are skipped when
   the data are not available, so checks do not require internet access.
 * The examples of `pob_ajustar()` and `pob_estimar()` are in `\donttest{}`
-  because they take about 8 and 25 seconds.
+  because fitting the model takes about 8 seconds.
 * The documentation is in Spanish (`Language: es`); the Title and
   Description are in English.
