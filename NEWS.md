@@ -5,6 +5,11 @@
   el total nacional. Modelo estructural en logaritmos y participaciones CLR,
   extrapolación amortiguada, bandas Monte Carlo condicionales, diagnósticos
   y referencias conservadas. No representan jurisdicciones históricas.
+* `pob_estimar()` usa una semilla propia para cada grupo territorial,
+  derivada de `semilla`, y solo simula las ramas que contienen los
+  territorios pedidos: una consulta por provincia o cantón tarda menos de un
+  segundo en lugar de unos 30. Las estimaciones puntuales no cambian y las
+  bandas de un territorio son las mismas se pida solo o con el resto.
 * Metodología técnica, validación temporal en ambos sentidos, análisis de
   sensibilidad y gráficos reproducibles en el README.
 

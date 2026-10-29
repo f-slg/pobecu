@@ -50,6 +50,8 @@ pob_ajustar <- function(entrenamiento = NULL, ventana = 20,
 #' @param canton Filtro cantonal por nombre o código, solo cantones/parroquias.
 #' @param simulaciones Número de trayectorias Monte Carlo, de 100 a 10000.
 #' @param semilla Semilla local reproducible; se restaura el estado aleatorio.
+#'   Cada grupo territorial usa una semilla propia derivada de esta, por lo
+#'   que filtrar territorios o años no cambia sus bandas.
 #' @param nivel_intervalo Cobertura nominal de bandas condicionales (0,1).
 #' @return Tabla con códigos, nombres, población entera, origen, dirección,
 #'   horizonte, referencia temporal y bandas marginales. El atributo
@@ -94,8 +96,10 @@ pob_estimar <- function(nivel = c("provincia", "canton", "parroquia", "nacional"
           else if (exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE))
             rm(".Random.seed", envir = .GlobalEnv), add = TRUE)
   set.seed(semilla)
-  # Siempre se simula el mismo árbol y rango continuo; pedir menos años o
-  # filtrar no altera una trayectoria para semilla y configuración iguales.
+  # Cada grupo de hermanos tiene su propia semilla, derivada de `semilla` y
+  # del código del padre, y se simula siempre en el rango continuo completo.
+  # Así pedir menos años o filtrar no altera una trayectoria, y las ramas que
+  # no contienen territorios pedidos se pueden omitir.
   anos <- 1900:2100
   salidas <- list()
   # Solo se resumen los territorios y años pedidos; la simulación del árbol
@@ -103,6 +107,14 @@ pob_estimar <- function(nivel = c("provincia", "canton", "parroquia", "nacional"
   necesita <- function(nodo) (nivel == "todos" || nodo$nivel == nivel) &&
     (is.null(cp) || substr(nodo$codigo, 1, 2) %in% cp) &&
     (is.null(cc) || substr(nodo$codigo, 1, 4) %in% cc)
+  profundidad <- c(nacional = 0L, provincia = 1L, canton = 2L, parroquia = 3L, todos = 3L)
+  # ¿Hay algún territorio pedido entre los hijos de `padre` o sus descendientes?
+  requerido <- function(padre) {
+    if (padre == "EC") return(profundidad[[nivel]] >= 1L)
+    if (profundidad[[nivel]] < nchar(padre) / 2 + 1) return(FALSE)
+    (is.null(cp) || substr(padre, 1, 2) %in% cp) &&
+      (is.null(cc) || if (nchar(padre) == 2) padre %in% substr(cc, 1, 2) else padre %in% cc)
+  }
   guardar <- function(nodo, punto, draws, rango) {
     if (!necesita(nodo)) return(invisible(NULL))
     conocido <- anos >= min(rango) & anos <= max(rango)
@@ -136,7 +148,8 @@ pob_estimar <- function(nivel = c("provincia", "canton", "parroquia", "nacional"
   guardar(list(nivel = "nacional", codigo = "EC", nombre = "Ecuador", padre = NA_character_), punto, draws, raiz$anios)
   recorrer <- function(padre, p, sim) {
     grupo <- modelo$grupos[[padre]]
-    if (is.null(grupo)) return(invisible(NULL))
+    if (is.null(grupo) || !requerido(padre)) return(invisible(NULL))
+    set.seed(.semilla_grupo(semilla, padre))
     k <- length(grupo$series)
     zs <- lapply(grupo$series, .extender_estado, anos = anos, nsim = simulaciones, phi = modelo$phi_partes)
     central <- do.call(cbind, lapply(zs, `[[`, "punto"))
@@ -164,9 +177,10 @@ pob_estimar <- function(nivel = c("provincia", "canton", "parroquia", "nacional"
   r$dpa_provin <- ifelse(r$nivel == "nacional", NA_character_, substr(r$codigo, 1, 2))
   r$dpa_canton <- ifelse(r$nivel %in% c("canton", "parroquia"), substr(r$codigo, 1, 4), NA_character_)
   r$dpa_parroq <- ifelse(r$nivel == "parroquia", r$codigo, NA_character_)
-  attr(r, "metodologia") <- list(version = 1L, ventana = modelo$ventana,
+  attr(r, "metodologia") <- list(version = 2L, ventana = modelo$ventana,
     phi_total = modelo$phi_total, phi_partes = modelo$phi_partes,
-    simulaciones = simulaciones, semilla = semilla, nivel_intervalo = nivel_intervalo,
+    simulaciones = simulaciones, semilla = semilla, semillas = "una por grupo territorial",
+    nivel_intervalo = nivel_intervalo,
     fuente = .pobecu_revision, entrenamiento = lapply(modelo$tablas, function(x) range(x$anio)),
     condicionamiento = "Estados y par\u00e1metros fijos; innovaciones independientes antes de normalizar CLR",
     territorio = "Unidades de referencia Censo 2022; no jurisdicciones hist\u00f3ricas")
@@ -308,6 +322,14 @@ pob_estimar <- function(nivel = c("provincia", "canton", "parroquia", "nacional"
   }
   if (any(!is.finite(draws)) || any(!is.finite(punto))) stop("Trayectoria no finita.", call. = FALSE)
   list(punto = punto, draws = draws)
+}
+
+# Semilla de un grupo de hermanos. Los códigos DPA de provincia (1-24),
+# cantón (101-2404) y parroquia (10150-240451) no se solapan como números, y
+# se desplazan para no coincidir con `semilla`, que usa el total nacional.
+.semilla_grupo <- function(semilla, padre) {
+  desplazamiento <- if (padre == "EC") 1 else 1e6 + as.numeric(padre)
+  as.integer((semilla + desplazamiento) %% .Machine$integer.max)
 }
 
 # Cuantiles tipo 7 (los de stats::quantile()) de cada fila, con un solo order().

@@ -38,6 +38,11 @@ test_that("jerarquía preserva referencias, ceros y sumas hasta 1900 y 2100", {
   expect_true(all(subset(p, anio == 1900)$extrapolacion_extrema))
   q <- pob_estimar("provincia", 2100, m, provincia="01", simulaciones=100)
   expect_equal(q$poblacion, subset(p,nivel=="provincia" & codigo=="01" & anio==2100)$poblacion)
+  # Semillas por grupo: filtrar territorios o años no cambia las bandas.
+  ref <- subset(p, nivel == "parroquia" & substr(codigo, 1, 4) == "0201" & anio == 2100)
+  r <- pob_estimar("parroquia", 2100, m, canton = "0201", simulaciones = 100)
+  expect_identical(r$limite_inferior, ref$limite_inferior)
+  expect_identical(r$limite_superior, ref$limite_superior)
   expect_equal(q$limite_inferior, subset(p,nivel=="provincia" & codigo=="01" & anio==2100)$limite_inferior)
 })
 

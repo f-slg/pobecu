@@ -28,7 +28,9 @@ pob_estimar(
 
 \item{simulaciones}{Número de trayectorias Monte Carlo, de 100 a 10000.}
 
-\item{semilla}{Semilla local reproducible; se restaura el estado aleatorio.}
+\item{semilla}{Semilla local reproducible; se restaura el estado aleatorio.
+Cada grupo territorial usa una semilla propia derivada de esta, por lo
+que filtrar territorios o años no cambia sus bandas.}
 
 \item{nivel_intervalo}{Cobertura nominal de bandas condicionales (0,1).}
 }
