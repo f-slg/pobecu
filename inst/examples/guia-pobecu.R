@@ -2,8 +2,7 @@
 #' output:
 #'   github_document:
 #'     html_preview: false
-#'     toc: true
-#'     toc_depth: 2
+#'     toc: false
 #'   html_document:
 #'     toc: true
 #'     toc_float: true
@@ -361,9 +360,12 @@ pob_tasa(casos_censo, "casos")
 #'
 #' ### Mapa de densidad
 #'
-#' La primera consulta cartográfica descarga las capas de `geoecu`. El ejemplo usa
-#' Loja para que los cantones sean legibles. `pob_mapa()` agrupa las unidades y
-#' devuelve un objeto `sf`; la densidad divide habitantes entre `area_km2`.
+#' La primera consulta cartográfica descarga las capas de `geoecu`. Instala
+#' `geoecu` 0.4.1 o posterior: cada capa aporta `area_km2`, superficie calculada
+#' sobre el elipsoide WGS84 a partir de la geometría de resolución alta.
+#' `pob_mapa()` agrupa las unidades CONALI que pertenecen a una unidad del Censo
+#' 2022, suma las áreas de los polígonos y calcula `densidad = poblacion / area_km2`.
+#' Así, población y superficie corresponden a la misma división territorial.
 #'
 ## ----mapa, fig.height=6, fig.cap="Densidad por cantón de Loja en 2025. Población: INEC; geometrías: geoecu, agrupadas a unidades censales."----
 mapa <- pob_mapa("canton", anio = 2025, provincia = "Loja")
@@ -383,11 +385,17 @@ grafico_mapa <- ggplot(mapa) +
 grafico_mapa
 
 #'
-#' La densidad es un promedio territorial: no muestra dónde se concentran los
-#' habitantes dentro de un cantón. Con `sexo`, `edad` o `area`, el cociente usa la
-#' superficie completa del polígono; en particular, no mide la densidad sobre una
-#' superficie urbana o rural delimitada por separado. Las zonas en estudio se
-#' conservan con población `NA`.
+#' La densidad es el promedio de habitantes por km² en toda la unidad; no muestra
+#' su distribución interna. Si pides sexo, edad o residencia urbana/rural, el área
+#' sigue siendo la superficie completa del territorio. No equivale a densidad de
+#' superficie habitada. Las zonas en estudio conservan población `NA`.
+#'
+#' Comprueba los insumos y reproduce el cociente con la tabla del mapa:
+#'
+## ----densidad-tabla-----------------------------------------------------------------------
+stopifnot(all.equal(mapa$densidad, mapa$poblacion / mapa$area_km2))
+head(detalle_mapa[c("canton", "poblacion", "area_km2", "densidad")])
+
 #'
 #' ## 10. Guardar resultados y trabajar sin conexión
 #'

@@ -92,7 +92,7 @@ pob_mapa <- function(nivel = c("canton", "provincia", "parroquia"), anio = NULL,
   }
   if (!"area_km2" %in% names(res)) {
     stop("Se requiere geoecu 0.4.1 o posterior, que incluye `area_km2`. ",
-         "Actualízalo con install.packages(\"geoecu\") o remotes::install_github(\"f-slg/geoecu\").",
+         "Actual\u00edzalo con install.packages(\"geoecu\") o remotes::install_github(\"f-slg/geoecu\").",
          call. = FALSE)
   }
   res$densidad <- res$poblacion / res$area_km2

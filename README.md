@@ -71,13 +71,13 @@ Para ver la cobertura disponible:
 pob_fuentes()
 #> pobecu 0.2.0.9000 · datos datos-v0.1.0
 #> Estimaciones hasta 2022 y proyecciones desde 2023, al 30 de junio de cada año.
-#> 
+#>
 #>      nivel   periodo      area        edad              tipo
 #>   nacional 1950-2050 2010-2035      0-100+           oficial
 #>  provincia 1990-2035 2010-2035      0-100+           oficial
 #>     canton 2010-2035 2010-2035      0-100+           oficial
 #>  parroquia 2010-2035        no 0-4 ... 85+ estimación pobecu
-#> 
+#>
 #> Fuentes:
 #> * INEC, Estimaciones y Proyecciones de Población, Revisión 2024 (actualización con áreas, 2025).
 #>   https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/
@@ -712,15 +712,15 @@ amplía los ejemplos cartográficos.
 ``` r
 citation("pobecu")
 #> To cite package 'pobecu' in publications use:
-#> 
+#>
 #>   Salas Guerrero, R. F. (2026). pobecu: Población del Ecuador por provincia,
 #>   cantón y parroquia. Paquete de R versión 0.2.0.9000.
 #>   https://github.com/f-slg/pobecu
-#> 
+#>
 #>   INEC (2024). Estimaciones y Proyecciones de Población del Ecuador, Revisión
 #>   2024. Quito: Instituto Nacional de Estadística y Censos.
 #>   https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/
-#> 
+#>
 #> To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)',
 #> 'toBibtex(.)', or set 'options(citation.bibtex.max=999)'.
 ```
@@ -779,10 +779,10 @@ modelo_territorial <- pob_ajustar(
 )
 #> Warning: 12 ajustes usan respaldo lineal; consulte $diagnosticos.
 table(modelo_territorial$diagnosticos$metodo)
-#> 
-#>           constante_degenerada                respaldo_lineal 
-#>                             82                             12 
-#> StructTS_sin_ruido_observacion       StructTS_tendencia_local 
+#>
+#>           constante_degenerada                respaldo_lineal
+#>                             82                             12
+#> StructTS_sin_ruido_observacion       StructTS_tendencia_local
 #>                            145                           2337
 
 escenarios <- pob_estimar(
