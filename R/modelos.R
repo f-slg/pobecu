@@ -102,8 +102,8 @@ pob_estimar <- function(nivel = c("provincia", "canton", "parroquia", "nacional"
   # no contienen territorios pedidos se pueden omitir.
   anos <- 1900:2100
   salidas <- list()
-  # Solo se resumen los territorios y años pedidos; la simulación del árbol
-  # completo no cambia, así que los resultados son los mismos.
+  # Solo se simulan las ramas con territorios pedidos (`requerido`) y solo se
+  # resumen los territorios y años pedidos (`necesita`).
   necesita <- function(nodo) (nivel == "todos" || nodo$nivel == nivel) &&
     (is.null(cp) || substr(nodo$codigo, 1, 2) %in% cp) &&
     (is.null(cc) || substr(nodo$codigo, 1, 4) %in% cc)
