@@ -5,7 +5,7 @@
 
 [Pruebas
 automáticas](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml)
-· [Licencia MIT](LICENSE.md)
+· [Licencia MIT](https://github.com/f-slg/pobecu/blob/main/LICENSE.md)
 
 **Población del Ecuador por provincia, cantón y parroquia, lista para
 analizar en R.** Consulta denominadores por año, sexo, edad y área de
@@ -41,7 +41,7 @@ remotes::install_github("f-slg/pobecu")
 # Para reproducir los gráficos de esta guía
 install.packages(c("ggplot2", "scales"))
 
-# Solo para los mapas
+# Solo para los mapas (geoecu 0.4.1 o posterior)
 install.packages(c("geoecu", "sf"))
 
 # Solo para abrir esta guía como documento HTML desde RStudio
@@ -742,7 +742,7 @@ Los errores y propuestas se reciben en
 contribución](https://github.com/f-slg/pobecu/blob/main/.github/CONTRIBUTING.md)
 y el [código de
 conducta](https://github.com/f-slg/pobecu/blob/main/.github/CODE_OF_CONDUCT.md).
-Código bajo licencia [MIT](LICENSE.md); datos procedentes de las
+Código bajo licencia [MIT](https://github.com/f-slg/pobecu/blob/main/LICENSE.md); datos procedentes de las
 publicaciones del INEC.
 
 ## 13. Reconstrucción y escenarios de población 1900–2100
