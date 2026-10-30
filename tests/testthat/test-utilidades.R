@@ -3,6 +3,13 @@ test_that("homologar_parroquia() lleva las urbanas a la cabecera", {
                c("010150", "010150", "010150", "010151", "220250"))
 })
 
+test_that("homologar_parroquia() no convierte el sufijo 00, que no existe", {
+  expect_equal(homologar_parroquia("110100"), "110100")
+  expect_warning(u <- pob_unir(data.frame(dpa_parroq = "110100", anio = 2025),
+                               nivel = "parroquia"), "sin poblaci")
+  expect_true(is.na(u$poblacion))
+})
+
 test_that("homologar_parroquia() convierte los códigos del CONALI 2026", {
   # Borbón (cabecera y rural), Sevilla Don Bosco, Bella Vista y parroquias nuevas
   expect_equal(homologar_parroquia(c("080950", "080961", "141350", "200351",
@@ -36,6 +43,9 @@ test_that("formatear_codigo() y normalizar_nombre() funcionan", {
   expect_equal(formatear_codigo(701, "canton"), "0701")
   expect_warning(formatear_codigo("abc", "canton"), "no son c")
   expect_equal(normalizar_nombre("  Cañar "), "CANAR")
+  # Misma palabra con la tilde como carácter combinado (forma NFD)
+  expect_equal(normalizar_nombre("Can\u0303ar"), "CANAR")
+  expect_equal(nrow(poblacion("provincia", 2025, provincia = "Can\u0303ar")), 1)
 })
 
 test_that("buscar_pob() encuentra por nombre y código", {
