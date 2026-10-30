@@ -12,7 +12,8 @@ pob_fuentes()
 
 ## Value
 
-Un `data.frame` (de forma invisible) con una fila por nivel.
+Un `data.frame` de clase `pob_fuentes` con una fila por nivel. Al
+imprimirlo se muestran también la versión de los datos y las fuentes.
 
 ## Examples
 

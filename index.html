@@ -69,7 +69,7 @@
 </h1>
 </div>
 <p><img src="reference/figures/logo.png" align="right" height="139" alt="Logo de pobecu"></p>
-<p><a href="https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml" class="external-link">Pruebas automáticas</a> · <a href="LICENSE.html">Licencia MIT</a></p>
+<p><a href="https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml" class="external-link">Pruebas automáticas</a> · <a href="https://github.com/f-slg/pobecu/blob/main/LICENSE.md" class="external-link">Licencia MIT</a></p>
 <p><strong>Población del Ecuador por provincia, cantón y parroquia, lista para analizar en R.</strong> Consulta denominadores por año, sexo, edad y área de residencia; calcula tasas y construye mapas con códigos de la División Político-Administrativa (DPA).</p>
 <p>Este es un paquete independiente. Las cifras nacionales, provinciales y cantonales proceden del <strong>INEC, Revisión 2024, actualización con áreas de 2025</strong>. Las cifras parroquiales son <strong>estimaciones propias de pobecu</strong>, no proyecciones oficiales del INEC.</p>
 <p>Este README se genera ejecutando <a href="https://github.com/f-slg/pobecu/blob/main/README.Rmd" class="external-link">README.Rmd</a>: las salidas <code>#&gt;</code> son resultados reales de R y las figuras se producen con el código que las precede. Puedes abrir el Rmd en RStudio y elegir <strong>Knit → Knit to HTML</strong> para ver código, resultados y gráficos en un documento navegable. También tienes el <a href="https://github.com/f-slg/pobecu/blob/main/inst/examples/guia-pobecu.R" class="external-link">guion completo para R</a>: ejecútalo por bloques en RStudio o con <code>source("inst/examples/guia-pobecu.R", echo = TRUE)</code> desde la raíz del repositorio para imprimir código, resultados y gráficos.</p>
@@ -84,7 +84,7 @@
 <span><span class="co"># Para reproducir los gráficos de esta guía</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ggplot2"</span>, <span class="st">"scales"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Solo para los mapas</span></span>
+<span><span class="co"># Solo para los mapas (geoecu 0.4.1 o posterior)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"geoecu"</span>, <span class="st">"sf"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Solo para abrir esta guía como documento HTML desde RStudio</span></span>
@@ -536,22 +536,22 @@ Estimaciones propias de pobecu para las parroquias de Puyango. No son cifras ofi
 <span><span class="va">detalle_mapa</span><span class="op">$</span><span class="va">densidad</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">detalle_mapa</span><span class="op">$</span><span class="va">densidad</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">detalle_mapa</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="op">-</span><span class="va">detalle_mapa</span><span class="op">$</span><span class="va">densidad</span><span class="op">)</span>, <span class="op">]</span></span>
 <span><span class="co">#&gt;    dpa_canton       canton poblacion area_km2 densidad</span></span>
-<span><span class="co">#&gt; 1        1101         Loja    258514  1891.24   136.69</span></span>
+<span><span class="co">#&gt; 1        1101         Loja    258514  1890.99   136.71</span></span>
 <span><span class="co">#&gt; 3        1103     Catamayo     36428   651.85    55.88</span></span>
-<span><span class="co">#&gt; 14       1114       Pindal     10987   202.00    54.39</span></span>
-<span><span class="co">#&gt; 16       1116       Olmedo      4134   113.78    36.33</span></span>
-<span><span class="co">#&gt; 8        1108       Macará     18520   573.03    32.32</span></span>
-<span><span class="co">#&gt; 2        1102       Calvas     26374   851.00    30.99</span></span>
-<span><span class="co">#&gt; 4        1104       Celica     14676   521.60    28.14</span></span>
-<span><span class="co">#&gt; 6        1106    Espíndola     14277   516.25    27.66</span></span>
-<span><span class="co">#&gt; 11       1111     Saraguro     29588  1084.88    27.27</span></span>
-<span><span class="co">#&gt; 10       1110      Puyango     16559   636.99    26.00</span></span>
-<span><span class="co">#&gt; 5        1105 Chaguarpamba      6875   313.23    21.95</span></span>
-<span><span class="co">#&gt; 9        1109       Paltas     22929  1156.17    19.83</span></span>
-<span><span class="co">#&gt; 7        1107    Gonzanamá     12421   681.90    18.22</span></span>
+<span><span class="co">#&gt; 14       1114       Pindal     10987   202.12    54.36</span></span>
+<span><span class="co">#&gt; 16       1116       Olmedo      4134   113.80    36.33</span></span>
+<span><span class="co">#&gt; 8        1108       Macará     18520   573.28    32.31</span></span>
+<span><span class="co">#&gt; 2        1102       Calvas     26374   851.17    30.99</span></span>
+<span><span class="co">#&gt; 4        1104       Celica     14676   521.86    28.12</span></span>
+<span><span class="co">#&gt; 6        1106    Espíndola     14277   516.26    27.65</span></span>
+<span><span class="co">#&gt; 11       1111     Saraguro     29588  1084.80    27.28</span></span>
+<span><span class="co">#&gt; 10       1110      Puyango     16559   637.33    25.98</span></span>
+<span><span class="co">#&gt; 5        1105 Chaguarpamba      6875   313.31    21.94</span></span>
+<span><span class="co">#&gt; 9        1109       Paltas     22929  1156.54    19.83</span></span>
+<span><span class="co">#&gt; 7        1107    Gonzanamá     12421   681.95    18.21</span></span>
 <span><span class="co">#&gt; 15       1115     Quilanga      3925   236.52    16.59</span></span>
-<span><span class="co">#&gt; 12       1112    Sozoranga      6917   421.88    16.40</span></span>
-<span><span class="co">#&gt; 13       1113    Zapotillo     15333  1211.58    12.66</span></span>
+<span><span class="co">#&gt; 12       1112    Sozoranga      6917   422.02    16.39</span></span>
+<span><span class="co">#&gt; 13       1113    Zapotillo     15333  1212.38    12.65</span></span>
 <span></span>
 <span><span class="va">grafico_mapa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mapa</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html" class="external-link">geom_sf</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">densidad</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"white"</span>, linewidth <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span></span>
@@ -572,12 +572,12 @@ Densidad por cantón de Loja en 2025. Población: INEC; geometrías: geoecu, agr
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">mapa</span><span class="op">$</span><span class="va">densidad</span>, <span class="va">mapa</span><span class="op">$</span><span class="va">poblacion</span> <span class="op">/</span> <span class="va">mapa</span><span class="op">$</span><span class="va">area_km2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">detalle_mapa</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"canton"</span>, <span class="st">"poblacion"</span>, <span class="st">"area_km2"</span>, <span class="st">"densidad"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt;         canton poblacion area_km2 densidad</span></span>
-<span><span class="co">#&gt; 1         Loja    258514  1891.24   136.69</span></span>
-<span><span class="co">#&gt; 2       Calvas     26374   851.00    30.99</span></span>
+<span><span class="co">#&gt; 1         Loja    258514  1890.99   136.71</span></span>
+<span><span class="co">#&gt; 2       Calvas     26374   851.17    30.99</span></span>
 <span><span class="co">#&gt; 3     Catamayo     36428   651.85    55.88</span></span>
-<span><span class="co">#&gt; 4       Celica     14676   521.60    28.14</span></span>
-<span><span class="co">#&gt; 5 Chaguarpamba      6875   313.23    21.95</span></span>
-<span><span class="co">#&gt; 6    Espíndola     14277   516.25    27.66</span></span></code></pre></div>
+<span><span class="co">#&gt; 4       Celica     14676   521.86    28.12</span></span>
+<span><span class="co">#&gt; 5 Chaguarpamba      6875   313.31    21.94</span></span>
+<span><span class="co">#&gt; 6    Espíndola     14277   516.26    27.65</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -836,7 +836,7 @@ Densidad por cantón de Loja en 2025. Población: INEC; geometrías: geoecu, agr
 <a href="https://www.censoecuador.gob.ec/wp-content/uploads/2024/04/01_2022_CPV_Estructura_poblacional.xlsx" class="external-link">INEC: estructura poblacional del Censo 2022</a>.</li>
 </ul>
 <p>Si usas datos parroquiales, declara que son estimaciones de pobecu y cita también la fuente censal y las proyecciones cantonales del INEC.</p>
-<p>Los errores y propuestas se reciben en <a href="https://github.com/f-slg/pobecu/issues" class="external-link">Issues</a>. Consulta la <a href="https://github.com/f-slg/pobecu/blob/main/.github/CONTRIBUTING.md" class="external-link">guía de contribución</a> y el <a href="https://github.com/f-slg/pobecu/blob/main/.github/CODE_OF_CONDUCT.md" class="external-link">código de conducta</a>. Código bajo licencia <a href="LICENSE.html">MIT</a>; datos procedentes de las publicaciones del INEC.</p>
+<p>Los errores y propuestas se reciben en <a href="https://github.com/f-slg/pobecu/issues" class="external-link">Issues</a>. Consulta la <a href="https://github.com/f-slg/pobecu/blob/main/.github/CONTRIBUTING.md" class="external-link">guía de contribución</a> y el <a href="https://github.com/f-slg/pobecu/blob/main/.github/CODE_OF_CONDUCT.md" class="external-link">código de conducta</a>. Código bajo licencia <a href="https://github.com/f-slg/pobecu/blob/main/LICENSE.md" class="external-link">MIT</a>; datos procedentes de las publicaciones del INEC.</p>
 </div>
 <div class="section level2">
 <h2 id="id_13-reconstrucción-y-escenarios-de-población-19002100">13. Reconstrucción y escenarios de población 1900–2100<a class="anchor" aria-label="anchor" href="#id_13-reconstrucci%C3%B3n-y-escenarios-de-poblaci%C3%B3n-19002100"></a>
@@ -1137,7 +1137,7 @@ N_{j,t}=N_{\mathrm{padre},t}\,p_{j,t}.</annotation></semantics></math></p>
 <td align="left">estructural_CLR</td>
 <td align="right">5</td>
 <td align="right">1.460</td>
-<td align="right">0.792</td>
+<td align="right">0.833</td>
 </tr>
 <tr>
 <td align="left">100</td>
@@ -1155,7 +1155,7 @@ N_{j,t}=N_{\mathrm{padre},t}\,p_{j,t}.</annotation></semantics></math></p>
 <td align="left">estructural_CLR</td>
 <td align="right">5</td>
 <td align="right">1.477</td>
-<td align="right">0.910</td>
+<td align="right">0.919</td>
 </tr>
 <tr>
 <td align="left">110</td>
@@ -1173,7 +1173,7 @@ N_{j,t}=N_{\mathrm{padre},t}\,p_{j,t}.</annotation></semantics></math></p>
 <td align="left">estructural_CLR</td>
 <td align="right">5</td>
 <td align="right">1.544</td>
-<td align="right">0.924</td>
+<td align="right">0.926</td>
 </tr>
 <tr>
 <td align="left">120</td>
@@ -1206,7 +1206,7 @@ N_{j,t}=N_{\mathrm{padre},t}\,p_{j,t}.</annotation></semantics></math></p>
 <li>
 <a href="https://otexts.com/fpp3/hierarchical-forecasting.html" class="external-link">Hyndman y Athanasopoulos: series jerárquicas y coherencia de pronósticos</a>.</li>
 <li>
-<a href="https://otexts.com/fpp3/holt.html" class="external-link">Hyndman y Athanasopoulos: tendencias amortiguadas</a>.</li>
+<a href="https://otexts.com/fpp3/exponential-smoothing.html#sec-holt" class="external-link">Hyndman y Athanasopoulos: tendencias amortiguadas</a>.</li>
 <li>
 <a href="https://www.ecuadorencifras.gob.ec/documentos/web-inec/Poblacion_y_Demografia/Proyecciones_Poblacionales/censo_2022/revision_2024_areas/Boletin_tecnico_proy_rev2025_vfinal.pdf" class="external-link">INEC: metodología y cobertura de sus proyecciones</a>.</li>
 </ul>
