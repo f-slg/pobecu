@@ -24,6 +24,9 @@ normalizar_nombre <- function(x) {
     cp <- utf8ToInt(s)
     if (anyNA(cp)) cp <- utf8ToInt(iconv(s, "latin1", "UTF-8"))
     if (anyNA(cp)) return(NA_character_)
+    # Marcas diacríticas combinadas (texto en forma NFD, p. ej. "n" + tilde):
+    # se descartan porque la letra base ya está delante.
+    cp <- cp[cp < 0x300L | cp > 0x36fL]
     i <- match(cp, con)
     cp[!is.na(i)] <- sin[i[!is.na(i)]]
     cp[cp > 127L] <- 32L
@@ -121,7 +124,7 @@ homologar_parroquia <- function(codigo) {
   conali <- match(x, .pobecu_conali$conali)
   x[!is.na(conali)] <- .pobecu_conali$censo[conali[!is.na(conali)]]
   sufijo <- suppressWarnings(as.integer(substr(x, 5, 6)))
-  urbana <- !is.na(sufijo) & sufijo <= 50
+  urbana <- !is.na(sufijo) & sufijo >= 1 & sufijo <= 50
   x[urbana] <- paste0(substr(x[urbana], 1, 4), "50")
   especiales <- c("220254" = "220250")
   i <- x %in% names(especiales)
