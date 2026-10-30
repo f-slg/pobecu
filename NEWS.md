@@ -13,6 +13,13 @@
 * Metodología técnica, validación temporal en ambos sentidos, análisis de
   sensibilidad y gráficos reproducibles en el README.
 
+* `homologar_parroquia()` ya no convierte el sufijo `00`, que no existe, en
+  la cabecera cantonal (por ejemplo, `110100` daba `110150` y la tasa se
+  calculaba con otro denominador sin aviso). Ahora se deja igual y
+  `pob_unir()` lo informa como no encontrado.
+* `normalizar_nombre()` y las búsquedas por nombre reconocen los textos con
+  tildes como caracteres combinados (Unicode NFD), habituales al copiar de
+  algunos sistemas: "Cañar" ya no se convierte en `CAN AR`.
 * `pob_unir()` interpreta correctamente columnas de años de tipo factor y
   rechaza años decimales o no finitos, sin truncarlos silenciosamente.
 * `pob_unir()` y `pob_tasa()` conservan las tablas vacías.
