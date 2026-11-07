@@ -7,6 +7,13 @@
 - [`pob_fuentes()`](https://f-slg.github.io/pobecu/reference/pob_fuentes.md)
   : Fuentes y versión de los datos
 
+## Escenarios territoriales 1900-2100
+
+- [`pob_ajustar()`](https://f-slg.github.io/pobecu/reference/pob_ajustar.md)
+  : Ajustar un modelo territorial de población para 1900-2100
+- [`pob_estimar()`](https://f-slg.github.io/pobecu/reference/pob_estimar.md)
+  : Reconstruir y proyectar población territorial entre 1900 y 2100
+
 ## Tasas y denominadores
 
 - [`pob_unir()`](https://f-slg.github.io/pobecu/reference/pob_unir.md) :

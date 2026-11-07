@@ -38,6 +38,7 @@ pob_unir(
 
   Nombre de la columna de `datos` con el año, o un año fijo (número)
   para toda la tabla. Por defecto se usa la columna `anio` si existe.
+  Acepta columnas numéricas, de texto o factor con años enteros.
 
 - sexo, edad:
 

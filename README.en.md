@@ -5,6 +5,8 @@ in R.**
 
 [Español](https://f-slg.github.io/pobecu/README.md) · **English**
 
+[![CRAN
+status](https://www.r-pkg.org/badges/version/pobecu)](https://CRAN.R-project.org/package=pobecu)
 [![R-CMD-check](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml)
 [![Website](https://img.shields.io/badge/docs-f--slg.github.io%2Fpobecu-0F2233.svg)](https://f-slg.github.io/pobecu/)
 [![License:
@@ -50,8 +52,12 @@ not the census count.
 
 ``` r
 
-install.packages("remotes")
-remotes::install_github("f-slg/pobecu")
+# Stable version, from CRAN
+install.packages("pobecu")
+
+# Development version, from GitHub
+# install.packages("remotes")
+# remotes::install_github("f-slg/pobecu")
 
 # For the plots and maps in this guide
 install.packages(c("ggplot2", "scales", "geoecu", "sf"))

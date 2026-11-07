@@ -12,13 +12,14 @@ pob_fuentes()
 
 ## Value
 
-Un `data.frame` (de forma invisible) con una fila por nivel.
+Un `data.frame` de clase `pob_fuentes` con una fila por nivel. Al
+imprimirlo se muestran también la versión de los datos y las fuentes.
 
 ## Examples
 
 ``` r
 pob_fuentes()
-#> pobecu 0.2.0 · datos datos-v0.1.0
+#> pobecu 0.2.0.9000 · datos datos-v0.1.0
 #> Estimaciones hasta 2022 y proyecciones desde 2023, al 30 de junio de cada año.
 #> 
 #>      nivel   periodo      area        edad              tipo

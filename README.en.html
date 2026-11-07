@@ -41,7 +41,7 @@
 
 <p><strong>Population of Ecuador by province, canton and parish, ready to analyse in R.</strong></p>
 <p><a href="README.html">Español</a> · <strong>English</strong></p>
-<p><a href="https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://f-slg.github.io/pobecu/"><img src="https://img.shields.io/badge/docs-f--slg.github.io%2Fpobecu-0F2233.svg" alt="Website"></a> <a href="https://github.com/f-slg/pobecu/blob/main/LICENSE.md" class="external-link"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a></p>
+<p><a href="https://CRAN.R-project.org/package=pobecu" class="external-link"><img src="https://www.r-pkg.org/badges/version/pobecu" alt="CRAN status"></a> <a href="https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://f-slg.github.io/pobecu/"><img src="https://img.shields.io/badge/docs-f--slg.github.io%2Fpobecu-0F2233.svg" alt="Website"></a> <a href="https://github.com/f-slg/pobecu/blob/main/LICENSE.md" class="external-link"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a></p>
 <blockquote>
 <p><strong>About the language.</strong> This is a shortened translation of the Spanish README, which is generated from <a href="https://github.com/f-slg/pobecu/blob/main/README.Rmd" class="external-link">README.Rmd</a> and shows the real R output of every example. The package is aimed at users in Ecuador and Latin America: function names, arguments, column names, messages and the vignettes are in Spanish. See the <a href="#glossary">glossary</a> below.</p>
 </blockquote>
@@ -80,8 +80,12 @@
 <div class="section level2">
 <h2 id="installation-and-first-query">Installation and first query<a class="anchor" aria-label="anchor" href="#installation-and-first-query"></a></h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"f-slg/pobecu"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Stable version, from CRAN</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pobecu"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Development version, from GitHub</span></span>
+<span><span class="co"># install.packages("remotes")</span></span>
+<span><span class="co"># remotes::install_github("f-slg/pobecu")</span></span>
 <span></span>
 <span><span class="co"># For the plots and maps in this guide</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ggplot2"</span>, <span class="st">"scales"</span>, <span class="st">"geoecu"</span>, <span class="st">"sf"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>

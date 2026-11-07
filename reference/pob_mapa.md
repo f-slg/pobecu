@@ -121,7 +121,6 @@ plot(m["densidad"], logz = TRUE)
 
 # Parroquias de Cuenca
 pob_mapa("parroquia", anio = 2030, canton = "Cuenca")
-#> Nota: las cifras parroquiales son una estimación de pobecu a partir de las proyecciones cantonales del INEC; no son cifras oficiales. Ver ?pob_parroquias. (Este aviso se muestra una vez por sesión.)
 #> Simple feature collection with 22 features and 11 fields
 #> Geometry type: MULTIPOLYGON
 #> Dimension:     XY
