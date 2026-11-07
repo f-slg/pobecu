@@ -1,5 +1,7 @@
 # Changelog
 
+## pobecu (development version)
+
 ## pobecu 0.3.0
 
 - [`pob_ajustar()`](https://f-slg.github.io/pobecu/reference/pob_ajustar.md)

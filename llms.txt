@@ -5,10 +5,6 @@
 **Español** ·
 [English](https://github.com/f-slg/pobecu/blob/main/README.en.md)
 
-[CRAN](https://CRAN.R-project.org/package=pobecu) · [Pruebas
-automáticas](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml)
-· [Licencia MIT](https://github.com/f-slg/pobecu/blob/main/LICENSE.md)
-
 **Población del Ecuador por provincia, cantón y parroquia, lista para
 analizar en R.** Consulta denominadores por año, sexo, edad y área de
 residencia; calcula tasas y construye mapas con códigos de la División

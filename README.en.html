@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">pobecu</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,14 +34,14 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="logo.png" class="logo" alt=""><h1>pobecu </h1>
-      <small class="dont-index">Source: <a href="https://github.com/f-slg/pobecu/blob/v0.3.0/README.en.md" class="external-link"><code>README.en.md</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/f-slg/pobecu/blob/main/README.en.md" class="external-link"><code>README.en.md</code></a></small>
     </div>
 
 <div id="pobecu-" class="section level1">
 
 <p><strong>Population of Ecuador by province, canton and parish, ready to analyse in R.</strong></p>
 <p><a href="README.html">Español</a> · <strong>English</strong></p>
-<p><a href="https://CRAN.R-project.org/package=pobecu" class="external-link"><img src="https://www.r-pkg.org/badges/version/pobecu" alt="CRAN status"></a> <a href="https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://f-slg.github.io/pobecu/"><img src="https://img.shields.io/badge/docs-f--slg.github.io%2Fpobecu-0F2233.svg" alt="Website"></a> <a href="https://github.com/f-slg/pobecu/blob/main/LICENSE.md" class="external-link"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a></p>
+<p><a href="https://CRAN.R-project.org/package=pobecu" class="external-link"><img src="https://www.r-pkg.org/badges/version/pobecu" alt="CRAN status"></a> <a href="https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://f-slg.github.io/pobecu/"><img src="https://img.shields.io/badge/docs-f--slg.github.io%2Fpobecu-0F2233.svg" alt="Website"></a> <a href="https://github.com/f-slg/pobecu/blob/main/LICENSE.md" class="external-link"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a> <a href="https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/" class="external-link"><img src="https://img.shields.io/badge/data-INEC%20%C2%B7%20Revision%202024-F2B705.svg" alt="Data: INEC"></a></p>
 <blockquote>
 <p><strong>About the language.</strong> This is a shortened translation of the Spanish README, which is generated from <a href="https://github.com/f-slg/pobecu/blob/main/README.Rmd" class="external-link">README.Rmd</a> and shows the real R output of every example. The package is aimed at users in Ecuador and Latin America: function names, arguments, column names, messages and the vignettes are in Spanish. See the <a href="#glossary">glossary</a> below.</p>
 </blockquote>
@@ -188,7 +188,7 @@
 <p><a href="https://github.com/f-slg/pobecu/tree/main/validacion" class="external-link"><code>validacion/</code></a> contains a reproducible audit that reads the original INEC Excel files with a reader independent of the one used to build the package. More than <strong>six million cells</strong> — every single-year and five-year age group at the three official levels, sex and area totals, the 2010 and 2022 census counts of the 1,042 parishes and the parish-to-canton sums — match with <strong>zero differences</strong>.</p>
 </div>
 <div class="section level2">
-<h2 id="reconstruction-and-scenarios-19002100-in-development">Reconstruction and scenarios 1900–2100 (in development)<a class="anchor" aria-label="anchor" href="#reconstruction-and-scenarios-19002100-in-development"></a></h2>
+<h2 id="reconstruction-and-scenarios-19002100">Reconstruction and scenarios 1900–2100<a class="anchor" aria-label="anchor" href="#reconstruction-and-scenarios-19002100"></a></h2>
 <p><code><a href="reference/pob_ajustar.html">pob_ajustar()</a></code> and <code><a href="reference/pob_estimar.html">pob_estimar()</a></code> extend the <strong>annual totals</strong> of the country, its 24 provinces, 221 cantons and 1,042 parish units to 1900–2100. They use damped local linear trend models (<code><a href="https://rdrr.io/r/stats/StructTS.html" class="external-link">stats::StructTS</a></code>, maximum likelihood) on log national totals and centred log-ratio territorial shares, a top-down hierarchical distribution that keeps every level coherent, and conditional Monte Carlo bands. Reference values are preserved exactly.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">modelo</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/pob_ajustar.html">pob_ajustar</a></span><span class="op">(</span>ventana <span class="op">=</span> <span class="fl">20</span>, phi_total <span class="op">=</span> <span class="fl">0.98</span>, phi_partes <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span>

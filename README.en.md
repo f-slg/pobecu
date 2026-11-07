@@ -11,6 +11,8 @@ status](https://www.r-pkg.org/badges/version/pobecu)](https://CRAN.R-project.org
 [![Website](https://img.shields.io/badge/docs-f--slg.github.io%2Fpobecu-0F2233.svg)](https://f-slg.github.io/pobecu/)
 [![License:
 MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/f-slg/pobecu/blob/main/LICENSE.md)
+[![Data:
+INEC](https://img.shields.io/badge/data-INEC%20%C2%B7%20Revision%202024-F2B705.svg)](https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/)
 
 > **About the language.** This is a shortened translation of the Spanish
 > README, which is generated from
@@ -205,7 +207,7 @@ at the three official levels, sex and area totals, the 2010 and 2022
 census counts of the 1,042 parishes and the parish-to-canton sums —
 match with **zero differences**.
 
-## Reconstruction and scenarios 1900–2100 (in development)
+## Reconstruction and scenarios 1900–2100
 
 [`pob_ajustar()`](https://f-slg.github.io/pobecu/reference/pob_ajustar.md)
 and
