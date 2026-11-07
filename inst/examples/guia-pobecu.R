@@ -45,8 +45,12 @@
 #' la consulta de grupos quinquenales no necesita conexión a Internet.
 #'
 ## ----instalar, eval=FALSE-----------------------------------------------------------------
-# install.packages("remotes")
-# remotes::install_github("f-slg/pobecu")
+# # Versión estable, desde CRAN
+# install.packages("pobecu")
+#
+# # Versión de desarrollo, desde GitHub
+# # install.packages("remotes")
+# # remotes::install_github("f-slg/pobecu")
 #
 # # Para reproducir los gráficos de esta guía
 # install.packages(c("ggplot2", "scales"))
