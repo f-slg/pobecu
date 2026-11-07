@@ -79,7 +79,7 @@ Para ver la cobertura disponible:
 
 ``` r
 pob_fuentes()
-#> pobecu 0.2.0.9000 · datos datos-v0.1.0
+#> pobecu 0.3.0.9000 · datos datos-v0.1.0
 #> Estimaciones hasta 2022 y proyecciones desde 2023, al 30 de junio de cada año.
 #>
 #>      nivel   periodo      area        edad              tipo
@@ -724,7 +724,7 @@ citation("pobecu")
 #> To cite package 'pobecu' in publications use:
 #>
 #>   Salas Guerrero, R. F. (2026). pobecu: Población del Ecuador por provincia,
-#>   cantón y parroquia. Paquete de R versión 0.2.0.9000.
+#>   cantón y parroquia. Paquete de R versión 0.3.0.9000.
 #>   https://github.com/f-slg/pobecu
 #>
 #>   INEC (2024). Estimaciones y Proyecciones de Población del Ecuador, Revisión
