@@ -2,6 +2,9 @@
 
 ![Logo de pobecu](reference/figures/logo.png)
 
+**Español** ·
+[English](https://github.com/f-slg/pobecu/blob/main/README.en.md)
+
 [Pruebas
 automáticas](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml)
 · [Licencia MIT](https://github.com/f-slg/pobecu/blob/main/LICENSE.md)
