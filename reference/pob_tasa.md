@@ -33,8 +33,7 @@ pob_tasa(
 
 - por:
 
-  Base de la tasa: un número finito mayor que cero. Por defecto 100 000
-  habitantes.
+  Base de la tasa. Por defecto 100 000 habitantes.
 
 - ...:
 
@@ -44,10 +43,7 @@ pob_tasa(
 
 ## Value
 
-`datos` con las columnas `poblacion` y `tasa`. Si la población es cero,
-la tasa es `NA_real_` y se emite una advertencia. Los casos deben ser
-numéricos, finitos y no negativos; se permiten valores `NA` y
-numeradores fraccionarios (por ejemplo, ponderados).
+`datos` con las columnas `poblacion` y `tasa`.
 
 ## Examples
 

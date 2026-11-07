@@ -2,6 +2,8 @@
 
 ## pobecu 0.2.0
 
+CRAN release: 2026-11-07
+
 ### Compatibilidad con geoecu 0.4.0
 
 geoecu 0.4.0 usa la Organización Territorial del Estado del CONALI
