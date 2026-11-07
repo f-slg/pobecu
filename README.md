@@ -3,6 +3,8 @@
 
 <img src="man/figures/logo.png" align="right" height="139" alt="Logo de pobecu" />
 
+**Español** · [English](https://github.com/f-slg/pobecu/blob/main/README.en.md)
+
 [Pruebas
 automáticas](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml)
 · [Licencia MIT](https://github.com/f-slg/pobecu/blob/main/LICENSE.md)
