@@ -182,7 +182,7 @@ cells** — every single-year and five-year age group at the three official
 levels, sex and area totals, the 2010 and 2022 census counts of the 1,042
 parishes and the parish-to-canton sums — match with **zero differences**.
 
-## Reconstruction and scenarios 1900–2100 (in development)
+## Reconstruction and scenarios 1900–2100
 
 `pob_ajustar()` and `pob_estimar()` extend the **annual totals** of the
 country, its 24 provinces, 221 cantons and 1,042 parish units to 1900–2100.
