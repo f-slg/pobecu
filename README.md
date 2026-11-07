@@ -5,7 +5,7 @@
 
 **Español** · [English](https://github.com/f-slg/pobecu/blob/main/README.en.md)
 
-[Pruebas
+[CRAN](https://CRAN.R-project.org/package=pobecu) · [Pruebas
 automáticas](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml)
 · [Licencia MIT](https://github.com/f-slg/pobecu/blob/main/LICENSE.md)
 
@@ -37,8 +37,12 @@ opcional; la consulta de grupos quinquenales no necesita conexión a
 Internet.
 
 ``` r
-install.packages("remotes")
-remotes::install_github("f-slg/pobecu")
+# Versión estable, desde CRAN
+install.packages("pobecu")
+
+# Versión de desarrollo, desde GitHub
+# install.packages("remotes")
+# remotes::install_github("f-slg/pobecu")
 
 # Para reproducir los gráficos de esta guía
 install.packages(c("ggplot2", "scales"))
