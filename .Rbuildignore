@@ -13,3 +13,4 @@
 ^vignettes/.*_cache$
 ^validacion$
 ^guia-pobecu\.html$
+^README\.en\.md$
