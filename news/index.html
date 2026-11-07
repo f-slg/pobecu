@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">pobecu</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +37,22 @@
       <small>Source: <a href="https://github.com/f-slg/pobecu/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.0" id="pobecu-030">pobecu 0.3.0<a class="anchor" aria-label="anchor" href="#pobecu-030"></a></h2>
+<ul><li><p><code><a href="../reference/pob_ajustar.html">pob_ajustar()</a></code> y <code><a href="../reference/pob_estimar.html">pob_estimar()</a></code> construyen escenarios 1900-2100 para 24 provincias, 221 cantones y 1042 unidades parroquiales, coherentes con el total nacional. Modelo estructural en logaritmos y participaciones CLR, extrapolación amortiguada, bandas Monte Carlo condicionales, diagnósticos y referencias conservadas. No representan jurisdicciones históricas.</p></li>
+<li><p><code><a href="../reference/pob_estimar.html">pob_estimar()</a></code> usa una semilla propia para cada grupo territorial, derivada de <code>semilla</code>, y solo simula las ramas que contienen los territorios pedidos: una consulta por provincia o cantón tarda menos de un segundo en lugar de unos 30. Las estimaciones puntuales no cambian y las bandas de un territorio son las mismas se pida solo o con el resto.</p></li>
+<li><p>Metodología técnica, validación temporal en ambos sentidos, análisis de sensibilidad y gráficos reproducibles en el README.</p></li>
+<li><p><code><a href="../reference/homologar_parroquia.html">homologar_parroquia()</a></code> ya no convierte el sufijo <code>00</code>, que no existe, en la cabecera cantonal (por ejemplo, <code>110100</code> daba <code>110150</code> y la tasa se calculaba con otro denominador sin aviso). Ahora se deja igual y <code><a href="../reference/pob_unir.html">pob_unir()</a></code> lo informa como no encontrado.</p></li>
+<li><p><code><a href="../reference/normalizar_nombre.html">normalizar_nombre()</a></code> y las búsquedas por nombre reconocen los textos con tildes como caracteres combinados (Unicode NFD), habituales al copiar de algunos sistemas: “Cañar” ya no se convierte en <code>CAN AR</code>.</p></li>
+<li><p><code><a href="../reference/pob_unir.html">pob_unir()</a></code> interpreta correctamente columnas de años de tipo factor y rechaza años decimales o no finitos, sin truncarlos silenciosamente.</p></li>
+<li><p><code><a href="../reference/pob_unir.html">pob_unir()</a></code> y <code><a href="../reference/pob_tasa.html">pob_tasa()</a></code> conservan las tablas vacías.</p></li>
+<li><p><code><a href="../reference/pob_tasa.html">pob_tasa()</a></code> devuelve <code>NA_real_</code> con advertencia cuando la población es cero. Valida numeradores numéricos no negativos y una base finita positiva; conserva <code>NA</code> y admite numeradores ponderados fraccionarios.</p></li>
+<li><p>Nuevas pruebas de regresión para esos casos.</p></li>
+<li><p>Auditoría reproducible contra los Excel originales del INEC, mediante un lector independiente del proceso de construcción, y evidencias en <code>validacion/</code>.</p></li>
+<li><p>README generado desde R Markdown con resultados reales, seis gráficos, interpretación y ejemplos completos. Incluye un guion R y un generador HTML.</p></li>
+<li><p><code><a href="../reference/pob_fuentes.html">pob_fuentes()</a></code> devuelve un objeto de clase <code>pob_fuentes</code>; la información sobre versión y fuentes se muestra con su método <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>.</p></li>
+<li><p>Requiere geoecu 0.4.1 o posterior (en Suggests), cuya superficie <code>area_km2</code> se calcula con una proyección de igual área; la <code>densidad</code> de <code><a href="../reference/pob_mapa.html">pob_mapa()</a></code> usa esas superficies corregidas.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="pobecu-020">pobecu 0.2.0<a class="anchor" aria-label="anchor" href="#pobecu-020"></a></h2><p class="text-muted">CRAN release: 2026-11-07</p>
 <div class="section level3">

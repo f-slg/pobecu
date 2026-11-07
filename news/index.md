@@ -1,5 +1,72 @@
 # Changelog
 
+## pobecu 0.3.0
+
+- [`pob_ajustar()`](https://f-slg.github.io/pobecu/reference/pob_ajustar.md)
+  y
+  [`pob_estimar()`](https://f-slg.github.io/pobecu/reference/pob_estimar.md)
+  construyen escenarios 1900-2100 para 24 provincias, 221 cantones y
+  1042 unidades parroquiales, coherentes con el total nacional. Modelo
+  estructural en logaritmos y participaciones CLR, extrapolación
+  amortiguada, bandas Monte Carlo condicionales, diagnósticos y
+  referencias conservadas. No representan jurisdicciones históricas.
+
+- [`pob_estimar()`](https://f-slg.github.io/pobecu/reference/pob_estimar.md)
+  usa una semilla propia para cada grupo territorial, derivada de
+  `semilla`, y solo simula las ramas que contienen los territorios
+  pedidos: una consulta por provincia o cantón tarda menos de un segundo
+  en lugar de unos 30. Las estimaciones puntuales no cambian y las
+  bandas de un territorio son las mismas se pida solo o con el resto.
+
+- Metodología técnica, validación temporal en ambos sentidos, análisis
+  de sensibilidad y gráficos reproducibles en el README.
+
+- [`homologar_parroquia()`](https://f-slg.github.io/pobecu/reference/homologar_parroquia.md)
+  ya no convierte el sufijo `00`, que no existe, en la cabecera cantonal
+  (por ejemplo, `110100` daba `110150` y la tasa se calculaba con otro
+  denominador sin aviso). Ahora se deja igual y
+  [`pob_unir()`](https://f-slg.github.io/pobecu/reference/pob_unir.md)
+  lo informa como no encontrado.
+
+- [`normalizar_nombre()`](https://f-slg.github.io/pobecu/reference/normalizar_nombre.md)
+  y las búsquedas por nombre reconocen los textos con tildes como
+  caracteres combinados (Unicode NFD), habituales al copiar de algunos
+  sistemas: “Cañar” ya no se convierte en `CAN AR`.
+
+- [`pob_unir()`](https://f-slg.github.io/pobecu/reference/pob_unir.md)
+  interpreta correctamente columnas de años de tipo factor y rechaza
+  años decimales o no finitos, sin truncarlos silenciosamente.
+
+- [`pob_unir()`](https://f-slg.github.io/pobecu/reference/pob_unir.md) y
+  [`pob_tasa()`](https://f-slg.github.io/pobecu/reference/pob_tasa.md)
+  conservan las tablas vacías.
+
+- [`pob_tasa()`](https://f-slg.github.io/pobecu/reference/pob_tasa.md)
+  devuelve `NA_real_` con advertencia cuando la población es cero.
+  Valida numeradores numéricos no negativos y una base finita positiva;
+  conserva `NA` y admite numeradores ponderados fraccionarios.
+
+- Nuevas pruebas de regresión para esos casos.
+
+- Auditoría reproducible contra los Excel originales del INEC, mediante
+  un lector independiente del proceso de construcción, y evidencias en
+  `validacion/`.
+
+- README generado desde R Markdown con resultados reales, seis gráficos,
+  interpretación y ejemplos completos. Incluye un guion R y un generador
+  HTML.
+
+- [`pob_fuentes()`](https://f-slg.github.io/pobecu/reference/pob_fuentes.md)
+  devuelve un objeto de clase `pob_fuentes`; la información sobre
+  versión y fuentes se muestra con su método
+  [`print()`](https://rdrr.io/r/base/print.html).
+
+- Requiere geoecu 0.4.1 o posterior (en Suggests), cuya superficie
+  `area_km2` se calcula con una proyección de igual área; la `densidad`
+  de
+  [`pob_mapa()`](https://f-slg.github.io/pobecu/reference/pob_mapa.md)
+  usa esas superficies corregidas.
+
 ## pobecu 0.2.0
 
 CRAN release: 2026-11-07
