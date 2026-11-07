@@ -7,6 +7,20 @@ This is an update of 'pobecu' (0.2.0 -> 0.3.0). It adds the functions
 (non-existent suffix `00`) and `normalizar_nombre()` (Unicode NFD text).
 See NEWS.md for details.
 
+## Reason for the early update
+
+We apologise for submitting so soon after 0.2.0 (published 2026-11-07).
+0.2.0 was submitted on 2026-10-23, and since then we found a bug that silently
+gives wrong results: `homologar_parroquia()` converted codes ending in the
+non-existent suffix `00` (e.g. `110100`) to the cantonal head parish
+(`110150`), so `pob_unir()` and `pob_tasa()` computed rates with the wrong
+population denominator without any warning. 0.3.0 fixes this, and
+`normalizar_nombre()` no longer mangles names written with combining accents
+(Unicode NFD, e.g. "Cañar" became "CAN AR"), which made name lookups fail.
+These functions are used to compute health and social indicators in Ecuador,
+so we would rather not leave the wrong denominators in place for another
+month. We do not plan another update in the coming months.
+
 ## Test environments
 
 * Local: Ubuntu Linux, R 4.5.2 (`R CMD check --as-cran`)
@@ -20,6 +34,7 @@ See NEWS.md for details.
   <https://otexts.com/fpp3/hierarchical-forecasting.html> (in README.md)
   return status 202 to automated checks because of the site's bot
   protection; both open correctly in a browser.
+* "Days since last update: 0": see "Reason for the early update" above.
 
 ## Notes for the reviewers
 
