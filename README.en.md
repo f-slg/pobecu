@@ -11,8 +11,6 @@ status](https://www.r-pkg.org/badges/version/pobecu)](https://CRAN.R-project.org
 [![Website](https://img.shields.io/badge/docs-f--slg.github.io%2Fpobecu-0F2233.svg)](https://f-slg.github.io/pobecu/)
 [![License:
 MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/f-slg/pobecu/blob/main/LICENSE.md)
-[![Data:
-INEC](https://img.shields.io/badge/data-INEC%20%C2%B7%20Revision%202024-F2B705.svg)](https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/)
 
 > **About the language.** This is a shortened translation of the Spanish
 > README, which is generated from
