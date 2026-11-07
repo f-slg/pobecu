@@ -26,9 +26,13 @@ options(width = 92)
 
 **Español** · [English](https://github.com/f-slg/pobecu/blob/main/README.en.md)
 
-[CRAN](https://CRAN.R-project.org/package=pobecu)
-· [Pruebas automáticas](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml)
-· [Licencia MIT](https://github.com/f-slg/pobecu/blob/main/LICENSE.md)
+<!-- badges: start -->
+[![CRAN](https://www.r-pkg.org/badges/version/pobecu)](https://cran.r-project.org/package=pobecu)
+[![R-CMD-check](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml)
+[![Sitio web](https://img.shields.io/badge/documentaci%C3%B3n-f--slg.github.io%2Fpobecu-0F2233.svg)](https://f-slg.github.io/pobecu/)
+[![Licencia: MIT](https://img.shields.io/badge/licencia-MIT-blue.svg)](https://github.com/f-slg/pobecu/blob/main/LICENSE.md)
+[![Datos: INEC](https://img.shields.io/badge/datos-INEC%20%C2%B7%20Revisi%C3%B3n%202024-F2B705.svg)](https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/)
+<!-- badges: end -->
 
 **Población del Ecuador por provincia, cantón y parroquia, lista para analizar en R.**
 Consulta denominadores por año, sexo, edad y área de residencia; calcula tasas
