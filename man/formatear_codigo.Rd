@@ -13,7 +13,10 @@ formatear_codigo(x, nivel = c("parroquia", "canton", "provincia"))
 }
 \value{
 Vector de texto. Los valores que no son códigos válidos se
-devuelven como \code{NA} con una advertencia.
+devuelven como \code{NA} con una advertencia: los que tienen letras o más
+dígitos que el nivel, y los que al completarse empezarían por \code{"00"}
+(no existe esa provincia; suele ser un código de otro nivel, como \code{"01"}
+usado como cantón).
 }
 \description{
 Devuelve códigos DPA como texto con el número correcto de dígitos,

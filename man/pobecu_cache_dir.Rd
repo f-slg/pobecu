@@ -12,7 +12,10 @@ Ruta de la carpeta de caché (texto).
 \description{
 Los datos por edad simple se descargan la primera vez que se piden y se
 guardan aquí para no volver a descargarlos. La ubicación sigue las
-convenciones de cada sistema operativo (\code{\link[tools:R_user_dir]{tools::R_user_dir()}}).
+convenciones de cada sistema operativo (\code{\link[tools:R_user_dir]{tools::R_user_dir()}}). La primera
+vez que se usan en cada sesión se comprueba su huella; si el archivo está
+incompleto o modificado, se descarga de nuevo. Para usar un archivo
+propio, indica otra carpeta con \code{\link[=pobecu_usar_carpeta]{pobecu_usar_carpeta()}}.
 }
 \examples{
 pobecu_cache_dir()

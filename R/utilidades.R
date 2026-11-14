@@ -2,6 +2,8 @@
 #'
 #' Convierte nombres a una forma comparable: mayúsculas, sin tildes ni
 #' diéresis, `Ñ` como `N`, sin signos de puntuación y con espacios simples.
+#' También se reducen a su letra base otras vocales acentuadas y la cedilla
+#' (`à`, `ê`, `ã`, `ç`...), frecuentes en nombres de otros idiomas.
 #' Útil para unir tablas que escriben los nombres de forma distinta
 #' ("Cañar", "CANAR", "cañar ").
 #'
@@ -16,9 +18,17 @@ normalizar_nombre <- function(x) {
   x[latin] <- enc2utf8(x[latin])
   # Se trabaja con puntos de codigo Unicode para que el resultado sea el mismo
   # en cualquier configuracion regional (Windows, macOS, Linux, locale "C").
-  con <- c(0xe1, 0xe9, 0xed, 0xf3, 0xfa, 0xfc, 0xf1,
-           0xc1, 0xc9, 0xcd, 0xd3, 0xda, 0xdc, 0xd1)
-  sin <- utf8ToInt("aeiouunAEIOUUN")
+  # a-e-i-o-u con tilde, u con dieresis y enie; despues grave, circunflejo,
+  # dieresis, a/o con virgulilla, cedilla y a con anillo. En Latin-1 la
+  # mayuscula de cada una esta 32 puntos de codigo antes.
+  minus <- c(0xe1, 0xe9, 0xed, 0xf3, 0xfa, 0xfc, 0xf1,
+             0xe0, 0xe8, 0xec, 0xf2, 0xf9,
+             0xe2, 0xea, 0xee, 0xf4, 0xfb,
+             0xe4, 0xeb, 0xef, 0xf6,
+             0xe3, 0xf5, 0xe7, 0xe5)
+  base <- "aeiouunaeiouaeiouaeioaoca"
+  con <- c(minus, minus - 32L)
+  sin <- utf8ToInt(paste0(base, toupper(base)))
   limpiar <- function(s) {
     if (is.na(s)) return(NA_character_)
     cp <- utf8ToInt(s)
@@ -48,7 +58,10 @@ normalizar_nombre <- function(x) {
 #' @param x Vector de códigos (número o texto).
 #' @param nivel `"provincia"` (2 dígitos), `"canton"` (4) o `"parroquia"` (6).
 #' @return Vector de texto. Los valores que no son códigos válidos se
-#'   devuelven como `NA` con una advertencia.
+#'   devuelven como `NA` con una advertencia: los que tienen letras o más
+#'   dígitos que el nivel, y los que al completarse empezarían por `"00"`
+#'   (no existe esa provincia; suele ser un código de otro nivel, como `"01"`
+#'   usado como cantón).
 #' @export
 #' @examples
 #' formatear_codigo(c(1, 11, "7"), "provincia")
@@ -58,12 +71,22 @@ formatear_codigo <- function(x, nivel = c("parroquia", "canton", "provincia")) {
   nivel <- match.arg(nivel)
   ancho <- c(provincia = 2L, canton = 4L, parroquia = 6L)[[nivel]]
   original <- x
+  if (is.numeric(x)) {
+    # Sin notación científica: as.character(100000) devuelve "1e+05".
+    x <- ifelse(is.na(x), NA_character_,
+                format(x, scientific = FALSE, trim = TRUE, digits = 15))
+  }
   x <- trimws(as.character(x))
   x <- sub("\\.0+$", "", x)
   invalido <- !is.na(x) & (!grepl("^[0-9]+$", x) | nchar(x) > ancho)
   x[invalido] <- NA_character_
   ok <- !is.na(x)
   x[ok] <- formatC(as.integer(x[ok]), width = ancho, flag = "0")
+  # No existe la provincia "00": un código que queda con ese prefijo es de
+  # otro nivel o está incompleto, y completarlo con ceros lo disfrazaría.
+  cero <- ok & startsWith(x, "00")
+  x[cero] <- NA_character_
+  invalido <- invalido | cero
   if (any(invalido)) {
     warning(sum(invalido), " valor(es) no son c\u00f3digos de ", .etiqueta(nivel),
             " v\u00e1lidos y se devolvieron como NA: ",
@@ -170,7 +193,8 @@ homologar_canton <- function(codigo) {
 #' @param texto Texto a buscar: parte de un nombre o un código.
 #' @param nivel Nivel en el que buscar: `"parroquia"`, `"canton"` o
 #'   `"provincia"`.
-#' @return Un `data.frame` con las coincidencias en el nivel indicado.
+#' @return Un `data.frame` con las coincidencias en el nivel indicado (sin
+#'   filas si no hay ninguna o si `texto` es `NA`).
 #' @export
 #' @examples
 #' buscar_pob("arenal")
@@ -181,6 +205,7 @@ buscar_pob <- function(texto, nivel = c("parroquia", "canton", "provincia")) {
   tabla <- .tabla_nivel(nivel)
   cols <- .columnas_nivel(nivel)
   texto <- as.character(texto)[1]
+  if (is.na(texto)) return(tabla[0, , drop = FALSE])
 
   if (grepl("^[0-9]+$", trimws(texto))) {
     hit <- startsWith(tabla[[cols$codigo]], trimws(texto))
@@ -237,6 +262,10 @@ buscar_pob <- function(texto, nivel = c("parroquia", "canton", "provincia")) {
   if (!is.null(dentro)) tabla <- tabla[tabla$dpa_provin %in% dentro, , drop = FALSE]
   cols <- .columnas_nivel(nivel)
   x <- as.character(x)
+  if (any(is.na(x) | !nzchar(trimws(x)))) {
+    stop("El filtro de ", .etiqueta(nivel), " no admite NA ni textos vac\u00edos. ",
+         "Usa NULL para no filtrar.", call. = FALSE)
+  }
 
   codigos <- character(0)
   for (valor in x) {

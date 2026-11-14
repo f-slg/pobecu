@@ -389,7 +389,9 @@ stopifnot(all.equal(tasas$tasa, tasas$casos / tasas$poblacion * 100000))
 
 `pob_unir(casos)` agrega solo `poblacion`. `pob_tasa()` agrega además
 `tasa`. Las funciones conservan el orden y los códigos originales de la
-tabla. Un código sin correspondencia deja `NA` y genera una advertencia.
+tabla. Una fila sin correspondencia deja `NA` y genera una advertencia
+que indica cuántas fallan por el código, por el año o por el sexo o la
+edad.
 
 Para tasas específicas, pide explícitamente las desagregaciones: tener
 una columna `sexo` o `edad` no activa automáticamente su uso.
@@ -438,7 +440,9 @@ pob_tasa(ejemplo_cero, "casos", nivel = "parroquia",
 Los años decimales se rechazan; los factores se interpretan por su
 etiqueta. La base `por` debe ser positiva y finita. Los casos deben ser
 numéricos y no negativos; `NA` permanece desconocido y los casos
-ponderados pueden ser fraccionarios.
+ponderados pueden ser fraccionarios. Un código que no puede pertenecer
+al nivel indicado (por ejemplo, `"01"` como cantón) se devuelve como
+`NA` con advertencia, en lugar de completarse con ceros.
 
 ## 8. Parroquias: estimación y coherencia
 
@@ -634,8 +638,10 @@ pobecu_usar_carpeta("ruta/a/mis_datos")
 `pobecu_usar_carpeta(NULL)` restablece la búsqueda predeterminada
 (incluida `POBECU_CARPETA`, si está definida). `pobecu_limpiar_cache()`
 elimina los archivos descargados de pobecu; úsalo solo si quieres
-descargarlos otra vez. Los mapas tienen una caché independiente,
-gestionada por `geoecu`.
+descargarlos otra vez. La huella del archivo se comprueba al descargarlo
+y la primera vez que se usa en cada sesión: si quedó incompleto, se
+descarga de nuevo. Los mapas tienen una caché independiente, gestionada
+por `geoecu`.
 
 ## 11. Contraste con los archivos originales
 

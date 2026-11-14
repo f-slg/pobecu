@@ -53,3 +53,40 @@ test_that("buscar_pob() encuentra por nombre y código", {
   expect_equal(buscar_pob("11", "provincia")$provincia, "Loja")
   expect_true(nrow(buscar_pob("arenal")) >= 1)
 })
+
+test_that("formatear_codigo() no inventa la provincia 00 ni usa notaci\u00f3n cient\u00edfica", {
+  expect_warning(x <- formatear_codigo(c("01", "101"), "canton"), "no son c")
+  expect_equal(x, c(NA, "0101"))
+  expect_warning(expect_equal(formatear_codigo(0, "provincia"), NA_character_))
+  expect_equal(formatear_codigo(c(100000, 110150, NA), "parroquia"),
+               c("100000", "110150", NA))
+  expect_warning(x <- formatear_codigo(c(701, 1101.5), "canton"), "1101.5")
+  expect_equal(x, c("0701", NA))
+})
+
+test_that("normalizar_nombre() conserva la letra base de otros acentos", {
+  expect_equal(normalizar_nombre(c("S\u00e3o Jo\u00e3o", "Cura\u00e7ao", "voil\u00e0", "\u00c0\u00ca\u00c7")),
+               c("SAO JOAO", "CURACAO", "VOILA", "AEC"))
+})
+
+test_that("los filtros y las b\u00fasquedas rechazan NA y textos vac\u00edos", {
+  expect_equal(nrow(buscar_pob(NA)), 0)
+  expect_error(poblacion("provincia", 2025, provincia = NA), "no admite NA")
+  expect_error(poblacion("canton", 2025, canton = ""), "cant\u00f3n no admite")
+  expect_error(pob_estimar("provincia", 2030, provincia = c("Loja", " ")), "no admite NA")
+})
+
+test_that("formatear_codigo() y normalizar_nombre() coinciden con las de geoecu", {
+  # geoecu exporta las mismas funciones; desde 0.4.2 deben dar lo mismo
+  skip_if_not_installed("geoecu", "0.4.1.9000")
+  codigos <- list(c(1, 11, "7", NA), c(701, 1101, 100000, 1101.5), "01", 0,
+                  c("0101", "abc", "12345", " 110150 ", "110150.0"),
+                  factor(c("1101", "0701")), c(150, 10150, 1e6))
+  for (x in codigos) for (nivel in c("provincia", "canton", "parroquia")) {
+    expect_identical(suppressWarnings(formatear_codigo(x, nivel)),
+                     suppressWarnings(geoecu::formatear_codigo(x, nivel)))
+  }
+  nombres <- c("Ca\u00f1ar", "  san  Jos\u00e9 de Chimbo ", "CHECA (JIDCAY)", NA,
+               "Can\u0303ar", "S\u00e3o Jo\u00e3o", "Cura\u00e7ao", "O'Higgins", "")
+  expect_identical(normalizar_nombre(nombres), geoecu::normalizar_nombre(nombres))
+})

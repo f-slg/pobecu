@@ -103,3 +103,6 @@ tam <- file.size(c(list.files("data", full.names = TRUE),
                    file.path(dir_release, "pobecu_edad_simple.rds")))
 names(tam) <- c(list.files("data"), "pobecu_edad_simple.rds")
 print(round(tam / 1024))
+
+# Huella del archivo del release: cópiala en `.pobecu_md5` (R/zzz.R)
+print(tools::md5sum(file.path(dir_release, "pobecu_edad_simple.rds")))

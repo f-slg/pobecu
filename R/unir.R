@@ -16,7 +16,8 @@
 #'   la usas, `datos` debe tener columnas `sexo` (`"hombre"`/`"mujer"`) y/o
 #'   `edad` con los mismos valores que devuelve [poblacion()].
 #' @return `datos` con una columna adicional `poblacion`. Las filas sin
-#'   coincidencia quedan con `NA` y se avisa con una advertencia.
+#'   coincidencia quedan con `NA` y se avisa con una advertencia que indica
+#'   cuántas fallan por el código, por el año o por la desagregación.
 #' @export
 #' @examples
 #' casos <- data.frame(dpa_canton = c(1101, 1102, 701), anio = 2024,
@@ -76,8 +77,22 @@ pob_unir <- function(datos, nivel = c("canton", "provincia", "parroquia"),
 
   faltan <- is.na(datos$poblacion)
   if (any(faltan)) {
-    warning(sum(faltan), " fila(s) sin poblaci\u00f3n (c\u00f3digo, a\u00f1o u otra ",
-            "desagregaci\u00f3n no encontrados).", call. = FALSE)
+    disponibles <- .pobecu_anios[[nivel]]
+    sin_codigo <- faltan & (is.na(cod) | !cod %in% .tabla_nivel(nivel)[[cols$codigo]])
+    sin_anio <- faltan & !sin_codigo & (is.na(anios) | !anios %in% disponibles)
+    otras <- faltan & !sin_codigo & !sin_anio
+    desagregacion <- if (sexo && !is.null(edad)) "sexo o edad no reconocidos"
+      else if (sexo) "sexo no reconocido (usa \"hombre\" o \"mujer\")"
+      else if (!is.null(edad)) "edad no reconocida (usa las etiquetas de poblacion())"
+      else "otra desagregaci\u00f3n"
+    motivos <- c(
+      if (any(sin_codigo)) paste0(sum(sin_codigo), " por c\u00f3digo no encontrado"),
+      if (any(sin_anio)) paste0(sum(sin_anio), " por a\u00f1o no disponible (",
+                                min(disponibles), "-", max(disponibles), ")"),
+      if (any(otras)) paste0(sum(otras), " por ", desagregacion)
+    )
+    warning(sum(faltan), " fila(s) sin poblaci\u00f3n: ",
+            paste(motivos, collapse = "; "), ".", call. = FALSE)
   }
   datos
 }

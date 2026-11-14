@@ -32,6 +32,8 @@ test_that("poblacion() da errores claros", {
   expect_error(poblacion("canton", canton = "Bolivar"), "varios")
   expect_error(poblacion("canton", provincia = "Lojaa"), "Quisiste")
   expect_error(poblacion("provincia", anio = 1995, area = TRUE), "2010-2035")
+  expect_error(poblacion("provincia", anio = 2025, sexo = NA), "`sexo` debe ser TRUE o FALSE")
+  expect_error(poblacion("provincia", anio = 2025, area = "si"), "`area` debe ser TRUE o FALSE")
 })
 
 test_that("edades simples cuando los datos están disponibles", {
