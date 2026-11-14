@@ -43,11 +43,15 @@ Official sources for the context:
 
 ## Test environments
 
-To be completed with the final check results before submission.
+* Local Ubuntu 26.04.1 LTS, R 4.5.2: R CMD check --as-cran on the built
+  source tarball, including --run-donttest examples and the PDF manual.
+* GitHub Actions: Windows, macOS and Ubuntu (R release), Ubuntu (R-devel).
+* Local tests with geoecu 0.4.2 and the published data available:
+  224 expectations, 0 failures, 0 errors, 0 skips.
 
 ## R CMD check results
 
-To be completed with the final check results before submission.
+0 errors | 0 warnings | 0 notes
 
 ## Notes for the reviewers
 
