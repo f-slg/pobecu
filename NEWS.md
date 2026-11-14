@@ -1,3 +1,9 @@
+# pobecu (development version)
+
+* `citation("pobecu")` incluye el DOI del paquete en CRAN
+  (<https://doi.org/10.32614/CRAN.package.pobecu>) y el ORCID del autor, que
+  también figura en `DESCRIPTION`. Nuevo `CITATION.cff` en el repositorio.
+
 # pobecu 0.3.0
 
 * `pob_ajustar()` y `pob_estimar()` construyen escenarios 1900-2100 para
