@@ -2,7 +2,10 @@
 #'
 #' Los datos por edad simple se descargan la primera vez que se piden y se
 #' guardan aquí para no volver a descargarlos. La ubicación sigue las
-#' convenciones de cada sistema operativo ([tools::R_user_dir()]).
+#' convenciones de cada sistema operativo ([tools::R_user_dir()]). La primera
+#' vez que se usan en cada sesión se comprueba su huella; si el archivo está
+#' incompleto o modificado, se descarga de nuevo. Para usar un archivo
+#' propio, indica otra carpeta con [pobecu_usar_carpeta()].
 #'
 #' @return Ruta de la carpeta de caché (texto).
 #' @export
@@ -25,6 +28,7 @@ pobecu_limpiar_cache <- function() {
   carpeta <- tools::R_user_dir("pobecu", which = "cache")
   if (dir.exists(carpeta)) unlink(carpeta, recursive = TRUE)
   .pobecu_env$simple <- NULL
+  rm(list = ls(.cache_verificada, all.names = TRUE), envir = .cache_verificada)
   message("Cach\u00e9 de pobecu eliminada.")
   invisible(TRUE)
 }
@@ -121,16 +125,67 @@ pobecu_datos_disponibles <- function() {
          "\nRevisa tu conexi\u00f3n o usa pobecu_usar_carpeta() con archivos locales.",
          call. = FALSE)
   }
-  file.copy(tmp, destino, overwrite = TRUE)
+  # Solo se verifica la huella del release oficial; con `pobecu.url_base`
+  # se pueden usar otras fuentes bajo responsabilidad de quien las configura.
+  oficial <- is.null(getOption("pobecu.url_base"))
+  if (oficial && !identical(unname(tools::md5sum(tmp)), .pobecu_md5)) {
+    stop("El archivo descargado no coincide con la versi\u00f3n esperada de los datos ",
+         "(", .pobecu_version_datos, "). Puede estar incompleto o haber sido ",
+         "modificado. Intenta de nuevo m\u00e1s tarde.", call. = FALSE)
+  }
+  # Se copia con otro nombre y se renombra al final: si el proceso se
+  # interrumpe, no queda un archivo incompleto con el nombre definitivo.
+  parcial <- paste0(destino, ".", Sys.getpid(), ".tmp")
+  on.exit(unlink(parcial), add = TRUE)
+  guardado <- file.copy(tmp, parcial, overwrite = TRUE) &&
+    (suppressWarnings(file.rename(parcial, destino)) ||
+       file.copy(parcial, destino, overwrite = TRUE))
+  if (!guardado) {
+    stop("No se pudo guardar el archivo en la cach\u00e9: ", destino, call. = FALSE)
+  }
+  if (oficial) assign(destino, TRUE, envir = .cache_verificada)
   destino
+}
+
+# Archivos de la caché cuya huella ya se comprobó en esta sesión.
+.cache_verificada <- new.env(parent = emptyenv())
+
+# ¿El archivo de la caché es el del release oficial? Se comprueba una vez por
+# sesión. Con `pobecu.url_base` la fuente es otra y no hay huella que comparar.
+.cache_integra <- function(ruta) {
+  if (!is.null(getOption("pobecu.url_base"))) return(TRUE)
+  if (exists(ruta, envir = .cache_verificada, inherits = FALSE)) return(TRUE)
+  ok <- identical(unname(tools::md5sum(ruta)), .pobecu_md5)
+  if (ok) assign(ruta, TRUE, envir = .cache_verificada)
+  ok
+}
+
+.ruta_datos <- function() {
+  ruta <- .ruta_local()
+  if (is.null(ruta)) return(.descargar())
+  # Solo se verifica la caché: una carpeta indicada por el usuario puede
+  # contener datos propios.
+  en_cache <- identical(ruta, file.path(pobecu_cache_dir(), .pobecu_archivo_simple))
+  if (en_cache && !.cache_integra(ruta)) {
+    message("El archivo en cach\u00e9 no coincide con la versi\u00f3n esperada de los ",
+            "datos (incompleto o modificado); se descarga de nuevo.")
+    ruta <- .descargar()
+  }
+  ruta
 }
 
 # Tabla de edades simples (se lee una vez por sesion)
 .datos_simple <- function() {
   if (is.null(.pobecu_env$simple)) {
-    ruta <- .ruta_local()
-    if (is.null(ruta)) ruta <- .descargar()
-    .pobecu_env$simple <- readRDS(ruta)
+    ruta <- .ruta_datos()
+    datos <- tryCatch(readRDS(ruta), error = function(e) NULL)
+    if (!is.data.frame(datos)) {
+      stop("No se pudo leer el archivo de edades simples:\n  ", ruta,
+           "\nNo es el archivo `", .pobecu_archivo_simple, "` de pobecu o est\u00e1 ",
+           "da\u00f1ado. Reempl\u00e1zalo o usa pobecu_usar_carpeta(NULL) para descargarlo.",
+           call. = FALSE)
+    }
+    .pobecu_env$simple <- datos
   }
   .pobecu_env$simple
 }

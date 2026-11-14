@@ -48,11 +48,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Ronald Fabricio Salas Guerrero \email{fabriciosalasguerrero@gmail.com} [copyright holder]
+\strong{Maintainer}: Ronald Fabricio Salas Guerrero \email{fabriciosalasguerrero@gmail.com} (\href{https://orcid.org/0000-0001-5077-1522}{ORCID}) [copyright holder]
 
 Authors:
 \itemize{
-  \item Ronald Fabricio Salas Guerrero \email{fabriciosalasguerrero@gmail.com} [copyright holder]
+  \item Ronald Fabricio Salas Guerrero \email{fabriciosalasguerrero@gmail.com} (\href{https://orcid.org/0000-0001-5077-1522}{ORCID}) [copyright holder]
 }
 
 }

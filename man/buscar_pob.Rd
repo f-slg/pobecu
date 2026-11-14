@@ -13,7 +13,8 @@ buscar_pob(texto, nivel = c("parroquia", "canton", "provincia"))
 \code{"provincia"}.}
 }
 \value{
-Un \code{data.frame} con las coincidencias en el nivel indicado.
+Un \code{data.frame} con las coincidencias en el nivel indicado (sin
+filas si no hay ninguna o si \code{texto} es \code{NA}).
 }
 \description{
 Busca por nombre (sin importar tildes ni mayúsculas) o por código en el

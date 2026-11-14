@@ -74,7 +74,8 @@ poblacion <- function(nivel = c("canton", "provincia", "parroquia", "nacional"),
                       sexo = FALSE, area = FALSE, edad = NULL) {
   nivel <- match.arg(nivel)
   anio <- .validar_anio(anio, nivel)
-  stopifnot(is.logical(sexo), length(sexo) == 1, is.logical(area), length(area) == 1)
+  .validar_logico(sexo, "sexo")
+  .validar_logico(area, "area")
 
   if (nivel == "nacional" && (!is.null(provincia) || !is.null(canton))) {
     stop("El nivel nacional no admite filtros por provincia o cant\u00f3n.", call. = FALSE)
@@ -128,6 +129,12 @@ poblacion <- function(nivel = c("canton", "provincia", "parroquia", "nacional"),
 }
 
 # --- internas ----------------------------------------------------------------
+
+.validar_logico <- function(x, nombre) {
+  if (!is.logical(x) || length(x) != 1L || is.na(x)) {
+    stop("`", nombre, "` debe ser TRUE o FALSE.", call. = FALSE)
+  }
+}
 
 .validar_anio <- function(anio, nivel) {
   disponibles <- .pobecu_anios[[nivel]]

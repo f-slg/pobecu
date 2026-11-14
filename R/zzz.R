@@ -8,6 +8,12 @@
 
 .pobecu_archivo_simple <- "pobecu_edad_simple.rds"
 
+# Huella MD5 del archivo del release. Se comprueba tras cada descarga y la
+# primera vez que se lee la caché en cada sesión, para detectar archivos
+# incompletos o modificados. Se actualiza junto con `.pobecu_version_datos`
+# (data-raw/03_construir_datos.R la imprime).
+.pobecu_md5 <- "6859b0d7c4f84e8f223e1b9d063c6080"
+
 # Revision de las proyecciones del INEC en la que se basan los datos.
 .pobecu_revision <- "Revisi\u00f3n 2024 (actualizaci\u00f3n con \u00e1reas, 2025)"
 

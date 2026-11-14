@@ -1,5 +1,24 @@
 # pobecu (development version)
 
+* Los datos por edad simple se verifican: la descarga se comprueba con una
+  huella MD5, se guarda con un nombre temporal y se renombra al terminar, y
+  el archivo en caché se comprueba la primera vez que se usa en cada sesión.
+  Un archivo incompleto ya no bloquea el paquete con el error "formato de
+  entrada desconocido": se descarga de nuevo. Los archivos de
+  `pobecu_usar_carpeta()` no se verifican, y si no se pueden leer se explica.
+* `pob_unir()` y `pob_tasa()` indican en la advertencia cuántas filas quedan
+  sin población por el código, por el año o por el sexo o la edad.
+* `formatear_codigo()` devuelve `NA`, con advertencia, en lugar de inventar
+  la provincia `"00"`: `"01"` como cantón ya no se convierte en `"0001"`.
+  Además, los números grandes ya no pasan por notación científica
+  (`100000` se mostraba como `1e+05`).
+* Los filtros `provincia` y `canton` explican el error cuando reciben `NA` o
+  un texto vacío, `sexo` y `area` cuando no son `TRUE` o `FALSE`, y
+  `buscar_pob(NA)` devuelve una tabla sin filas.
+* `normalizar_nombre()` conserva la letra base de otras vocales acentuadas y
+  de la cedilla (`à`, `ê`, `ã`, `ç`...), que antes se convertían en espacios.
+* `formatear_codigo()` y `normalizar_nombre()` se comportan igual que las de
+  geoecu 0.4.2, y una prueba lo comprueba cuando geoecu está instalado.
 * `citation("pobecu")` incluye el DOI del paquete en CRAN
   (<https://doi.org/10.32614/CRAN.package.pobecu>) y el ORCID del autor, que
   también figura en `DESCRIPTION`. Nuevo `CITATION.cff` en el repositorio.

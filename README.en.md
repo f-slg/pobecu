@@ -129,8 +129,9 @@ cobertura$cobertura_pct <- 100 * cobertura$vacunados / cobertura$poblacion
 ```
 
 `pob_unir()` adds the `poblacion` column; `pob_tasa()` also adds `tasa`. Both
-keep the original row order and codes. Unmatched codes give `NA` with a
-warning, and a zero denominator gives `NA` (not `Inf` or `NaN`). Do not add or
+keep the original row order and codes. Unmatched rows give `NA` with a
+warning that says how many fail because of the code, the year, or the sex or
+age, and a zero denominator gives `NA` (not `Inf` or `NaN`). Do not add or
 average rates: add the cases and compatible denominators first.
 
 ## Parishes: estimate and consistency
@@ -174,6 +175,10 @@ pobecu_cache_dir()
 pobecu_datos_disponibles()
 pobecu_usar_carpeta("path/to/my_data")                # or set POBECU_CARPETA
 ```
+
+The downloaded file is checked against a checksum when it is downloaded and
+the first time it is used in a session: an incomplete file is downloaded
+again.
 
 ## Audited against the INEC spreadsheets
 

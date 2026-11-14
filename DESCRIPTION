@@ -39,6 +39,7 @@ Imports:
     tools,
     utils
 Suggests:
+    curl,
     geoecu (>= 0.4.1),
     ggplot2,
     knitr,

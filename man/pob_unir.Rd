@@ -31,7 +31,8 @@ la usas, \code{datos} debe tener columnas \code{sexo} (\code{"hombre"}/\code{"mu
 }
 \value{
 \code{datos} con una columna adicional \code{poblacion}. Las filas sin
-coincidencia quedan con \code{NA} y se avisa con una advertencia.
+coincidencia quedan con \code{NA} y se avisa con una advertencia que indica
+cuántas fallan por el código, por el año o por la desagregación.
 }
 \description{
 Agrega a tu tabla (por ejemplo, casos por cantón y año) una columna con la

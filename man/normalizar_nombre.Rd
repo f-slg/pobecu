@@ -15,6 +15,8 @@ Vector de texto normalizado.
 \description{
 Convierte nombres a una forma comparable: mayúsculas, sin tildes ni
 diéresis, \code{Ñ} como \code{N}, sin signos de puntuación y con espacios simples.
+También se reducen a su letra base otras vocales acentuadas y la cedilla
+(\code{à}, \code{ê}, \code{ã}, \code{ç}...), frecuentes en nombres de otros idiomas.
 Útil para unir tablas que escriben los nombres de forma distinta
 ("Cañar", "CANAR", "cañar ").
 }
