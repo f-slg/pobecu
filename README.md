@@ -638,9 +638,12 @@ pobecu_usar_carpeta("ruta/a/mis_datos")
 `pobecu_usar_carpeta(NULL)` restablece la búsqueda predeterminada
 (incluida `POBECU_CARPETA`, si está definida). `pobecu_limpiar_cache()`
 elimina los archivos descargados de pobecu; úsalo solo si quieres
-descargarlos otra vez. La huella del archivo se comprueba al descargarlo
-y la primera vez que se usa en cada sesión: si quedó incompleto, se
-descarga de nuevo. Los mapas tienen una caché independiente, gestionada
+descargarlos otra vez. En la **versión de desarrollo de GitHub (0.3.0.9000)**, la huella del
+archivo se comprueba al descargarlo y la primera vez que se usa en cada
+sesión: si quedó incompleto, se descarga de nuevo. Esta verificación y la
+recuperación automática no están incluidas en la **versión 0.3.0 de CRAN**;
+en ella, usa `pobecu_limpiar_cache()` para eliminar un archivo dañado de
+la caché antes de descargarlo otra vez. Los mapas tienen una caché independiente, gestionada
 por `geoecu`.
 
 ## 11. Contraste con los archivos originales
