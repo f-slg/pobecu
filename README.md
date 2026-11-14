@@ -7,6 +7,8 @@
 
 <!-- badges: start -->
 [![CRAN](https://www.r-pkg.org/badges/version/pobecu)](https://cran.r-project.org/package=pobecu)
+[![DOI](https://img.shields.io/badge/DOI-10.32614%2FCRAN.package.pobecu-0F2233.svg)](https://doi.org/10.32614/CRAN.package.pobecu)
+[![Descargas de CRAN](https://cranlogs.r-pkg.org/badges/grand-total/pobecu)](https://cran.r-project.org/package=pobecu)
 [![R-CMD-check](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml)
 [![Sitio web](https://img.shields.io/badge/documentaci%C3%B3n-f--slg.github.io%2Fpobecu-0F2233.svg)](https://f-slg.github.io/pobecu/)
 [![Licencia: MIT](https://img.shields.io/badge/licencia-MIT-blue.svg)](https://github.com/f-slg/pobecu/blob/main/LICENSE.md)
@@ -723,9 +725,10 @@ amplía los ejemplos cartográficos.
 citation("pobecu")
 #> To cite package 'pobecu' in publications use:
 #>
-#>   Salas Guerrero, R. F. (2026). pobecu: Población del Ecuador por provincia,
-#>   cantón y parroquia. Paquete de R versión 0.3.0.9000.
-#>   https://github.com/f-slg/pobecu
+#>   Salas Guerrero, R. F. (2026). pobecu: Population of Ecuador by Province,
+#>   Canton and Parish (Población del Ecuador por Provincia, Cantón y
+#>   Parroquia). R package version 0.3.0.9000.
+#>   https://doi.org/10.32614/CRAN.package.pobecu
 #>
 #>   INEC (2024). Estimaciones y Proyecciones de Población del Ecuador, Revisión
 #>   2024. Quito: Instituto Nacional de Estadística y Censos.
@@ -743,6 +746,24 @@ Fuentes primarias:
   áreas](https://www.ecuadorencifras.gob.ec/documentos/web-inec/Poblacion_y_Demografia/Proyecciones_Poblacionales/censo_2022/revision_2024_areas/Tabulados_Estimacion_Proyeccion_v2.xlsx).
 - [INEC: estructura poblacional del Censo
   2022](https://www.censoecuador.gob.ec/wp-content/uploads/2024/04/01_2022_CPV_Estructura_poblacional.xlsx).
+
+En BibTeX:
+
+``` bibtex
+@Manual{pobecu,
+  title  = {pobecu: Population of Ecuador by Province, Canton and Parish
+            (Población del Ecuador por Provincia, Cantón y Parroquia)},
+  author = {Ronald Fabricio {Salas Guerrero}},
+  year   = {2026},
+  note   = {R package version 0.3.0},
+  doi    = {10.32614/CRAN.package.pobecu},
+  url    = {https://CRAN.R-project.org/package=pobecu},
+}
+```
+
+El DOI apunta siempre a la versión vigente en CRAN; indica la versión que
+usaste (`packageVersion("pobecu")`). En GitHub, el botón **Cite this
+repository** ofrece la misma referencia.
 
 Si usas datos parroquiales, declara que son estimaciones de pobecu y
 cita también la fuente censal y las proyecciones cantonales del INEC.

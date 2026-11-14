@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: "Si usas pobecu, cítalo así. / If you use pobecu, please cite it as below."
+type: software
+title: "pobecu: Population of Ecuador by Province, Canton and Parish (Población del Ecuador por Provincia, Cantón y Parroquia)"
+abstract: >-
+  Official population estimates and projections of Ecuador published by the
+  National Institute of Statistics and Censuses (INEC), Revision 2024, by
+  province, canton, sex, age and urban/rural area, identified by the codes of
+  the political-administrative division (DPA), plus a parish-level estimate
+  consistent with the official cantonal projections and helpers to compute
+  rates and join population denominators to case tables.
+authors:
+  - family-names: "Salas Guerrero"
+    given-names: "Ronald Fabricio"
+    orcid: "https://orcid.org/0000-0001-5077-1522"
+version: "0.3.0"
+date-released: "2026-11-07"
+doi: 10.32614/CRAN.package.pobecu
+license: MIT
+url: "https://f-slg.github.io/pobecu/"
+repository-code: "https://github.com/f-slg/pobecu"
+repository: "https://CRAN.R-project.org/package=pobecu"
+keywords:
+  - R
+  - Ecuador
+  - population
+  - demography
+  - population projections
+  - DPA
+  - public health
+references:
+  - type: report
+    title: "Estimaciones y Proyecciones de Población del Ecuador, Revisión 2024"
+    authors:
+      - name: "Instituto Nacional de Estadística y Censos (INEC)"
+    year: 2024
+    url: "https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/"
