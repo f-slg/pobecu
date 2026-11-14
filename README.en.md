@@ -176,9 +176,12 @@ pobecu_datos_disponibles()
 pobecu_usar_carpeta("path/to/my_data")                # or set POBECU_CARPETA
 ```
 
-The downloaded file is checked against a checksum when it is downloaded and
-the first time it is used in a session: an incomplete file is downloaded
-again.
+In the **development version available from GitHub (0.3.0.9000)**, the
+file is checked against a checksum when it is downloaded and the first time
+it is used in a session: an incomplete file is downloaded again. These
+checks and automatic recovery are not included in **CRAN version 0.3.0**;
+with that version, use `pobecu_limpiar_cache()` to remove a damaged cached
+file before downloading it again.
 
 ## Audited against the INEC spreadsheets
 
