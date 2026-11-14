@@ -376,8 +376,7 @@ casos_p <- data.frame(dpa_parroq = c("131250", "131251", "131252"),
 casos_p$dpa_parroq <- homologar_parroquia(casos_p$dpa_parroq)  # Sosote -> Rocafuerte
 casos_p <- aggregate(casos ~ dpa_parroq + anio, casos_p, sum)
 pob_tasa(casos_p, "casos", nivel = "parroquia")
-#> Warning: 1 fila(s) sin población (código, año u otra desagregación no
-#> encontrados).
+#> Warning: 1 fila(s) sin población: 1 por código no encontrado.
 #>   dpa_parroq anio casos poblacion     tasa
 #> 1     131250 2025     6     46005 13.04206
 #> 2     131252 2025     1        NA       NA

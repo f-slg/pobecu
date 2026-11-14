@@ -154,7 +154,7 @@
 <span>                      edad <span class="op">=</span> <span class="st">"0"</span>, vacunados <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">11800</span>, <span class="fl">6900</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">cobertura</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/pob_unir.html">pob_unir</a></span><span class="op">(</span><span class="va">vacunas</span>, nivel <span class="op">=</span> <span class="st">"provincia"</span>, edad <span class="op">=</span> <span class="st">"simple"</span><span class="op">)</span></span>
 <span><span class="va">cobertura</span><span class="op">$</span><span class="va">cobertura_pct</span> <span class="op">&lt;-</span> <span class="fl">100</span> <span class="op">*</span> <span class="va">cobertura</span><span class="op">$</span><span class="va">vacunados</span> <span class="op">/</span> <span class="va">cobertura</span><span class="op">$</span><span class="va">poblacion</span></span></code></pre></div>
-<p><code><a href="reference/pob_unir.html">pob_unir()</a></code> adds the <code>poblacion</code> column; <code><a href="reference/pob_tasa.html">pob_tasa()</a></code> also adds <code>tasa</code>. Both keep the original row order and codes. Unmatched codes give <code>NA</code> with a warning, and a zero denominator gives <code>NA</code> (not <code>Inf</code> or <code>NaN</code>). Do not add or average rates: add the cases and compatible denominators first.</p>
+<p><code><a href="reference/pob_unir.html">pob_unir()</a></code> adds the <code>poblacion</code> column; <code><a href="reference/pob_tasa.html">pob_tasa()</a></code> also adds <code>tasa</code>. Both keep the original row order and codes. Unmatched rows give <code>NA</code> with a warning that says how many fail because of the code, the year, or the sex or age, and a zero denominator gives <code>NA</code> (not <code>Inf</code> or <code>NaN</code>). Do not add or average rates: add the cases and compatible denominators first.</p>
 </div>
 <div class="section level2">
 <h2 id="parishes-estimate-and-consistency">Parishes: estimate and consistency<a class="anchor" aria-label="anchor" href="#parishes-estimate-and-consistency"></a></h2>
@@ -182,6 +182,7 @@
 <span><span class="fu"><a href="reference/pobecu_cache_dir.html">pobecu_cache_dir</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/pobecu_datos_disponibles.html">pobecu_datos_disponibles</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/pobecu_usar_carpeta.html">pobecu_usar_carpeta</a></span><span class="op">(</span><span class="st">"path/to/my_data"</span><span class="op">)</span>                <span class="co"># or set POBECU_CARPETA</span></span></code></pre></div>
+<p>The downloaded file is checked against a checksum when it is downloaded and the first time it is used in a session: an incomplete file is downloaded again.</p>
 </div>
 <div class="section level2">
 <h2 id="audited-against-the-inec-spreadsheets">Audited against the INEC spreadsheets<a class="anchor" aria-label="anchor" href="#audited-against-the-inec-spreadsheets"></a></h2>

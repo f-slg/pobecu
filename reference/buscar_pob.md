@@ -21,7 +21,8 @@ buscar_pob(texto, nivel = c("parroquia", "canton", "provincia"))
 
 ## Value
 
-Un `data.frame` con las coincidencias en el nivel indicado.
+Un `data.frame` con las coincidencias en el nivel indicado (sin filas si
+no hay ninguna o si `texto` es `NA`).
 
 ## Examples
 

@@ -23,7 +23,10 @@ formatear_codigo(x, nivel = c("parroquia", "canton", "provincia"))
 ## Value
 
 Vector de texto. Los valores que no son códigos válidos se devuelven
-como `NA` con una advertencia.
+como `NA` con una advertencia: los que tienen letras o más dígitos que
+el nivel, y los que al completarse empezarían por `"00"` (no existe esa
+provincia; suele ser un código de otro nivel, como `"01"` usado como
+cantón).
 
 ## Examples
 

@@ -68,7 +68,10 @@ guarda como número en Excel (por ejemplo, <code>701</code> en lugar de <code>"0
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>Vector de texto. Los valores que no son códigos válidos se
-devuelven como <code>NA</code> con una advertencia.</p>
+devuelven como <code>NA</code> con una advertencia: los que tienen letras o más
+dígitos que el nivel, y los que al completarse empezarían por <code>"00"</code>
+(no existe esa provincia; suele ser un código de otro nivel, como <code>"01"</code>
+usado como cantón).</p>
     </div>
 
     <div class="section level2">

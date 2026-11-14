@@ -2,8 +2,10 @@
 
 Convierte nombres a una forma comparable: mayúsculas, sin tildes ni
 diéresis, `Ñ` como `N`, sin signos de puntuación y con espacios simples.
-Útil para unir tablas que escriben los nombres de forma distinta
-("Cañar", "CANAR", "cañar ").
+También se reducen a su letra base otras vocales acentuadas y la cedilla
+(`à`, `ê`, `ã`, `ç`...), frecuentes en nombres de otros idiomas. Útil
+para unir tablas que escriben los nombres de forma distinta ("Cañar",
+"CANAR", "cañar ").
 
 ## Usage
 

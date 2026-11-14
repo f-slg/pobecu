@@ -51,7 +51,8 @@ pob_unir(
 ## Value
 
 `datos` con una columna adicional `poblacion`. Las filas sin
-coincidencia quedan con `NA` y se avisa con una advertencia.
+coincidencia quedan con `NA` y se avisa con una advertencia que indica
+cuántas fallan por el código, por el año o por la desagregación.
 
 ## Examples
 

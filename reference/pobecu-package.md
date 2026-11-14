@@ -61,9 +61,10 @@ Useful links:
 ## Author
 
 **Maintainer**: Ronald Fabricio Salas Guerrero
-<fabriciosalasguerrero@gmail.com> \[copyright holder\]
+<fabriciosalasguerrero@gmail.com>
+([ORCID](https://orcid.org/0000-0001-5077-1522)) \[copyright holder\]
 
 Authors:
 
 - Ronald Fabricio Salas Guerrero <fabriciosalasguerrero@gmail.com>
-  \[copyright holder\]
+  ([ORCID](https://orcid.org/0000-0001-5077-1522)) \[copyright holder\]

@@ -39,7 +39,17 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="pobecu-development-version">pobecu (development version)<a class="anchor" aria-label="anchor" href="#pobecu-development-version"></a></h2>
-<ul><li>
+<ul><li>Los datos por edad simple se verifican: la descarga se comprueba con una huella MD5, se guarda con un nombre temporal y se renombra al terminar, y el archivo en caché se comprueba la primera vez que se usa en cada sesión. Un archivo incompleto ya no bloquea el paquete con el error “formato de entrada desconocido”: se descarga de nuevo. Los archivos de <code><a href="../reference/pobecu_usar_carpeta.html">pobecu_usar_carpeta()</a></code> no se verifican, y si no se pueden leer se explica.</li>
+<li>
+<code><a href="../reference/pob_unir.html">pob_unir()</a></code> y <code><a href="../reference/pob_tasa.html">pob_tasa()</a></code> indican en la advertencia cuántas filas quedan sin población por el código, por el año o por el sexo o la edad.</li>
+<li>
+<code><a href="../reference/formatear_codigo.html">formatear_codigo()</a></code> devuelve <code>NA</code>, con advertencia, en lugar de inventar la provincia <code>"00"</code>: <code>"01"</code> como cantón ya no se convierte en <code>"0001"</code>. Además, los números grandes ya no pasan por notación científica (<code>100000</code> se mostraba como <code>1e+05</code>).</li>
+<li>Los filtros <code>provincia</code> y <code>canton</code> explican el error cuando reciben <code>NA</code> o un texto vacío, <code>sexo</code> y <code>area</code> cuando no son <code>TRUE</code> o <code>FALSE</code>, y <code>buscar_pob(NA)</code> devuelve una tabla sin filas.</li>
+<li>
+<code><a href="../reference/normalizar_nombre.html">normalizar_nombre()</a></code> conserva la letra base de otras vocales acentuadas y de la cedilla (<code>à</code>, <code>ê</code>, <code>ã</code>, <code>ç</code>…), que antes se convertían en espacios.</li>
+<li>
+<code><a href="../reference/formatear_codigo.html">formatear_codigo()</a></code> y <code><a href="../reference/normalizar_nombre.html">normalizar_nombre()</a></code> se comportan igual que las de geoecu 0.4.2, y una prueba lo comprueba cuando geoecu está instalado.</li>
+<li>
 <code>citation("pobecu")</code> incluye el DOI del paquete en CRAN (<a href="https://doi.org/10.32614/CRAN.package.pobecu" class="external-link uri">https://doi.org/10.32614/CRAN.package.pobecu</a>) y el ORCID del autor, que también figura en <code>DESCRIPTION</code>. Nuevo <code>CITATION.cff</code> en el repositorio.</li>
 </ul></div>
     <div class="section level2">

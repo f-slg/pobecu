@@ -425,7 +425,7 @@ Composición urbana y rural de tres provincias en 2025. Fuente: INEC.
 <span></span>
 <span><span class="co"># Comprobación de la fórmula: casos / habitantes × base</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="va">tasas</span><span class="op">$</span><span class="va">tasa</span>, <span class="va">tasas</span><span class="op">$</span><span class="va">casos</span> <span class="op">/</span> <span class="va">tasas</span><span class="op">$</span><span class="va">poblacion</span> <span class="op">*</span> <span class="fl">100000</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><code>pob_unir(casos)</code> agrega solo <code>poblacion</code>. <code><a href="reference/pob_tasa.html">pob_tasa()</a></code> agrega además <code>tasa</code>. Las funciones conservan el orden y los códigos originales de la tabla. Un código sin correspondencia deja <code>NA</code> y genera una advertencia.</p>
+<p><code>pob_unir(casos)</code> agrega solo <code>poblacion</code>. <code><a href="reference/pob_tasa.html">pob_tasa()</a></code> agrega además <code>tasa</code>. Las funciones conservan el orden y los códigos originales de la tabla. Una fila sin correspondencia deja <code>NA</code> y genera una advertencia que indica cuántas fallan por el código, por el año o por el sexo o la edad.</p>
 <p>Para tasas específicas, pide explícitamente las desagregaciones: tener una columna <code>sexo</code> o <code>edad</code> no activa automáticamente su uso.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">casos_sexo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>dpa_provin <span class="op">=</span> <span class="st">"11"</span>, anio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="st">"2025"</span><span class="op">)</span>,</span>
@@ -458,7 +458,7 @@ Composición urbana y rural de tres provincias en 2025. Fuente: INEC.
 <span><span class="co">#&gt; Warning: 1 fila(s) con población cero: la tasa se devuelve como NA.</span></span>
 <span><span class="co">#&gt;   dpa_parroq anio   sexo  edad casos poblacion tasa</span></span>
 <span><span class="co">#&gt; 1     060256 2025 hombre 70-74     1         0   NA</span></span></code></pre></div>
-<p>Los años decimales se rechazan; los factores se interpretan por su etiqueta. La base <code>por</code> debe ser positiva y finita. Los casos deben ser numéricos y no negativos; <code>NA</code> permanece desconocido y los casos ponderados pueden ser fraccionarios.</p>
+<p>Los años decimales se rechazan; los factores se interpretan por su etiqueta. La base <code>por</code> debe ser positiva y finita. Los casos deben ser numéricos y no negativos; <code>NA</code> permanece desconocido y los casos ponderados pueden ser fraccionarios. Un código que no puede pertenecer al nivel indicado (por ejemplo, <code>"01"</code> como cantón) se devuelve como <code>NA</code> con advertencia, en lugar de completarse con ceros.</p>
 </div>
 </div>
 <div class="section level2">
@@ -603,7 +603,7 @@ Densidad por cantón de Loja en 2025. Población: INEC; geometrías: geoecu, agr
 <span><span class="co"># En otro equipo: copiar pobecu_edad_simple.rds a una carpeta existente</span></span>
 <span><span class="fu"><a href="reference/pobecu_usar_carpeta.html">pobecu_usar_carpeta</a></span><span class="op">(</span><span class="st">"ruta/a/mis_datos"</span><span class="op">)</span></span>
 <span><span class="co"># También se puede definir POBECU_CARPETA en .Renviron</span></span></code></pre></div>
-<p><code>pobecu_usar_carpeta(NULL)</code> restablece la búsqueda predeterminada (incluida <code>POBECU_CARPETA</code>, si está definida). <code><a href="reference/pobecu_limpiar_cache.html">pobecu_limpiar_cache()</a></code> elimina los archivos descargados de pobecu; úsalo solo si quieres descargarlos otra vez. Los mapas tienen una caché independiente, gestionada por <code>geoecu</code>.</p>
+<p><code>pobecu_usar_carpeta(NULL)</code> restablece la búsqueda predeterminada (incluida <code>POBECU_CARPETA</code>, si está definida). <code><a href="reference/pobecu_limpiar_cache.html">pobecu_limpiar_cache()</a></code> elimina los archivos descargados de pobecu; úsalo solo si quieres descargarlos otra vez. La huella del archivo se comprueba al descargarlo y la primera vez que se usa en cada sesión: si quedó incompleto, se descarga de nuevo. Los mapas tienen una caché independiente, gestionada por <code>geoecu</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="id_11-contraste-con-los-archivos-originales">11. Contraste con los archivos originales<a class="anchor" aria-label="anchor" href="#id_11-contraste-con-los-archivos-originales"></a>
