@@ -1,53 +1,68 @@
 ## Submission
 
-This is an update of 'pobecu' (0.2.0 -> 0.3.0). It adds the functions
-`pob_ajustar()` and `pob_estimar()` (territorial population scenarios for
-1900-2100), stricter input validation in `pob_unir()` and `pob_tasa()`, and a
-`print()` method for `pob_fuentes()`, and fixes in `homologar_parroquia()`
-(non-existent suffix `00`) and `normalizar_nombre()` (Unicode NFD text).
-See NEWS.md for details.
+This is a patch release of 'pobecu' (0.3.0 -> 0.3.1). It fixes recovery
+from a corrupted download cache for single-year-of-age population data,
+validates malformed geographic codes and filters, and improves diagnostics
+for rows that cannot be matched to a population denominator. See NEWS.md.
+The population data (data release 'datos-v0.1.0') and statistical methods
+are unchanged.
 
 ## Reason for the early update
 
-We apologise for submitting so soon after 0.2.0 (published 2026-11-07).
-0.2.0 was submitted on 2026-10-23, and since then we found a bug that silently
-gives wrong results: `homologar_parroquia()` converted codes ending in the
-non-existent suffix `00` (e.g. `110100`) to the cantonal head parish
-(`110150`), so `pob_unir()` and `pob_tasa()` computed rates with the wrong
-population denominator without any warning. 0.3.0 fixes this, and
-`normalizar_nombre()` no longer mangles names written with combining accents
-(Unicode NFD, e.g. "Cañar" became "CAN AR"), which made name lookups fail.
-These functions are used to compute health and social indicators in Ecuador,
-so we would rather not leave the wrong denominators in place for another
-month. We do not plan another update in the coming months.
+We apologise for requesting another update only one week after 0.3.0
+(published 2026-11-07), despite stating in that submission that we did not
+plan another update in the coming months. We are requesting an exception
+for the following reproducible reliability defects.
+
+In 0.3.0, a truncated single-year-of-age data file is treated as available
+and reused on every call. Age-specific population queries then fail with
+an uninformative readRDS error until the user manually clears the cache.
+Version 0.3.1 verifies the official file's checksum on download and first
+use in each session, saves completed downloads via a temporary file, and
+redownloads a damaged cache. It also rejects malformed codes instead of
+padding them into impossible codes, and identifies why population joins
+fail (code, year, sex or age).
+
+The intended application is the extraction of population denominators for
+epidemiological rates, including surveillance of waterborne diseases.
+Ecuador is under a national red alert for El Nino, declared on 29 August
+2026 (SNGR Resolution 238-2026). PAHO's 2026-2027 public health situation
+analysis identifies increased risks of waterborne and foodborne diseases
+among the possible consequences of the event. In this context, these
+fixes improve the reliability of age-specific denominator extraction and
+help users detect unmatched records before calculating rates.
+
+We have not identified incorrect population figures in 0.3.0; the changes
+address access to the data, input validation and diagnostics. We
+understand that the epidemiological context does not by itself establish
+urgency, and will respect CRAN's decision if this update should wait.
+
+Official sources for the context:
+* https://www.gestionderiesgos.gob.ec/sitrep-eventos-de-lluvias-por-alerta-roja/
+* https://www.paho.org/es/documentos/analisis-situacion-salud-publica-nino-americas-2026-2027-24-junio-2026
 
 ## Test environments
 
-* Local: Ubuntu Linux, R 4.5.2 (`R CMD check --as-cran`)
-* GitHub Actions: windows-latest, macos-latest and ubuntu-latest (R release)
+To be completed with the final check results before submission.
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
-
-* The URLs <https://otexts.com/fpp3/exponential-smoothing.html#sec-holt> and
-  <https://otexts.com/fpp3/hierarchical-forecasting.html> (in README.md)
-  return status 202 to automated checks because of the site's bot
-  protection; both open correctly in a browser.
-* "Days since last update: 0": see "Reason for the early update" above.
+To be completed with the final check results before submission.
 
 ## Notes for the reviewers
 
-* 'geoecu' (Suggests, >= 0.4.1) is the companion package with the boundaries
-  of the same territorial units and is available on CRAN (version 0.4.1). All uses of
-  'geoecu' are conditional (`requireNamespace()`), and the related examples,
-  tests and vignette chunks are skipped when it is not installed.
+* 'geoecu' (Suggests, >= 0.4.1) is the companion package for geographic
+  boundaries. Version 0.4.2 is available on CRAN. All uses are conditional
+  on it being installed; map examples and tests also require the layers
+  to be available locally.
 * Single-year-of-age data are downloaded on first use from the package's
-  GitHub release and cached with `tools::R_user_dir("pobecu", "cache")`.
-  Examples that need them are wrapped in `@examplesIf
-  pobecu_datos_disponibles()` and the corresponding tests are skipped when
-  the data are not available, so checks do not require internet access.
-* The examples of `pob_ajustar()` and `pob_estimar()` are in `\donttest{}`
-  because fitting the model takes about 8 seconds.
-* The documentation is in Spanish (`Language: es`); the Title and
-  Description are in English.
+  GitHub data release and cached with tools::R_user_dir("pobecu", "cache").
+  Examples needing those data use @examplesIf pobecu_datos_disponibles(),
+  and corresponding tests skip when the data are unavailable.
+* The cache unit tests use temporary directories and local file://
+  sources. A separate end-to-end repair test accesses the published data
+  and is skipped on CRAN. Checks do not require downloading the data.
+* The examples of pob_ajustar() and pob_estimar() use \donttest{} because
+  fitting the model is comparatively expensive.
+* Documentation is in Spanish (Language: es); Title and Description are
+  in English. DOI and ORCID metadata are included in this release.
