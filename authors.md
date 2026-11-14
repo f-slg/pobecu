@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/f-slg/pobecu/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/f-slg/pobecu/blob/v0.3.1/inst/CITATION)
 
 Salas Guerrero, R. F. (2026). pobecu: Population of Ecuador by Province,
 Canton and Parish (Población del Ecuador por Provincia, Cantón y
