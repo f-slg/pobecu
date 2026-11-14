@@ -2,7 +2,7 @@ Package: pobecu
 Type: Package
 Title: Population of Ecuador by Province, Canton and Parish (Población del
     Ecuador por Provincia, Cantón y Parroquia)
-Version: 0.3.0.9000
+Version: 0.3.1
 Authors@R:
     person("Ronald Fabricio", "Salas Guerrero",
            email = "fabriciosalasguerrero@gmail.com",

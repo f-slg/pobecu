@@ -1,4 +1,4 @@
-# pobecu (development version)
+# pobecu 0.3.1
 
 * Los datos por edad simple se verifican: la descarga se comprueba con una
   huella MD5, se guarda con un nombre temporal y se renombra al terminar, y

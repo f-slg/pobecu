@@ -13,8 +13,8 @@ authors:
   - family-names: "Salas Guerrero"
     given-names: "Ronald Fabricio"
     orcid: "https://orcid.org/0000-0001-5077-1522"
-version: "0.3.0"
-date-released: "2026-11-07"
+version: "0.3.1"
+date-released: "2026-11-14"
 doi: 10.32614/CRAN.package.pobecu
 license: MIT
 url: "https://f-slg.github.io/pobecu/"
