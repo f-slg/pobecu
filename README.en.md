@@ -7,6 +7,9 @@ in R.**
 
 [![CRAN
 status](https://www.r-pkg.org/badges/version/pobecu)](https://CRAN.R-project.org/package=pobecu)
+[![DOI](https://img.shields.io/badge/DOI-10.32614%2FCRAN.package.pobecu-0F2233.svg)](https://doi.org/10.32614/CRAN.package.pobecu)
+[![CRAN
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/pobecu)](https://cran.r-project.org/package=pobecu)
 [![R-CMD-check](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/f-slg/pobecu/actions/workflows/R-CMD-check.yaml)
 [![Website](https://img.shields.io/badge/docs-f--slg.github.io%2Fpobecu-0F2233.svg)](https://f-slg.github.io/pobecu/)
 [![License:
@@ -268,9 +271,12 @@ bands](reference/figures/README-modelo-nacional-1.png)
   projections](https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/)
   and the [2022 Census population
   structure](https://www.censoecuador.gob.ec/wp-content/uploads/2024/04/01_2022_CPV_Estructura_poblacional.xlsx).
-- Cite with `citation("pobecu")`. When using parish data, state that
-  they are pobecu estimates and also cite the INEC census and cantonal
-  projections.
+- Cite with `citation("pobecu")` or the **Cite this repository** button:
+  Salas Guerrero, R. F. (2026). *pobecu: Population of Ecuador by
+  Province, Canton and Parish*. R package version 0.3.0.
+  <https://doi.org/10.32614/CRAN.package.pobecu>. When using parish
+  data, state that they are pobecu estimates and also cite the INEC
+  census and cantonal projections.
 
 Bugs and proposals are welcome in
 [Issues](https://github.com/f-slg/pobecu/issues), in English or Spanish.

@@ -81,13 +81,13 @@ por sexo, edad o residencia en este modelo de totales territoriales.
 ``` r
 # \donttest{
 m <- pob_ajustar()
-#> Warning: 12 ajustes usan respaldo lineal; consulte $diagnosticos.
+#> Warning: 14 ajustes usan respaldo lineal; consulte $diagnosticos.
 p <- pob_estimar("parroquia", c(1900, 2022, 2100), m, canton = "Loja")
 p[c("nombre", "anio", "poblacion", "origen", "horizonte")]
 #>                     nombre anio poblacion                       origen
 #> 1                     Loja 1900     26879                modelo_pobecu
 #> 2                     Loja 2022    217989 referencia_parroquial_pobecu
-#> 3                     Loja 2100    294920                modelo_pobecu
+#> 3                     Loja 2100    294918                modelo_pobecu
 #> 4                 Chantaco 1900       327                modelo_pobecu
 #> 5                 Chantaco 2022      1054 referencia_parroquial_pobecu
 #> 6                 Chantaco 2100       570                modelo_pobecu
@@ -108,7 +108,7 @@ p[c("nombre", "anio", "poblacion", "origen", "horizonte")]
 #> 21               Malacatos 2100     13280                modelo_pobecu
 #> 22               San Lucas 1900       887                modelo_pobecu
 #> 23               San Lucas 2022      4787 referencia_parroquial_pobecu
-#> 24               San Lucas 2100      4356                modelo_pobecu
+#> 24               San Lucas 2100      4358                modelo_pobecu
 #> 25 San Pedro De Vilcabamba 1900       247                modelo_pobecu
 #> 26 San Pedro De Vilcabamba 2022      1332 referencia_parroquial_pobecu
 #> 27 San Pedro De Vilcabamba 2100      1213                modelo_pobecu

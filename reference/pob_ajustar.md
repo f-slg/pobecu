@@ -57,7 +57,7 @@ README antes de interpretar horizontes lejanos.
 # \donttest{
 modelo <- pob_ajustar()
 #> Nota: las cifras parroquiales son una estimación de pobecu a partir de las proyecciones cantonales del INEC; no son cifras oficiales. Ver ?pob_parroquias. (Este aviso se muestra una vez por sesión.)
-#> Warning: 12 ajustes usan respaldo lineal; consulte $diagnosticos.
+#> Warning: 14 ajustes usan respaldo lineal; consulte $diagnosticos.
 head(modelo$diagnosticos)
 #>   codigo padre     nivel sentido entrenamiento_desde entrenamiento_hasta  n
 #> 1     EC  <NA>  nacional   retro                1950                1969 20

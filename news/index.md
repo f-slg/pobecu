@@ -2,7 +2,14 @@
 
 ## pobecu (development version)
 
+- `citation("pobecu")` incluye el DOI del paquete en CRAN
+  (<https://doi.org/10.32614/CRAN.package.pobecu>) y el ORCID del autor,
+  que también figura en `DESCRIPTION`. Nuevo `CITATION.cff` en el
+  repositorio.
+
 ## pobecu 0.3.0
+
+CRAN release: 2026-11-07
 
 - [`pob_ajustar()`](https://f-slg.github.io/pobecu/reference/pob_ajustar.md)
   y
