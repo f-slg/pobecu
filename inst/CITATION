@@ -1,15 +1,17 @@
 bibentry(
   bibtype = "Manual",
-  title = "pobecu: Población del Ecuador por provincia, cantón y parroquia",
+  title = "pobecu: Population of Ecuador by Province, Canton and Parish (Población del Ecuador por Provincia, Cantón y Parroquia)",
   author = person("Ronald Fabricio", "Salas Guerrero",
-                  email = "fabriciosalasguerrero@gmail.com"),
+                  comment = c(ORCID = "0000-0001-5077-1522")),
   year = "2026",
-  note = paste("Paquete de R versión", meta$Version),
-  url = "https://github.com/f-slg/pobecu",
+  note = paste("R package version", meta$Version),
+  doi = "10.32614/CRAN.package.pobecu",
+  url = "https://CRAN.R-project.org/package=pobecu",
   textVersion = paste0(
-    "Salas Guerrero, R. F. (2026). pobecu: Población del Ecuador por ",
-    "provincia, cantón y parroquia. Paquete de R versión ", meta$Version,
-    ". https://github.com/f-slg/pobecu"
+    "Salas Guerrero, R. F. (2026). pobecu: Population of Ecuador by Province, ",
+    "Canton and Parish (Población del Ecuador por Provincia, Cantón y ",
+    "Parroquia). R package version ", meta$Version,
+    ". https://doi.org/10.32614/CRAN.package.pobecu"
   )
 )
 

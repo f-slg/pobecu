@@ -6,7 +6,8 @@ Version: 0.3.0
 Authors@R:
     person("Ronald Fabricio", "Salas Guerrero",
            email = "fabriciosalasguerrero@gmail.com",
-           role = c("aut", "cre", "cph"))
+           role = c("aut", "cre", "cph"),
+           comment = c(ORCID = "0000-0001-5077-1522"))
 Description: Provides the official population estimates and projections of
     Ecuador published by the National Institute of Statistics and Censuses
     (INEC, "Instituto Nacional de Estadística y Censos"), Revision 2024:
