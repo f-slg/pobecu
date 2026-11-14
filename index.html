@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="index.html">pobecu</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -108,15 +108,15 @@
 <p>Para ver la cobertura disponible:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/pob_fuentes.html">pob_fuentes</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; pobecu 0.3.0.9000 · datos datos-v0.1.0</span></span>
+<span><span class="co">#&gt; pobecu 0.3.1 · datos datos-v0.1.0</span></span>
 <span><span class="co">#&gt; Estimaciones hasta 2022 y proyecciones desde 2023, al 30 de junio de cada año.</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;      nivel   periodo      area        edad              tipo</span></span>
 <span><span class="co">#&gt;   nacional 1950-2050 2010-2035      0-100+           oficial</span></span>
 <span><span class="co">#&gt;  provincia 1990-2035 2010-2035      0-100+           oficial</span></span>
 <span><span class="co">#&gt;     canton 2010-2035 2010-2035      0-100+           oficial</span></span>
 <span><span class="co">#&gt;  parroquia 2010-2035        no 0-4 ... 85+ estimación pobecu</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Fuentes:</span></span>
 <span><span class="co">#&gt; * INEC, Estimaciones y Proyecciones de Población, Revisión 2024 (actualización con áreas, 2025).</span></span>
 <span><span class="co">#&gt;   https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/</span></span>
@@ -334,6 +334,8 @@ Diez provincias más pobladas en 2025. Fuente: INEC.
 <p>Los cortes son los <strong>inicios</strong> de cada grupo; el último es abierto. Para parroquias solo se admiten cortes múltiplos de cinco hasta 85. El archivo de edades simples se descarga una vez y queda guardado en caché.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/poblacion.html">poblacion</a></span><span class="op">(</span><span class="st">"canton"</span>, anio <span class="op">=</span> <span class="fl">2026</span>, canton <span class="op">=</span> <span class="st">"Loja"</span>, edad <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Descargando datos por edad simple (2 MB) por única vez...</span></span>
+<span><span class="co">#&gt;   https://github.com/f-slg/pobecu/releases/download/datos-v0.1.0/pobecu_edad_simple.rds</span></span>
 <span><span class="co">#&gt;   dpa_canton canton dpa_provin provincia anio edad poblacion</span></span>
 <span><span class="co">#&gt; 1       1101   Loja         11      Loja 2026    0      3427</span></span>
 <span><span class="co">#&gt; 2       1101   Loja         11      Loja 2026  1-4     15224</span></span>
@@ -536,6 +538,8 @@ Estimaciones propias de pobecu para las parroquias de Puyango. No son cifras ofi
 <p>La primera consulta cartográfica descarga las capas de <code>geoecu</code>. Instala <code>geoecu</code> 0.4.1 o posterior: cada capa aporta <code>area_km2</code>, superficie calculada sobre el elipsoide WGS84 a partir de la geometría de resolución alta. <code><a href="reference/pob_mapa.html">pob_mapa()</a></code> agrupa las unidades CONALI que pertenecen a una unidad del Censo 2022, suma las áreas de los polígonos y calcula <code>densidad = poblacion / area_km2</code>. Así, población y superficie corresponden a la misma división territorial.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mapa</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/pob_mapa.html">pob_mapa</a></span><span class="op">(</span><span class="st">"canton"</span>, anio <span class="op">=</span> <span class="fl">2025</span>, provincia <span class="op">=</span> <span class="st">"Loja"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Descargando capas geoecu (resolución baja) por única vez...</span></span>
+<span><span class="co">#&gt;   https://github.com/f-slg/geoecu/releases/download/datos-v0.3.0/geoecu_dpa_baja.gpkg</span></span>
 <span><span class="va">detalle_mapa</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="va">mapa</span><span class="op">)</span><span class="op">[</span>,</span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dpa_canton"</span>, <span class="st">"canton"</span>, <span class="st">"poblacion"</span>, <span class="st">"area_km2"</span>, <span class="st">"densidad"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="va">detalle_mapa</span><span class="op">$</span><span class="va">area_km2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">detalle_mapa</span><span class="op">$</span><span class="va">area_km2</span>, <span class="fl">2</span><span class="op">)</span></span>
@@ -603,7 +607,7 @@ Densidad por cantón de Loja en 2025. Población: INEC; geometrías: geoecu, agr
 <span><span class="co"># En otro equipo: copiar pobecu_edad_simple.rds a una carpeta existente</span></span>
 <span><span class="fu"><a href="reference/pobecu_usar_carpeta.html">pobecu_usar_carpeta</a></span><span class="op">(</span><span class="st">"ruta/a/mis_datos"</span><span class="op">)</span></span>
 <span><span class="co"># También se puede definir POBECU_CARPETA en .Renviron</span></span></code></pre></div>
-<p><code>pobecu_usar_carpeta(NULL)</code> restablece la búsqueda predeterminada (incluida <code>POBECU_CARPETA</code>, si está definida). <code><a href="reference/pobecu_limpiar_cache.html">pobecu_limpiar_cache()</a></code> elimina los archivos descargados de pobecu; úsalo solo si quieres descargarlos otra vez. En la <strong>versión de desarrollo de GitHub (0.3.0.9000)</strong>, la huella del archivo se comprueba al descargarlo y la primera vez que se usa en cada sesión: si quedó incompleto, se descarga de nuevo. Esta verificación y la recuperación automática no están incluidas en la <strong>versión 0.3.0 de CRAN</strong>; en ella, usa <code><a href="reference/pobecu_limpiar_cache.html">pobecu_limpiar_cache()</a></code> para eliminar un archivo dañado de la caché antes de descargarlo otra vez. Los mapas tienen una caché independiente, gestionada por <code>geoecu</code>.</p>
+<p><code>pobecu_usar_carpeta(NULL)</code> restablece la búsqueda predeterminada (incluida <code>POBECU_CARPETA</code>, si está definida). <code><a href="reference/pobecu_limpiar_cache.html">pobecu_limpiar_cache()</a></code> elimina los archivos descargados de pobecu; úsalo solo si quieres descargarlos otra vez. Desde <strong>pobecu 0.3.1</strong>, la huella del archivo se comprueba al descargarlo y la primera vez que se usa en cada sesión: si quedó incompleto, se descarga de nuevo. En <strong>0.3.0 y anteriores</strong>, usa <code><a href="reference/pobecu_limpiar_cache.html">pobecu_limpiar_cache()</a></code> para eliminar un archivo dañado de la caché antes de descargarlo otra vez. Los mapas tienen una caché independiente, gestionada por <code>geoecu</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="id_11-contraste-con-los-archivos-originales">11. Contraste con los archivos originales<a class="anchor" aria-label="anchor" href="#id_11-contraste-con-los-archivos-originales"></a>
@@ -821,16 +825,15 @@ Densidad por cantón de Loja en 2025. Población: INEC; geometrías: geoecu, agr
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"pobecu"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; To cite package 'pobecu' in publications use:</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt;   Salas Guerrero, R. F. (2026). pobecu: Population of Ecuador by Province,</span></span>
-<span><span class="co">#&gt;   Canton and Parish (Población del Ecuador por Provincia, Cantón y</span></span>
-<span><span class="co">#&gt;   Parroquia). R package version 0.3.0.9000.</span></span>
-<span><span class="co">#&gt;   https://doi.org/10.32614/CRAN.package.pobecu</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;   Salas Guerrero, R. F. (2026). pobecu: Population of Ecuador by Province, Canton</span></span>
+<span><span class="co">#&gt;   and Parish (Población del Ecuador por Provincia, Cantón y Parroquia). R package</span></span>
+<span><span class="co">#&gt;   version 0.3.1. https://doi.org/10.32614/CRAN.package.pobecu</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;   INEC (2024). Estimaciones y Proyecciones de Población del Ecuador, Revisión</span></span>
 <span><span class="co">#&gt;   2024. Quito: Instituto Nacional de Estadística y Censos.</span></span>
 <span><span class="co">#&gt;   https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/</span></span>
-<span><span class="co">#&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; To see these entries in BibTeX format, use 'print(&lt;citation&gt;, bibtex=TRUE)',</span></span>
 <span><span class="co">#&gt; 'toBibtex(.)', or set 'options(citation.bibtex.max=999)'.</span></span></code></pre></div>
 <p>Fuentes primarias:</p>
@@ -848,7 +851,7 @@ Densidad por cantón de Loja en 2025. Población: INEC; geometrías: geoecu, agr
 <span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a>            (Población del Ecuador por Provincia, Cantón y Parroquia)},</span>
 <span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a>  <span class="dt">author</span> = {Ronald Fabricio {Salas Guerrero}},</span>
 <span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a>  <span class="dt">year</span>   = {2026},</span>
-<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a>  <span class="dt">note</span>   = {R package version 0.3.0},</span>
+<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a>  <span class="dt">note</span>   = {R package version 0.3.1},</span>
 <span id="cb22-7"><a href="#cb22-7" tabindex="-1"></a>  <span class="dt">doi</span>    = {10.32614/CRAN.package.pobecu},</span>
 <span id="cb22-8"><a href="#cb22-8" tabindex="-1"></a>  <span class="dt">url</span>    = {https://CRAN.R-project.org/package=pobecu},</span>
 <span id="cb22-9"><a href="#cb22-9" tabindex="-1"></a>}</span></code></pre></div>
@@ -873,10 +876,10 @@ Densidad por cantón de Loja en 2025. Población: INEC; geometrías: geoecu, agr
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: 12 ajustes usan respaldo lineal; consulte $diagnosticos.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">modelo_territorial</span><span class="op">$</span><span class="va">diagnosticos</span><span class="op">$</span><span class="va">metodo</span><span class="op">)</span></span>
-<span><span class="co">#&gt;</span></span>
-<span><span class="co">#&gt;           constante_degenerada                respaldo_lineal</span></span>
-<span><span class="co">#&gt;                             82                             12</span></span>
-<span><span class="co">#&gt; StructTS_sin_ruido_observacion       StructTS_tendencia_local</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;           constante_degenerada                respaldo_lineal </span></span>
+<span><span class="co">#&gt;                             82                             12 </span></span>
+<span><span class="co">#&gt; StructTS_sin_ruido_observacion       StructTS_tendencia_local </span></span>
 <span><span class="co">#&gt;                            145                           2337</span></span>
 <span></span>
 <span><span class="va">escenarios</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/pob_estimar.html">pob_estimar</a></span><span class="op">(</span></span>

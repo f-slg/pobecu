@@ -201,11 +201,9 @@ pobecu_datos_disponibles()
 pobecu_usar_carpeta("path/to/my_data")                # or set POBECU_CARPETA
 ```
 
-In the **development version available from GitHub (0.3.0.9000)**, the
-file is checked against a checksum when it is downloaded and the first
-time it is used in a session: an incomplete file is downloaded again.
-These checks and automatic recovery are not included in **CRAN version
-0.3.0**; with that version, use
+Since **pobecu 0.3.1**, the file is checked against a checksum when it
+is downloaded and the first time it is used in a session: an incomplete
+file is downloaded again. In **0.3.0 and earlier**, use
 [`pobecu_limpiar_cache()`](https://f-slg.github.io/pobecu/reference/pobecu_limpiar_cache.md)
 to remove a damaged cached file before downloading it again.
 
@@ -282,7 +280,7 @@ bands](reference/figures/README-modelo-nacional-1.png)
   structure](https://www.censoecuador.gob.ec/wp-content/uploads/2024/04/01_2022_CPV_Estructura_poblacional.xlsx).
 - Cite with `citation("pobecu")` or the **Cite this repository** button:
   Salas Guerrero, R. F. (2026). *pobecu: Population of Ecuador by
-  Province, Canton and Parish*. R package version 0.3.0.
+  Province, Canton and Parish*. R package version 0.3.1.
   <https://doi.org/10.32614/CRAN.package.pobecu>. When using parish
   data, state that they are pobecu estimates and also cite the INEC
   census and cantonal projections.

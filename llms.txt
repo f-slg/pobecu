@@ -74,15 +74,15 @@ Para ver la cobertura disponible:
 ``` r
 
 pob_fuentes()
-#> pobecu 0.3.0.9000 · datos datos-v0.1.0
+#> pobecu 0.3.1 · datos datos-v0.1.0
 #> Estimaciones hasta 2022 y proyecciones desde 2023, al 30 de junio de cada año.
-#>
+#> 
 #>      nivel   periodo      area        edad              tipo
 #>   nacional 1950-2050 2010-2035      0-100+           oficial
 #>  provincia 1990-2035 2010-2035      0-100+           oficial
 #>     canton 2010-2035 2010-2035      0-100+           oficial
 #>  parroquia 2010-2035        no 0-4 ... 85+ estimación pobecu
-#>
+#> 
 #> Fuentes:
 #> * INEC, Estimaciones y Proyecciones de Población, Revisión 2024 (actualización con áreas, 2025).
 #>   https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/
@@ -252,6 +252,8 @@ archivo de edades simples se descarga una vez y queda guardado en caché.
 ``` r
 
 poblacion("canton", anio = 2026, canton = "Loja", edad = c(0, 1, 5))
+#> Descargando datos por edad simple (2 MB) por única vez...
+#>   https://github.com/f-slg/pobecu/releases/download/datos-v0.1.0/pobecu_edad_simple.rds
 #>   dpa_canton canton dpa_provin provincia anio edad poblacion
 #> 1       1101   Loja         11      Loja 2026    0      3427
 #> 2       1101   Loja         11      Loja 2026  1-4     15224
@@ -540,6 +542,8 @@ corresponden a la misma división territorial.
 ``` r
 
 mapa <- pob_mapa("canton", anio = 2025, provincia = "Loja")
+#> Descargando capas geoecu (resolución baja) por única vez...
+#>   https://github.com/f-slg/geoecu/releases/download/datos-v0.3.0/geoecu_dpa_baja.gpkg
 detalle_mapa <- sf::st_drop_geometry(mapa)[,
   c("dpa_canton", "canton", "poblacion", "area_km2", "densidad")]
 detalle_mapa$area_km2 <- round(detalle_mapa$area_km2, 2)
@@ -624,11 +628,9 @@ pobecu_usar_carpeta("ruta/a/mis_datos")
 (incluida `POBECU_CARPETA`, si está definida).
 [`pobecu_limpiar_cache()`](https://f-slg.github.io/pobecu/reference/pobecu_limpiar_cache.md)
 elimina los archivos descargados de pobecu; úsalo solo si quieres
-descargarlos otra vez. En la **versión de desarrollo de GitHub
-(0.3.0.9000)**, la huella del archivo se comprueba al descargarlo y la
-primera vez que se usa en cada sesión: si quedó incompleto, se descarga
-de nuevo. Esta verificación y la recuperación automática no están
-incluidas en la **versión 0.3.0 de CRAN**; en ella, usa
+descargarlos otra vez. Desde **pobecu 0.3.1**, la huella del archivo se
+comprueba al descargarlo y la primera vez que se usa en cada sesión: si
+quedó incompleto, se descarga de nuevo. En **0.3.0 y anteriores**, usa
 [`pobecu_limpiar_cache()`](https://f-slg.github.io/pobecu/reference/pobecu_limpiar_cache.md)
 para eliminar un archivo dañado de la caché antes de descargarlo otra
 vez. Los mapas tienen una caché independiente, gestionada por `geoecu`.
@@ -722,16 +724,15 @@ amplía los ejemplos cartográficos.
 
 citation("pobecu")
 #> To cite package 'pobecu' in publications use:
-#>
-#>   Salas Guerrero, R. F. (2026). pobecu: Population of Ecuador by Province,
-#>   Canton and Parish (Población del Ecuador por Provincia, Cantón y
-#>   Parroquia). R package version 0.3.0.9000.
-#>   https://doi.org/10.32614/CRAN.package.pobecu
-#>
+#> 
+#>   Salas Guerrero, R. F. (2026). pobecu: Population of Ecuador by Province, Canton
+#>   and Parish (Población del Ecuador por Provincia, Cantón y Parroquia). R package
+#>   version 0.3.1. https://doi.org/10.32614/CRAN.package.pobecu
+#> 
 #>   INEC (2024). Estimaciones y Proyecciones de Población del Ecuador, Revisión
 #>   2024. Quito: Instituto Nacional de Estadística y Censos.
 #>   https://www.ecuadorencifras.gob.ec/proyecciones-poblacionales/
-#>
+#> 
 #> To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)',
 #> 'toBibtex(.)', or set 'options(citation.bibtex.max=999)'.
 ```
@@ -753,7 +754,7 @@ En BibTeX:
             (Población del Ecuador por Provincia, Cantón y Parroquia)},
   author = {Ronald Fabricio {Salas Guerrero}},
   year   = {2026},
-  note   = {R package version 0.3.0},
+  note   = {R package version 0.3.1},
   doi    = {10.32614/CRAN.package.pobecu},
   url    = {https://CRAN.R-project.org/package=pobecu},
 }
@@ -814,10 +815,10 @@ modelo_territorial <- pob_ajustar(
 )
 #> Warning: 12 ajustes usan respaldo lineal; consulte $diagnosticos.
 table(modelo_territorial$diagnosticos$metodo)
-#>
-#>           constante_degenerada                respaldo_lineal
-#>                             82                             12
-#> StructTS_sin_ruido_observacion       StructTS_tendencia_local
+#> 
+#>           constante_degenerada                respaldo_lineal 
+#>                             82                             12 
+#> StructTS_sin_ruido_observacion       StructTS_tendencia_local 
 #>                            145                           2337
 
 escenarios <- pob_estimar(

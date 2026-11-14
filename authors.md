@@ -12,14 +12,14 @@ Source:
 
 Salas Guerrero, R. F. (2026). pobecu: Population of Ecuador by Province,
 Canton and Parish (Población del Ecuador por Provincia, Cantón y
-Parroquia). R package version 0.3.0.9000.
+Parroquia). R package version 0.3.1.
 https://doi.org/10.32614/CRAN.package.pobecu
 
     @Manual{,
       title = {pobecu: Population of Ecuador by Province, Canton and Parish (Población del Ecuador por Provincia, Cantón y Parroquia)},
       author = {Ronald Fabricio {Salas Guerrero}},
       year = {2026},
-      note = {R package version 0.3.0.9000},
+      note = {R package version 0.3.1},
       doi = {10.32614/CRAN.package.pobecu},
       url = {https://CRAN.R-project.org/package=pobecu},
     }
